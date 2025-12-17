@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SUDESAN PORTAL — Ekran Kısayolları</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#111a2e;
+      --muted:#9aa7bd;
+      --text:#eaf0ff;
+      --border:rgba(255,255,255,.10);
+
+      --sudesan:#2b6cb0;
+      --dupack:#2f855a;
+      --other:#6b46c1;
+      --disabled:#374151;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background: radial-gradient(1000px 600px at 20% 0%, rgba(59,130,246,.25), transparent 60%),
+                  radial-gradient(1000px 600px at 80% 0%, rgba(34,197,94,.20), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+    }
+    header{
+      padding:28px 18px 14px;
+      max-width:1100px;
+      margin:0 auto;
+    }
+    h1{
+      margin:0 0 6px;
+      font-size:22px;
+      letter-spacing:.3px;
+    }
+    .sub{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.4;
+    }
+    .toolbar{
+      max-width:1100px;
+      margin:10px auto 0;
+      padding:0 18px 18px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .input, .select{
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      outline: none;
+      font-size: 13px;
+    }
+    .input{flex:1; min-width:240px;}
+    .select{min-width:190px;}
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding: 0 18px 28px;
+    }
+    .section{
+      margin:18px 0 22px;
+      padding:14px;
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+    .section-title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin:0 0 12px;
+      font-size:14px;
+      letter-spacing:.2px;
+      color: #dbe6ff;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap:12px;
+    }
+    @media (max-width: 880px){ .grid{grid-template-columns: repeat(2, minmax(0, 1fr));} }
+    @media (max-width: 560px){ .grid{grid-template-columns: 1fr;} }
+
+    .btn{
+      text-align:left;
+      width:100%;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      padding: 14px 14px 12px;
+      border-radius: 14px;
+      cursor:pointer;
+      transition: transform .06s ease, border-color .06s ease, background .06s ease;
+      position:relative;
+      overflow:hidden;
+      min-height:72px;
+    }
+    .btn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.18); }
+    .btn:active{ transform: translateY(0px); }
+
+    .pill{
+      position:absolute;
+      top:10px; right:10px;
+      font-size:11px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      color: rgba(255,255,255,.92);
+      background: rgba(255,255,255,.06);
+    }
+
+    .name{
+      font-weight:800;
+      font-size:13px;
+      margin:0 0 6px;
+      line-height:1.2;
+    }
+    .desc{
+      margin:0;
+      font-size:12px;
+      color: var(--muted);
+      line-height:1.35;
+    }
+
+    .tag-sudesan{ outline: 1px solid rgba(59,130,246,.35); }
+    .tag-sudesan::before{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(120deg, rgba(59,130,246,.18), transparent 55%);
+      pointer-events:none;
+    }
+    .tag-dupack{ outline: 1px solid rgba(34,197,94,.30); }
+    .tag-dupack::before{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(120deg, rgba(34,197,94,.14), transparent 55%);
+      pointer-events:none;
+    }
+    .tag-other{ outline: 1px solid rgba(168,85,247,.26); }
+    .tag-other::before{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(120deg, rgba(168,85,247,.14), transparent 55%);
+      pointer-events:none;
+    }
+    .disabled{
+      background: rgba(255,255,255,.04);
+      color: rgba(255,255,255,.55);
+      cursor:not-allowed;
+    }
+    .disabled:hover{ transform:none; border-color: var(--border); }
+    footer{
+      max-width:1100px;
+      margin:0 auto;
+      padding: 0 18px 26px;
+      color: rgba(255,255,255,.45);
+      font-size:12px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SUDESAN PORTAL — Ekran Kısayolları</h1>
+    <p class="sub">Butonlara tıklayınca ilgili Google Sheet / Looker Studio ekranı yeni sekmede açılır. URL boş olanlar pasiftir.</p>
+  </header>
+
+  <div class="toolbar">
+    <input id="q" class="input" placeholder="Ara (ad/açıklama/kategori)..." />
+    <select id="filter" class="select">
+      <option value="ALL">Tümü</option>
+      <option value="SUDESAN">Sudesan</option>
+      <option value="DUPACK">Dupack</option>
+      <option value="OTHER">Diğer</option>
+    </select>
+  </div>
+
+  <div class="wrap" id="app"></div>
+
+  <footer>
+    İpucu: Linkleri düzenlemek için bu sayfadaki <code>DATA</code> listesini güncellemeniz yeterli.
+  </footer>
+
+<script>
+  // 1) Buraya linkleri ekle (url boşsa pasif olur)
+  const DATA = [
+    {cat:"ÜRETİM", name:"Sudesan | Üretim Verimlilik ve Duruş Takip Ekranı", url:"", desc:"Google Sheet / takip ekranı"},
+    {cat:"ÜRETİM", name:"Dupack | Üretim Verimlilik ve Duruş Takip Ekranı", url:"", desc:"Google Sheet / takip ekranı"},
+    {cat:"ÜRETİM", name:"Sudesan | Fazla Mesai Maliyet Takip Ekranı", url:"", desc:"Google Sheet / maliyet"},
+    {cat:"ÜRETİM", name:"Sudesan | Fazla Mesai Takip Ekranı", url:"", desc:"Google Sheet / takip"},
+    {cat:"İK", name:"Sudesan | Kadro Yıl Dağılım", url:"", desc:"Google Sheet / HR raporu"},
+    {cat:"LOJİSTİK", name:"Sudesan | BIM Sevkiyat OTIF Raporu", url:"", desc:"Google Sheet / OTIF"},
+    {cat:"DEPO", name:"Sudesan | Depo Faaliyet Tablosu", url:"", desc:"Google Sheet / depo faaliyet"},
+    {cat:"LOJİSTİK", name:"Sudesan | BIM LTL/FTL Dağıtım Fark Analizi", url:"", desc:"Google Sheet / analiz"},
+    {cat:"DEPO", name:"Sudesan | Çevrim Sayım & Kontrol Takip Ekranı", url:"", desc:"Google Sheet / sayım kontrol"},
+    {cat:"BAKIM", name:"Sudesan | Bakım Takip Yazılım Teklifleri", url:"", desc:"Google Sheet / teklif takibi"},
+    {cat:"STRATEJİ", name:"Sudesan | Stratejik Yol Haritası", url:"", desc:"Google Sheet / roadmap"},
+    {cat:"KPI", name:"Sudesan | KPI Süreç Künyeleri", url:"", desc:"Google Sheet / KPI"},
+    {cat:"KPI", name:"Sudesan | KPI Süreç Künyeleri >> 11-Planlama", url:"", desc:"Google Sheet / KPI - Planlama"},
+    {cat:"KPI", name:"Sudesan | KPI Süreç Künyeleri >> 12-Satınalma ve İthalat Yönetimi", url:"", desc:"Google Sheet / KPI - Satınalma"},
+    {cat:"KPI", name:"Sudesan | KPI Süreç Künyeleri >> 14-Depo Yönetimi", url:"", desc:"Google Sheet / KPI - Depo"},
+    {cat:"KPI", name:"Sudesan | KPI Süreç Künyeleri >> 15-Üretim", url:"", desc:"Google Sheet / KPI - Üretim"},
+    {cat:"FİNANS", name:"Sudesan | Bütçe Planlama-Takip & Kontrol Ekranı", url:"", desc:"Google Sheet / bütçe"},
+    {cat:"YÖNETİM", name:"Sudesan | Minerva Devam Eden İş Maddeleri", url:"", desc:"Google Sheet / iş listesi"},
+    {cat:"DEPO", name:"Sudesan | Depo Operasyon Zaman Etüdü Ekranı", url:"", desc:"Google Sheet / zaman etüdü"},
+    {cat:"SATINALMA", name:"Sudesan | Tedarikçi OTIF Raporu", url:"", desc:"Google Sheet / OTIF"},
+    {cat:"DEPO", name:"Sudesan | Stok Analiz Raporu", url:"", desc:"Google Sheet / stok analiz"},
+    {cat:"DEPO", name:"Sudesan | Hammadde Stok Takibi Ekranı", url:"", desc:"Google Sheet / stok takip"},
+    {cat:"FİNANS", name:"Sudesan | Elida Beauty Costing", url:"", desc:"Google Sheet / costing"},
+    {cat:"OPERASYON", name:"Sudesan | Mars Performans Takip Ekranı", url:"", desc:"Google Sheet / performans"},
+    {cat:"OPERASYON", name:"Sudesan | Mars Araç Talep ve Tedarik Takip Ekranı", url:"", desc:"Google Sheet / araç talep"},
+    {cat:"DASHBOARD", name:"Sudesan | Looker Dashboard", url:"", desc:"Looker Studio dashboard"},
+    {cat:"DASHBOARD", name:"Dupack | Üretim Verimlilik ve Duruş Dashboard", url:"", desc:"Looker Studio dashboard"},
+    {cat:"DASHBOARD", name:"Sudesan | Üretim Verimlilik ve Duruş Dashboard", url:"", desc:"Looker Studio dashboard"},
+    {cat:"FİNANS", name:"Sudesan | Finansal Tablolar", url:"", desc:"Google Sheet / finans"}
+  ];
+
+  const norm = (s="") => s.toLowerCase().trim();
+  const tagOf = (name) => {
+    const n = norm(name);
+    if (n.includes("sudesan")) return "SUDESAN";
+    if (n.includes("dupack")) return "DUPACK";
+    return "OTHER";
+  };
+
+  function groupByCat(list){
+    const m = {};
+    list.forEach(x => (m[x.cat] = m[x.cat] || []).push(x));
+    return Object.keys(m).sort().map(k => ({cat:k, items:m[k]}));
+  }
+
+  function render(){
+    const q = norm(document.getElementById("q").value);
+    const f = document.getElementById("filter").value;
+
+    const filtered = DATA.filter(x => {
+      const t = tagOf(x.name);
+      if (f !== "ALL" && t !== f) return false;
+      if (!q) return true;
+      const hay = norm(x.name + " " + (x.desc||"") + " " + (x.cat||""));
+      return hay.includes(q);
+    });
+
+    const sections = groupByCat(filtered);
+    const app = document.getElementById("app");
+    app.innerHTML = "";
+
+    if (!filtered.length){
+      app.innerHTML = `<div class="section"><div class="section-title">Sonuç yok</div><div style="color:var(--muted);font-size:13px;">Filtreyi/aramayı değiştir.</div></div>`;
+      return;
+    }
+
+    sections.forEach(sec => {
+      const box = document.createElement("div");
+      box.className = "section";
+
+      const title = document.createElement("div");
+      title.className = "section-title";
+      title.textContent = sec.cat;
+
+      const grid = document.createElement("div");
+      grid.className = "grid";
+
+      sec.items.forEach(x => {
+        const tag = tagOf(x.name);
+        const btn = document.createElement("button");
+        btn.className = "btn " + (tag==="SUDESAN" ? "tag-sudesan" : tag==="DUPACK" ? "tag-dupack" : "tag-other");
+
+        const pill = document.createElement("div");
+        pill.className = "pill";
+        pill.textContent = tag;
+
+        const nm = document.createElement("div");
+        nm.className = "name";
+        nm.textContent = x.name;
+
+        const ds = document.createElement("div");
+        ds.className = "desc";
+        ds.textContent = x.desc || "";
+
+        btn.appendChild(pill);
+        btn.appendChild(nm);
+        btn.appendChild(ds);
+
+        if (!x.url){
+          btn.classList.add("disabled");
+          btn.onclick = () => {};
+        } else {
+          btn.onclick = () => window.open(x.url, "_blank", "noopener,noreferrer");
+        }
+
+        grid.appendChild(btn);
+      });
+
+      box.appendChild(title);
+      box.appendChild(grid);
+      app.appendChild(box);
+    });
+  }
+
+  document.getElementById("q").addEventListener("input", render);
+  document.getElementById("filter").addEventListener("change", render);
+  render();
+</script>
+</body>
+</html>

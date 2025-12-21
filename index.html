@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SUDESAN PORTAL — Ekran Kısayolları</title>
+  <title>PSD-Portal</title>
 
   <style>
     :root{
@@ -16,10 +16,10 @@
       --sudesan:#2b6cb0;
       --dupack:#2f855a;
       --other:#6b46c1;
-      --disabled:#374151;
 
       --danger:#ef4444;
       --ok:#22c55e;
+      --warn:#f59e0b;
     }
     *{box-sizing:border-box}
     body{
@@ -32,7 +32,7 @@
     }
 
     header{
-      padding:22px 18px 12px;
+      padding:22px 18px 10px;
       max-width:1100px;
       margin:0 auto;
       display:flex;
@@ -67,16 +67,7 @@
       border:1px solid var(--border);
       border-radius:12px;
       background:rgba(255,255,255,.04);
-    }
-    .chip{
-      display:inline-block;
-      margin-left:6px;
-      font-size:11px;
-      padding:3px 8px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.06);
-      color:rgba(255,255,255,.9);
+      white-space:nowrap;
     }
     .linkbtn{
       border:1px solid var(--border);
@@ -92,26 +83,69 @@
     .linkbtn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.18); }
     .linkbtn:active{ transform: translateY(0px); }
 
+    .linkbtn.primary{
+      border-color: rgba(34,197,94,.25);
+      background: rgba(34,197,94,.12);
+    }
+    .linkbtn.warn{
+      border-color: rgba(245,158,11,.25);
+      background: rgba(245,158,11,.12);
+    }
+
+    /* ===== Toolbar (search + category chips) ===== */
     .toolbar{
       max-width:1100px;
       margin:10px auto 0;
-      padding:0 18px 18px;
+      padding:0 18px 10px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .toolbar-row{
       display:flex;
       gap:10px;
       flex-wrap:wrap;
       align-items:center;
     }
-    .input, .select{
+
+    .input{
       background: rgba(255,255,255,.06);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 10px 12px;
+      padding: 9px 10px;
       border-radius: 12px;
       outline: none;
       font-size: 13px;
+      width: 320px;
+      max-width: 100%;
     }
-    .input{flex:1; min-width:240px;}
-    .select{min-width:190px;}
+
+    .chips{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .chipBtn{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+      color:rgba(255,255,255,.85);
+      padding:8px 10px;
+      border-radius:999px;
+      cursor:pointer;
+      font-size:12px;
+      transition: transform .06s ease, border-color .06s ease, background .06s ease;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .chipBtn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.18); }
+    .chipBtn:active{ transform: translateY(0px); }
+    .chipBtn.active{
+      background: rgba(255,255,255,.08);
+      border-color: rgba(255,255,255,.22);
+      color: rgba(255,255,255,.95);
+    }
 
     .wrap{
       max-width:1100px;
@@ -119,7 +153,7 @@
       padding: 0 18px 28px;
     }
     .section{
-      margin:18px 0 22px;
+      margin:14px 0 18px;
       padding:14px;
       background: rgba(255,255,255,.03);
       border: 1px solid var(--border);
@@ -144,18 +178,20 @@
       header{flex-direction:column; align-items:flex-start;}
       .topbar-right{justify-content:flex-start; text-align:left;}
       .grid{grid-template-columns: 1fr;}
+      .input{ width: 100%; }
     }
 
+    /* portal butonları (küçük) */
     .btn{
       text-align:left;
       width:100%;
       border: 1px solid var(--border);
       background: var(--card);
       color: var(--text);
-      padding: 10px 10px 10px;
-      border-radius: 10px;
+      padding: 11px 12px 10px;
+      border-radius: 12px;
       cursor:pointer;
-      transition: transform .06s ease, border-color .06s ease, background .06s ease, opacity .06s ease;
+      transition: transform .06s ease, border-color .06s ease, opacity .06s ease;
       position:relative;
       overflow:hidden;
       min-height:62px;
@@ -165,9 +201,9 @@
 
     .pill{
       position:absolute;
-      top:10px; right:10px;
-      font-size:11px;
-      padding:4px 8px;
+      top:8px; right:8px;
+      font-size:10px;
+      padding:3px 7px;
       border-radius:999px;
       border:1px solid var(--border);
       color: rgba(255,255,255,.92);
@@ -175,16 +211,16 @@
     }
     .name{
       font-weight:800;
-      font-size:13px;
-      margin:0 0 6px;
+      font-size:12.5px;
+      margin:0 0 5px;
       line-height:1.2;
-      padding-right:84px;
+      padding-right:78px;
     }
     .desc{
       margin:0;
-      font-size:12px;
+      font-size:11.5px;
       color: var(--muted);
-      line-height:1.35;
+      line-height:1.3;
     }
 
     .tag-sudesan{ outline: 1px solid rgba(59,130,246,.35); }
@@ -325,8 +361,16 @@
     .label{
       font-size:12px;
       color:rgba(255,255,255,.78);
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      align-items:center;
     }
-    .login-input{
+    .hint{
+      font-size:11px;
+      color:rgba(255,255,255,.45);
+    }
+    .login-input, .select{
       width:100%;
       background: rgba(255,255,255,.06);
       border: 1px solid var(--border);
@@ -336,6 +380,7 @@
       outline: none;
       font-size: 13px;
     }
+
     .primary{
       width:100%;
       margin-top:10px;
@@ -357,22 +402,134 @@
     }
     .msg.err{ color: rgba(239,68,68,.95); }
     .msg.ok{ color: rgba(34,197,94,.95); }
+    .msg.warn{ color: rgba(245,158,11,.95); }
+
     .tiny{
       color: rgba(255,255,255,.45);
       font-size:11px;
       margin-top:10px;
       line-height:1.4;
     }
-    .toggle{
+
+    /* ===== ADMIN VIEW ===== */
+    .admin-wrap{ max-width:1100px; margin:0 auto; padding: 0 18px 28px; }
+    .admin-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    @media (max-width: 900px){ .admin-grid{ grid-template-columns: 1fr; } }
+
+    .panel{
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding:14px;
+    }
+    .panel h3{
+      margin:0 0 10px;
+      font-size:14px;
+      color:#dbe6ff;
+      letter-spacing:.2px;
+    }
+    .row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    @media (max-width: 520px){ .row{ grid-template-columns: 1fr; } }
+
+    .btn2{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-size: 12px;
+      font-weight: 650;
+    }
+    .btn2:hover{ border-color: rgba(255,255,255,.18); transform: translateY(-1px); }
+    .btn2:active{ transform: translateY(0px); }
+
+    .btn2.ok{ border-color: rgba(34,197,94,.25); background: rgba(34,197,94,.10); }
+    .btn2.danger{ border-color: rgba(239,68,68,.25); background: rgba(239,68,68,.10); }
+    .btn2.warn{ border-color: rgba(245,158,11,.25); background: rgba(245,158,11,.10); }
+
+    .list{
+      margin-top:10px;
+      border-top:1px solid var(--border);
+      padding-top:10px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      max-height: 260px;
+      overflow:auto;
+    }
+    .item{
       display:flex;
       align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+    }
+    .item .meta{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      min-width:0;
+    }
+    .item .meta b{
+      font-size:12.5px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .item .meta span{
+      font-size:11px;
+      color: rgba(255,255,255,.55);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .pills{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+    .pill2{
+      font-size:10px;
+      padding:3px 7px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.9);
+      white-space:nowrap;
+    }
+    .rolesBox{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:6px;
+      padding:10px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background: rgba(255,255,255,.03);
+    }
+    .chk{
+      display:flex;
       gap:8px;
-      margin-top:8px;
+      align-items:center;
       font-size:12px;
-      color:rgba(255,255,255,.75);
+      color: rgba(255,255,255,.85);
       user-select:none;
     }
-    .toggle input{ transform: translateY(1px); }
+    .chk input{ transform: translateY(1px); }
   </style>
 </head>
 
@@ -380,30 +537,166 @@
 
   <header>
     <div>
-      <h1>SUDESAN PORTAL — Ekran Kısayolları</h1>
-      <p class="sub">Butonlara tıklayınca ilgili Google Sheet / Looker Studio ekranı yeni sekmede açılır. URL boş olanlar pasiftir.</p>
+      <h1 id="portalTitle">PSD-Portal</h1>
+      <p class="sub" id="portalSub">Butonlara tıklayınca ilgili Google Sheet / Looker Studio ekranı yeni sekmede açılır. URL boş olanlar pasiftir.</p>
     </div>
 
     <div class="topbar-right">
       <div class="who" id="whoBox" style="display:none;"></div>
+
+      <button class="linkbtn warn" id="adminBtn" style="display:none;">Admin</button>
+      <button class="linkbtn primary" id="saveBtn" style="display:none;">Kaydet</button>
       <button class="linkbtn" id="logoutBtn" style="display:none;">Çıkış</button>
     </div>
   </header>
 
-  <div class="toolbar">
-    <input id="q" class="input" placeholder="Ara (ad/açıklama/kategori)..." />
-    <select id="filter" class="select">
-      <option value="ALL">Tümü</option>
-      <option value="SUDESAN">Sudesan</option>
-      <option value="DUPACK">Dupack</option>
-      <option value="OTHER">Diğer</option>
-    </select>
+  <!-- PORTAL TOOLBAR -->
+  <div class="toolbar" id="portalToolbar" style="display:none;">
+    <div class="toolbar-row">
+      <input id="q" class="input" placeholder="Ara (ad/açıklama)..." />
+      <div class="chips" id="chips"></div>
+    </div>
   </div>
 
-  <div class="wrap" id="app"></div>
+  <!-- PORTAL VIEW -->
+  <div class="wrap" id="portalApp" style="display:none;"></div>
 
-  <footer>
-    İpucu: Linkleri düzenlemek için bu sayfadaki <code>DATA</code> listesini güncellemeniz yeterli.
+  <!-- ADMIN VIEW -->
+  <div class="admin-wrap" id="adminView" style="display:none;">
+    <div class="section">
+      <div class="section-title">
+        <span>Admin Paneli</span>
+        <span style="font-size:12px;color:rgba(255,255,255,.55)" id="pendingInfo"></span>
+      </div>
+      <div style="color:rgba(255,255,255,.70);font-size:12px;line-height:1.45">
+        Admin tarafında yapılan değişiklikler taslak olarak tutulur. Portal’a dönünce sağ üstte <b>Kaydet</b> görünür; kaydedince herkes için güncellenir.
+      </div>
+    </div>
+
+    <div class="admin-grid">
+      <!-- Firma -->
+      <div class="panel">
+        <h3>1) Yeni Firma Ekle</h3>
+        <div class="row">
+          <div class="field">
+            <div class="label">Firma Adı <span class="hint">(örn: Sudesan / Kuzey Pet)</span></div>
+            <input id="firmDisplayIn" class="login-input" placeholder="Firma adı" />
+          </div>
+          <div class="field">
+            <div class="label">Firma Key (otomatik) <span class="hint">(örn: SUDESTAN / KUZEY_PET)</span></div>
+            <input id="firmKeyOut" class="login-input" placeholder="otomatik oluşur" disabled />
+          </div>
+        </div>
+        <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn2 ok" id="addFirmBtn">Firmayı Ekle</button>
+          <button class="btn2" id="addAliasBtn">Bu Yazımı Alias Olarak Ekle</button>
+        </div>
+        <div class="msg" id="firmMsg"></div>
+        <div class="list" id="firmList"></div>
+      </div>
+
+      <!-- Kullanıcı -->
+      <div class="panel">
+        <h3>3) Yeni Kullanıcı Ekle & Yetkilendir</h3>
+        <div class="row">
+          <div class="field">
+            <div class="label">Kullanıcı Adı</div>
+            <input id="newUserU" class="login-input" placeholder="örn: zeynep" />
+          </div>
+          <div class="field">
+            <div class="label">Şifre</div>
+            <input id="newUserP" class="login-input" placeholder="örn: 1234" />
+          </div>
+          <div class="field">
+            <div class="label">Görünen Ad</div>
+            <input id="newUserD" class="login-input" placeholder="örn: Zeynep" />
+          </div>
+          <div class="field">
+            <div class="label">Not</div>
+            <input class="login-input" value="Roller aşağıdan seçilir" disabled />
+          </div>
+        </div>
+
+        <div class="label" style="margin-top:10px;">Roller</div>
+        <div class="rolesBox" id="userRoleBox"></div>
+
+        <div style="margin-top:10px;">
+          <button class="btn2 ok" id="addUserBtn">Kullanıcıyı Ekle</button>
+        </div>
+        <div class="msg" id="userMsg"></div>
+        <div class="list" id="userList"></div>
+      </div>
+
+      <!-- Rapor -->
+      <div class="panel">
+        <h3>2) Yeni Rapor Ekle</h3>
+        <div class="row">
+          <div class="field">
+            <div class="label">Firma</div>
+            <select id="repFirmSel" class="select"></select>
+          </div>
+          <div class="field">
+            <div class="label">Kategori</div>
+            <input id="repCat" class="login-input" placeholder="örn: DEPO / ÜRETİM / KPI" />
+          </div>
+          <div class="field">
+            <div class="label">Rapor Adı</div>
+            <input id="repName" class="login-input" placeholder="örn: Sudesan | Stok Analiz Raporu" />
+          </div>
+          <div class="field">
+            <div class="label">Açıklama</div>
+            <input id="repDesc" class="login-input" placeholder="örn: Google Sheet / stok analiz" />
+          </div>
+          <div class="field" style="grid-column:1/-1;">
+            <div class="label">URL</div>
+            <input id="repUrl" class="login-input" placeholder="https://..." />
+          </div>
+        </div>
+
+        <div class="label" style="margin-top:10px;">Bu raporu görebilecek roller</div>
+        <div class="rolesBox" id="repRoleBox"></div>
+
+        <div style="margin-top:10px;">
+          <button class="btn2 ok" id="addReportBtn">Raporu Ekle</button>
+        </div>
+        <div class="msg" id="repMsg"></div>
+        <div class="list" id="reportList"></div>
+      </div>
+
+      <!-- URL Güncelle -->
+      <div class="panel">
+        <h3>4) URL Güncelle</h3>
+        <div class="field">
+          <div class="label">Rapor Seç</div>
+          <select id="urlReportSel" class="select"></select>
+        </div>
+        <div class="field">
+          <div class="label">Yeni URL</div>
+          <input id="urlNew" class="login-input" placeholder="https://..." />
+        </div>
+        <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn2 ok" id="updateUrlBtn">URL Güncelle</button>
+          <button class="btn2 danger" id="deleteReportBtn">Raporu Sil</button>
+        </div>
+        <div class="msg" id="urlMsg"></div>
+
+        <div class="section" style="margin-top:12px;">
+          <div class="section-title"><span>5) Kaydet Akışı</span></div>
+          <div style="color:rgba(255,255,255,.70);font-size:12px;line-height:1.45">
+            Admin panelinde eklediğin her şey “taslak” olarak bekler. Portal’a dön ve sağ üstte çıkan <b>Kaydet</b> butonuna bas.
+          </div>
+          <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn2 warn" id="goPortalBtn">Portal’a Dön</button>
+            <button class="btn2" id="discardBtn">Taslak Değişiklikleri At</button>
+          </div>
+          <div class="msg" id="flowMsg"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer id="footer" style="display:none;">
+    İpucu: Admin ile eklenenler kalıcı hale gelmesi için Portal ekranında <code>Kaydet</code> butonuna basılmalıdır.
   </footer>
 
   <!-- LOGIN OVERLAY -->
@@ -411,37 +704,38 @@
     <div class="login-card">
       <div class="login-left">
         <div class="brand">
-          <h2>SUDESAN Portal</h2>
-          <p>Yetkinize göre raporlar listelenir. Bu ekran hızlı erişim içindir.</p>
+          <h2>PSD-Portal</h2>
+          <p>Firma adını yazarak giriş yapılır. Portal başlığı otomatik olarak <b>Firma-Portal</b> olur.</p>
           <div class="badge-row">
-            <span class="badge">Rol Bazlı Erişim</span>
-            <span class="badge">Hızlı Arama</span>
-            <span class="badge">Filtreleme</span>
+            <span class="badge">Firma Bazlı Liste</span>
+            <span class="badge">Rol Bazlı Yetki</span>
+            <span class="badge">Admin Panel</span>
           </div>
         </div>
         <div style="color:rgba(255,255,255,.55);font-size:12px;line-height:1.5;">
-          <div>• Kullanıcıları <code>USERS</code> listesinde tanımlayın</div>
-          <div>• Rapor yetkilerini her kayıt için <code>acl</code> ile belirleyin</div>
+          <div>• Admin: Poseidon / psd123</div>
+          <div>• Normal kullanıcılar: Admin panelden eklenir</div>
         </div>
       </div>
 
       <div class="login-right">
         <h3 class="login-title">Giriş</h3>
-        <p class="login-sub">Kullanıcı adı ve şifrenizle giriş yapın.</p>
+        <p class="login-sub">Kullanıcı adı, şifre ve firma ile giriş yapın. Admin girişi firmayı zorunlu kılmaz.</p>
 
         <div class="field">
           <div class="label">Kullanıcı Adı</div>
-          <input id="u" class="login-input" autocomplete="username" placeholder="örn: alper" />
+          <input id="u" class="login-input" autocomplete="username" placeholder="örn: alper / Poseidon" />
         </div>
+
         <div class="field">
           <div class="label">Şifre</div>
           <input id="p" type="password" class="login-input" autocomplete="current-password" placeholder="••••••••" />
         </div>
 
-        <label class="toggle">
-          <input type="checkbox" id="showUnauthorized" />
-          Yetkisiz raporları da listede göster (pasif)
-        </label>
+        <div class="field">
+          <div class="label">Firma <span class="hint">(Admin için boş bırakılabilir)</span></div>
+          <input id="firmName" class="login-input" placeholder='örn: Sudesan / Kuzey Pet' />
+        </div>
 
         <button class="primary" id="loginBtn">Giriş Yap</button>
         <div class="msg" id="loginMsg"></div>
@@ -455,123 +749,61 @@
 
 <script>
   /********************************************************************
-   * 1) USERS (kullanıcılar) — demo amaçlıdır.
-   *    Gerçek güvenlik için backend (Apps Script Web App) önerilir.
+   * ADMIN CREDENTIALS
    ********************************************************************/
-  const USERS = [
-    { username:"admin",  password:"admin123", display:"Admin",   roles:["ADMIN"] },
-
-    { username:"alper",  password:"1234",     display:"Alper",   roles:["SUDESAN_VIEW","FINANCE_VIEW","KPI_VIEW","DASHBOARD_VIEW"] },
-    { username:"zeynep", password:"1234",     display:"Zeynep",  roles:["SUDESAN_VIEW","DASHBOARD_VIEW"] },
-    { username:"mars",   password:"1234",     display:"Mars Ops",roles:["OPERATIONS_VIEW","SUDESAN_VIEW"] },
-    { username:"dupack", password:"1234",     display:"Dupack",  roles:["DUPACK_VIEW","DASHBOARD_VIEW"] },
-  ];
+  const ADMIN_LOGIN = { username: "Poseidon", password: "psd123" };
 
   /********************************************************************
-   * 2) DATA (rapor listesi) — senin mevcut listen + ACL eklendi
-   *    acl yoksa: login olan herkes görür.
-   *    acl.allowRoles: listeden bir rol eşleşirse görünür
-   *    acl.allowUsers: kullanıcı adı eşleşirse görünür
+   * DB STORAGE (kalıcı) + WORKING (taslak)
    ********************************************************************/
-  const DATA = [
-    {cat:"ÜRETİM", name:"Sudesan | Üretim Verimlilik ve Duruş Takip Ekranı", url:"", desc:"Google Sheet / takip ekranı",
-      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW"] }},
+  const DB_KEY = "PSD_PORTAL_DB_V1";
+  const WORKING_KEY = "PSD_PORTAL_WORKING_V1"; // taslak
+  const SESSION_KEY = "PSD_PORTAL_SESSION_V5";
 
-    {cat:"ÜRETİM", name:"Dupack | Üretim Verimlilik ve Duruş Takip Ekranı", url:"", desc:"Google Sheet / takip ekranı",
-      acl:{ allowRoles:["ADMIN","DUPACK_VIEW"] }},
+  function deepClone(x){ return JSON.parse(JSON.stringify(x)); }
 
-    {cat:"ÜRETİM", name:"Sudesan | Fazla Mesai Maliyet Takip Ekranı", url:"", desc:"Google Sheet / maliyet",
-      acl:{ allowRoles:["ADMIN","FINANCE_VIEW"] }},
-
-    {cat:"ÜRETİM", name:"Sudesan | Fazla Mesai Takip Ekranı", url:"", desc:"Google Sheet / takip",
-      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW"] }},
-
-    {cat:"İK", name:"Sudesan | Kadro Yıl Dağılım", url:"", desc:"Google Sheet / HR raporu",
-      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW"] }},
-
-    {cat:"LOJİSTİK", name:"Sudesan | BIM Sevkiyat OTIF Raporu", url:"", desc:"Google Sheet / OTIF",
-      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW","OPERATIONS_VIEW"] }},
-
-    {cat:"DEPO", name:"Sudesan | Depo Faaliyet Tablosu", url:"", desc:"Google Sheet / depo faaliyet",
-      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW","OPERATIONS_VIEW"] }},
-
-    {cat:"LOJİSTİK", name:"Sudesan | BIM LTL/FTL Dağıtım Fark Analizi", url:"", desc:"Google Sheet / analiz",
-      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW","OPERATIONS_VIEW"] }},
-
-    {cat:"DEPO", name:"Sudesan | Çevrim Sayım & Kontrol Takip Ekranı", url:"", desc:"Google Sheet / sayım kontrol",
-      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW","OPERATIONS_VIEW"] }},
-
-    {cat:"BAKIM", name:"Sudesan | Bakım Takip Yazılım Teklifleri", url:"", desc:"Google Sheet / teklif takibi",
-      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW"] }},
-
-    {cat:"STRATEJİ", name:"Sudesan | Stratejik Yol Haritası", url:"", desc:"Google Sheet / roadmap",
-      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW"] }},
-
-    {cat:"KPI", name:"Sudesan | KPI Süreç Künyeleri", url:"", desc:"Google Sheet / KPI",
-      acl:{ allowRoles:["ADMIN","KPI_VIEW"] }},
-
-    {cat:"KPI", name:"Sudesan | KPI Süreç Künyeleri >> 11-Planlama", url:"", desc:"Google Sheet / KPI - Planlama",
-      acl:{ allowRoles:["ADMIN","KPI_VIEW"] }},
-
-    {cat:"KPI", name:"Sudesan | KPI Süreç Künyeleri >> 12-Satınalma ve İthalat Yönetimi", url:"", desc:"Google Sheet / KPI - Satınalma",
-      acl:{ allowRoles:["ADMIN","KPI_VIEW"] }},
-
-    {cat:"KPI", name:"Sudesan | KPI Süreç Künyeleri >> 14-Depo Yönetimi", url:"", desc:"Google Sheet / KPI - Depo",
-      acl:{ allowRoles:["ADMIN","KPI_VIEW"] }},
-
-    {cat:"KPI", name:"Sudesan | KPI Süreç Künyeleri >> 15-Üretim", url:"", desc:"Google Sheet / KPI - Üretim",
-      acl:{ allowRoles:["ADMIN","KPI_VIEW"] }},
-
-    {cat:"FİNANS", name:"Sudesan | Bütçe Planlama-Takip & Kontrol Ekranı", url:"", desc:"Google Sheet / bütçe",
-      acl:{ allowRoles:["ADMIN","FINANCE_VIEW"] }},
-
-    {cat:"YÖNETİM", name:"Sudesan | Minerva Devam Eden İş Maddeleri", url:"", desc:"Google Sheet / iş listesi",
-      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW"] }},
-
-    {cat:"DEPO", name:"Sudesan | Depo Operasyon Zaman Etüdü Ekranı", url:"", desc:"Google Sheet / zaman etüdü",
-      acl:{ allowRoles:["ADMIN","OPERATIONS_VIEW","SUDESAN_VIEW"] }},
-
-    {cat:"SATINALMA", name:"Sudesan | Tedarikçi OTIF Raporu", url:"", desc:"Google Sheet / OTIF",
-      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW"] }},
-
-    {cat:"DEPO", name:"Sudesan | Stok Analiz Raporu", url:"", desc:"Google Sheet / stok analiz",
-      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW","OPERATIONS_VIEW"] }},
-
-    {cat:"DEPO", name:"Sudesan | Hammadde Stok Takibi Ekranı", url:"", desc:"Google Sheet / stok takip",
-      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW","OPERATIONS_VIEW"] }},
-
-    {cat:"FİNANS", name:"Sudesan | Elida Beauty Costing", url:"", desc:"Google Sheet / costing",
-      acl:{ allowRoles:["ADMIN","FINANCE_VIEW"] }},
-
-    {cat:"OPERASYON", name:"Sudesan | Mars Performans Takip Ekranı", url:"", desc:"Google Sheet / performans",
-      acl:{ allowRoles:["ADMIN","OPERATIONS_VIEW"] }},
-
-    {cat:"OPERASYON", name:"Sudesan | Mars Araç Talep ve Tedarik Takip Ekranı", url:"", desc:"Google Sheet / araç talep",
-      acl:{ allowRoles:["ADMIN","OPERATIONS_VIEW"] }},
-
-    {cat:"DASHBOARD", name:"Sudesan | Looker Dashboard", url:"", desc:"Looker Studio dashboard",
-      acl:{ allowRoles:["ADMIN","DASHBOARD_VIEW","SUDESAN_VIEW"] }},
-
-    {cat:"DASHBOARD", name:"Dupack | Üretim Verimlilik ve Duruş Dashboard", url:"", desc:"Looker Studio dashboard",
-      acl:{ allowRoles:["ADMIN","DASHBOARD_VIEW","DUPACK_VIEW"] }},
-
-    {cat:"DASHBOARD", name:"Sudesan | Üretim Verimlilik ve Duruş Dashboard", url:"", desc:"Looker Studio dashboard",
-      acl:{ allowRoles:["ADMIN","DASHBOARD_VIEW","SUDESAN_VIEW"] }},
-
-    {cat:"FİNANS", name:"Sudesan | Finansal Tablolar", url:"", desc:"Google Sheet / finans",
-      acl:{ allowRoles:["ADMIN","FINANCE_VIEW"] }},
-  ];
+  function getLocalJSON(key){
+    try{
+      const s = localStorage.getItem(key);
+      if (!s) return null;
+      return JSON.parse(s);
+    }catch(e){ return null; }
+  }
+  function setLocalJSON(key, obj){
+    localStorage.setItem(key, JSON.stringify(obj));
+  }
 
   /********************************************************************
-   * 3) Helpers
+   * Helpers
    ********************************************************************/
   const norm = (s="") => String(s).toLowerCase().trim();
-  const tagOf = (name) => {
+  const trim = (s="") => String(s).trim();
+
+  function normalizeFirmNameForAlias(s){
+    const t = norm(s)
+      .replace(/[.,]/g, " ")
+      .replace(/\s+/g, " ")
+      .replace(/\b(as|aş|a\.ş|a\.s|ltd|limited|inc|corp|co|san|tic|sti|şti|ve|veya)\b/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    return t;
+  }
+
+  function firmKeyAuto(displayName){
+    const raw = trim(displayName);
+    if (!raw) return "";
+    return raw
+      .toUpperCase()
+      .replace(/\s+/g, "_")
+      .replace(/[^\wĞÜŞİÖÇ_]/g, "");
+  }
+
+  function tagOf(name){
     const n = norm(name);
     if (n.includes("sudesan")) return "SUDESAN";
     if (n.includes("dupack")) return "DUPACK";
     return "OTHER";
-  };
+  }
 
   function groupByCat(list){
     const m = {};
@@ -579,114 +811,365 @@
     return Object.keys(m).sort().map(k => ({cat:k, items:m[k]}));
   }
 
-  /********************************************************************
-   * 4) Session
-   ********************************************************************/
-  const SESSION_KEY = "SUDESAN_PORTAL_SESSION_V1";
-
-  function setSession(user){
-    localStorage.setItem(SESSION_KEY, JSON.stringify({
-      username: user.username,
-      display: user.display,
-      roles: user.roles || [],
-      ts: Date.now()
-    }));
-  }
-  function getSession(){
-    try{
-      const raw = localStorage.getItem(SESSION_KEY);
-      if (!raw) return null;
-      return JSON.parse(raw);
-    }catch(e){ return null; }
-  }
-  function clearSession(){
-    localStorage.removeItem(SESSION_KEY);
-  }
   function hasRole(session, role){
-    if (!session) return false;
-    return (session.roles || []).includes(role);
+    return !!session && Array.isArray(session.roles) && session.roles.includes(role);
   }
 
   function isAllowed(item, session){
     if (!session) return false;
-
-    // ADMIN her şeye erişir
     if (hasRole(session, "ADMIN")) return true;
-
-    const acl = item.acl;
-    if (!acl) return true; // acl yoksa login olan herkes
-
-    if (Array.isArray(acl.allowUsers) && acl.allowUsers.length){
-      if (acl.allowUsers.includes(session.username)) return true;
-    }
-    if (Array.isArray(acl.allowRoles) && acl.allowRoles.length){
-      for (const r of acl.allowRoles){
-        if (hasRole(session, r)) return true;
-      }
+    const acl = item.acl || {};
+    const allowUsers = Array.isArray(acl.allowUsers) ? acl.allowUsers : [];
+    const allowRoles = Array.isArray(acl.allowRoles) ? acl.allowRoles : [];
+    if (allowUsers.includes(session.username)) return true;
+    for (const r of allowRoles){
+      if (hasRole(session, r)) return true;
     }
     return false;
   }
 
   /********************************************************************
-   * 5) Render
+   * Seed DB (ilk kurulum)
    ********************************************************************/
-  function showLogin(show){
-    const ov = document.getElementById("loginOverlay");
-    if (show) ov.classList.add("show");
-    else ov.classList.remove("show");
+  const SEED_DB = {
+    // firmalar: key + display
+    firms: [
+      { key:"SUDESAN", display:"Sudesan" },
+      { key:"DUPACK",  display:"Dupack" }
+    ],
+
+    // alias: normalize edilen giriş -> firmKey
+    aliases: {
+      "sudesan":"SUDESAN",
+      "sudesan as":"SUDESAN",
+      "sudesan a s":"SUDESAN",
+      "sudesan a.s":"SUDESAN",
+      "sudesan a.ş":"SUDESAN",
+      "dupack":"DUPACK",
+      "dupack as":"DUPACK",
+      "dupack a s":"DUPACK",
+      "dupack a.s":"DUPACK"
+    },
+
+    // rol sözlüğü (checkbox üretmek için)
+    rolesCatalog: [
+      "SUDESAN_VIEW",
+      "DUPACK_VIEW",
+      "OPERATIONS_VIEW",
+      "FINANCE_VIEW",
+      "KPI_VIEW",
+      "DASHBOARD_VIEW"
+    ],
+
+    // kullanıcılar (admin hariç — admin sabit)
+    users: [
+      { username:"alper",  password:"1234", display:"Alper",  roles:["SUDESAN_VIEW","FINANCE_VIEW","KPI_VIEW","DASHBOARD_VIEW"] },
+      { username:"zeynep", password:"1234", display:"Zeynep", roles:["SUDESAN_VIEW","DASHBOARD_VIEW"] },
+      { username:"dupack", password:"1234", display:"Dupack", roles:["DUPACK_VIEW","DASHBOARD_VIEW"] }
+    ],
+
+    // raporlar
+    reports: [
+      { id:"r1", firm:"SUDESAN", cat:"DEPO",   name:"Sudesan | Stok Analiz Raporu", url:"", desc:"Google Sheet / stok analiz", acl:{allowRoles:["SUDESAN_VIEW","OPERATIONS_VIEW"]} },
+      { id:"r2", firm:"SUDESAN", cat:"DASHBOARD", name:"Sudesan | Looker Dashboard", url:"", desc:"Looker Studio dashboard", acl:{allowRoles:["DASHBOARD_VIEW","SUDESAN_VIEW"]} },
+      { id:"r3", firm:"DUPACK",  cat:"DASHBOARD", name:"Dupack | Üretim Verimlilik ve Duruş Dashboard", url:"", desc:"Looker Studio dashboard", acl:{allowRoles:["DASHBOARD_VIEW","DUPACK_VIEW"]} },
+    ]
+  };
+
+  function ensureDB(){
+    const existing = getLocalJSON(DB_KEY);
+    if (existing) return;
+    setLocalJSON(DB_KEY, SEED_DB);
+  }
+
+  function loadCommittedDB(){
+    ensureDB();
+    return getLocalJSON(DB_KEY);
+  }
+
+  // Taslak varsa onu döndür, yoksa committed clone
+  function loadWorkingDB(){
+    const w = getLocalJSON(WORKING_KEY);
+    if (w) return w;
+    return deepClone(loadCommittedDB());
+  }
+
+  function setWorkingDB(db){
+    setLocalJSON(WORKING_KEY, db);
+  }
+
+  function discardWorking(){
+    localStorage.removeItem(WORKING_KEY);
+  }
+
+  function hasPendingChanges(){
+    const w = getLocalJSON(WORKING_KEY);
+    if (!w) return false;
+    const c = loadCommittedDB();
+    return JSON.stringify(w) !== JSON.stringify(c);
+  }
+
+  function commitWorkingToDB(){
+    const w = getLocalJSON(WORKING_KEY);
+    if (!w) return false;
+    setLocalJSON(DB_KEY, w);
+    discardWorking();
+    return true;
+  }
+
+  /********************************************************************
+   * Session
+   ********************************************************************/
+  function setSession(session){
+    setLocalJSON(SESSION_KEY, session);
+  }
+  function getSession(){
+    return getLocalJSON(SESSION_KEY);
+  }
+  function clearSession(){
+    localStorage.removeItem(SESSION_KEY);
+  }
+
+  function setPortalTitle(session){
+    const h = document.getElementById("portalTitle");
+    const sub = document.getElementById("portalSub");
+    if (!session){
+      h.textContent = "PSD-Portal";
+      document.title = "PSD-Portal";
+      sub.textContent = "Butonlara tıklayınca ilgili Google Sheet / Looker Studio ekranı yeni sekmede açılır. URL boş olanlar pasiftir.";
+      return;
+    }
+    if (hasRole(session, "ADMIN") && session.mode === "ADMIN"){
+      h.textContent = "PSD-Portal (Admin)";
+      document.title = "PSD-Portal (Admin)";
+      sub.textContent = "Admin: Firma/Rapor/Kullanıcı ekleyebilir. Değişiklikleri Portal ekranında Kaydet ile kalıcı yap.";
+      return;
+    }
+    const title = `${session.firmDisplay}-Portal`;
+    h.textContent = title;
+    document.title = title;
+    sub.textContent = "Butonlara tıklayınca ilgili Google Sheet / Looker Studio ekranı yeni sekmede açılır. URL boş olanlar pasiftir.";
   }
 
   function refreshTopbar(){
     const session = getSession();
     const whoBox = document.getElementById("whoBox");
     const logoutBtn = document.getElementById("logoutBtn");
+    const adminBtn = document.getElementById("adminBtn");
+    const saveBtn = document.getElementById("saveBtn");
 
     if (!session){
       whoBox.style.display = "none";
       logoutBtn.style.display = "none";
+      adminBtn.style.display = "none";
+      saveBtn.style.display = "none";
       return;
     }
 
     whoBox.style.display = "block";
     logoutBtn.style.display = "inline-block";
 
-    const roles = (session.roles || []).map(r => `<span class="chip">${r}</span>`).join("");
-    whoBox.innerHTML = `<div><strong>${session.display || session.username}</strong>${roles}</div>`;
+    // yetki gösterme yok
+    if (hasRole(session, "ADMIN")){
+      whoBox.textContent = `${session.display} • Admin`;
+      adminBtn.style.display = "inline-block";
+      saveBtn.style.display = hasPendingChanges() ? "inline-block" : "none";
+    } else {
+      whoBox.textContent = `${session.display} • ${session.firmDisplay}`;
+      adminBtn.style.display = "none";
+      saveBtn.style.display = "none";
+    }
   }
 
-  function render(){
-    const session = getSession();
+  /********************************************************************
+   * Login
+   ********************************************************************/
+  function doLogin(){
+    const u = trim(document.getElementById("u").value);
+    const p = document.getElementById("p").value || "";
+    const firmDisplay = document.getElementById("firmName").value || "";
+    const msg = document.getElementById("loginMsg");
+    msg.className = "msg";
+    msg.textContent = "";
 
-    // Login yoksa içerik gösterme
-    if (!session){
-      showLogin(true);
-      document.getElementById("app").innerHTML = "";
+    // Admin login (firma zorunlu değil)
+    if (norm(u) === norm(ADMIN_LOGIN.username) && p === ADMIN_LOGIN.password){
+      setSession({
+        username: "Poseidon",
+        display: "Poseidon",
+        roles: ["ADMIN"],
+        mode: "ADMIN"
+      });
+      msg.className = "msg ok";
+      msg.textContent = "Admin girişi başarılı.";
+      showLogin(false);
+      showAdmin(true);
+      refreshTopbar();
+      setPortalTitle(getSession());
+      renderAdmin(); // admin ekranını doldur
       return;
     }
 
-    const q = norm(document.getElementById("q").value);
-    const f = document.getElementById("filter").value;
-    const showUnauthorized = document.getElementById("showUnauthorized").checked;
+    // Normal kullanıcı
+    const db = loadCommittedDB();
+    const user = (db.users || []).find(x => norm(x.username) === norm(u) && x.password === p);
+    if (!user){
+      msg.className = "msg err";
+      msg.textContent = "Hatalı kullanıcı adı veya şifre.";
+      return;
+    }
 
-    const base = DATA.filter(x => {
-      const allowed = isAllowed(x, session);
-      return showUnauthorized ? true : allowed;
+    const fd = trim(firmDisplay);
+    if (!fd){
+      msg.className = "msg err";
+      msg.textContent = "Lütfen firma adını yazın.";
+      return;
+    }
+
+    // firmKey alias veya auto
+    const firmKey = firmKeyFromInput(fd, db);
+
+    setSession({
+      username: user.username,
+      display: user.display || user.username,
+      roles: user.roles || [],
+      firmDisplay: fd,
+      firmKey: firmKey,
+      mode: "PORTAL"
     });
 
-    const filtered = base.filter(x => {
-      const t = tagOf(x.name);
-      if (f !== "ALL" && t !== f) return false;
+    msg.className = "msg ok";
+    msg.textContent = "Giriş başarılı.";
+    selectedCat = "ALL";
+    showLogin(false);
+    showAdmin(false);
+    showPortal(true);
+    refreshTopbar();
+    setPortalTitle(getSession());
+    buildCategoryChips();
+    renderPortal();
+  }
+
+  function firmKeyFromInput(displayName, db){
+    const raw = trim(displayName);
+    if (!raw) return "";
+    const key = normalizeFirmNameForAlias(raw);
+    const aliases = (db && db.aliases) ? db.aliases : {};
+    if (aliases[key]) return aliases[key];
+    return firmKeyAuto(raw);
+  }
+
+  function doLogout(){
+    clearSession();
+    selectedCat = "ALL";
+    document.getElementById("q").value = "";
+    document.getElementById("chips").innerHTML = "";
+    document.getElementById("portalApp").innerHTML = "";
+    showPortal(false);
+    showAdmin(false);
+    refreshTopbar();
+    setPortalTitle(null);
+    showLogin(true);
+  }
+
+  /********************************************************************
+   * Views toggle
+   ********************************************************************/
+  function showLogin(show){
+    const ov = document.getElementById("loginOverlay");
+    if (show) ov.classList.add("show");
+    else ov.classList.remove("show");
+  }
+  function showPortal(show){
+    document.getElementById("portalToolbar").style.display = show ? "block" : "none";
+    document.getElementById("portalApp").style.display = show ? "block" : "none";
+    document.getElementById("footer").style.display = show ? "block" : "none";
+  }
+  function showAdmin(show){
+    document.getElementById("adminView").style.display = show ? "block" : "none";
+    // portal açık kalsın mı? admin view açılınca portalı kapatalım
+    if (show) showPortal(false);
+  }
+
+  /********************************************************************
+   * Portal rendering
+   ********************************************************************/
+  let selectedCat = "ALL";
+
+  function uniqueCatsForFirmKey(db, firmKey){
+    const set = new Set((db.reports || []).filter(x => x.firm === firmKey).map(x => x.cat).filter(Boolean));
+    return Array.from(set).sort();
+  }
+
+  function buildCategoryChips(){
+    const session = getSession();
+    const chips = document.getElementById("chips");
+    chips.innerHTML = "";
+    if (!session) return;
+
+    // Admin portal görünümü için: portalı açarsan firmKey gerekmiyor, ama biz admin portalı ayrı kullanmıyoruz.
+    if (hasRole(session, "ADMIN")) return;
+
+    const db = loadCommittedDB();
+    const cats = uniqueCatsForFirmKey(db, session.firmKey);
+    const all = ["ALL", ...cats];
+
+    all.forEach(c => {
+      const b = document.createElement("button");
+      b.className = "chipBtn" + (c === selectedCat ? " active" : "");
+      b.textContent = (c === "ALL") ? "Tümü" : c;
+      b.onclick = () => {
+        selectedCat = c;
+        buildCategoryChips();
+        renderPortal();
+      };
+      chips.appendChild(b);
+    });
+  }
+
+  function renderPortal(){
+    const session = getSession();
+    if (!session){
+      showLogin(true);
+      setPortalTitle(null);
+      return;
+    }
+    if (hasRole(session, "ADMIN") && session.mode === "ADMIN"){
+      // admin modunda portal değil admin gösteriyoruz
+      showAdmin(true);
+      return;
+    }
+
+    showAdmin(false);
+    showPortal(true);
+
+    setPortalTitle(session);
+
+    const db = loadCommittedDB();
+    const q = norm(document.getElementById("q").value);
+
+    const firmList = (db.reports || []).filter(x => x.firm === session.firmKey);
+    const allowedList = firmList.filter(x => isAllowed(x, session));
+    const catList = allowedList.filter(x => selectedCat === "ALL" ? true : x.cat === selectedCat);
+
+    const filtered = catList.filter(x => {
       if (!q) return true;
       const hay = norm(x.name + " " + (x.desc||"") + " " + (x.cat||""));
       return hay.includes(q);
     });
 
     const sections = groupByCat(filtered);
-    const app = document.getElementById("app");
+    const app = document.getElementById("portalApp");
     app.innerHTML = "";
 
     if (!filtered.length){
-      app.innerHTML = `<div class="section"><div class="section-title">Sonuç yok</div><div style="color:var(--muted);font-size:13px;">Filtreyi/aramayı değiştir.</div></div>`;
+      app.innerHTML = `
+        <div class="section">
+          <div class="section-title">Sonuç yok</div>
+          <div style="color:var(--muted);font-size:13px;">
+            Bu firma/filtre için rapor bulunamadı. (Firma anahtarı: <b>${session.firmKey}</b>)
+          </div>
+        </div>`;
       return;
     }
 
@@ -703,8 +1186,6 @@
 
       sec.items.forEach(x => {
         const tag = tagOf(x.name);
-        const allowed = isAllowed(x, session);
-
         const btn = document.createElement("button");
         btn.className = "btn " + (tag==="SUDESAN" ? "tag-sudesan" : tag==="DUPACK" ? "tag-dupack" : "tag-other");
 
@@ -718,14 +1199,13 @@
 
         const ds = document.createElement("div");
         ds.className = "desc";
-        ds.textContent = allowed ? (x.desc || "") : ((x.desc || "") + ((x.desc && x.desc.trim()) ? " • " : "") + "Erişim yok");
+        ds.textContent = x.desc || "";
 
         btn.appendChild(pill);
         btn.appendChild(nm);
         btn.appendChild(ds);
 
-        // url yoksa ya da yetkisizse pasif
-        if (!x.url || !allowed){
+        if (!x.url){
           btn.classList.add("disabled");
           btn.onclick = () => {};
         } else {
@@ -742,67 +1222,412 @@
   }
 
   /********************************************************************
-   * 6) Login / Logout
+   * Admin rendering + actions (taslak db)
    ********************************************************************/
-  function doLogin(){
-    const u = norm(document.getElementById("u").value);
-    const p = document.getElementById("p").value || "";
-    const msg = document.getElementById("loginMsg");
-
-    msg.className = "msg";
-    msg.textContent = "";
-
-    const user = USERS.find(x => norm(x.username) === u && x.password === p);
-
-    if (!user){
-      msg.className = "msg err";
-      msg.textContent = "Hatalı kullanıcı adı veya şifre.";
+  function renderAdmin(){
+    const session = getSession();
+    if (!session || !hasRole(session, "ADMIN")){
       return;
     }
 
-    setSession(user);
-    msg.className = "msg ok";
-    msg.textContent = "Giriş başarılı.";
+    const wdb = loadWorkingDB();
+    setWorkingDB(wdb); // ensure exists
 
-    showLogin(false);
+    document.getElementById("pendingInfo").textContent =
+      hasPendingChanges() ? "Taslak değişiklik var (Kaydet bekliyor)" : "Taslak değişiklik yok";
+
+    // firmKey preview
+    const fd = document.getElementById("firmDisplayIn").value || "";
+    document.getElementById("firmKeyOut").value = firmKeyFromInput(fd, wdb) || "";
+
+    // firm select for report add
+    const firmSel = document.getElementById("repFirmSel");
+    firmSel.innerHTML = "";
+    (wdb.firms || []).slice().sort((a,b)=>a.display.localeCompare(b.display)).forEach(f => {
+      const opt = document.createElement("option");
+      opt.value = f.key;
+      opt.textContent = `${f.display} (${f.key})`;
+      firmSel.appendChild(opt);
+    });
+
+    // role boxes
+    buildRoleCheckboxes("userRoleBox", wdb.rolesCatalog || []);
+    buildRoleCheckboxes("repRoleBox", wdb.rolesCatalog || []);
+
+    // lists
+    renderFirmList(wdb);
+    renderUserList(wdb);
+    renderReportList(wdb);
+    renderUrlReportSelect(wdb);
+
+    // topbar save button visibility
     refreshTopbar();
-    render();
   }
 
-  function doLogout(){
-    clearSession();
+  function buildRoleCheckboxes(containerId, roles){
+    const box = document.getElementById(containerId);
+    box.innerHTML = "";
+    roles.forEach(r => {
+      const lbl = document.createElement("label");
+      lbl.className = "chk";
+      const inp = document.createElement("input");
+      inp.type = "checkbox";
+      inp.value = r;
+      lbl.appendChild(inp);
+      const span = document.createElement("span");
+      span.textContent = r;
+      lbl.appendChild(span);
+      box.appendChild(lbl);
+    });
+  }
+
+  function getCheckedRoles(containerId){
+    return Array.from(document.querySelectorAll(`#${containerId} input[type="checkbox"]`))
+      .filter(x => x.checked)
+      .map(x => x.value);
+  }
+
+  function setMsg(id, text, type){
+    const el = document.getElementById(id);
+    el.className = "msg" + (type ? (" " + type) : "");
+    el.textContent = text || "";
+  }
+
+  function renderFirmList(db){
+    const list = document.getElementById("firmList");
+    list.innerHTML = "";
+    (db.firms || []).slice().sort((a,b)=>a.display.localeCompare(b.display)).forEach(f => {
+      const row = document.createElement("div");
+      row.className = "item";
+      row.innerHTML = `
+        <div class="meta">
+          <b>${escapeHtml(f.display)}</b>
+          <span>Key: ${escapeHtml(f.key)}</span>
+        </div>
+        <div class="pills">
+          <span class="pill2">${escapeHtml(f.key)}</span>
+        </div>
+      `;
+      list.appendChild(row);
+    });
+  }
+
+  function renderUserList(db){
+    const list = document.getElementById("userList");
+    list.innerHTML = "";
+    (db.users || []).slice().sort((a,b)=>a.username.localeCompare(b.username)).forEach(u => {
+      const row = document.createElement("div");
+      row.className = "item";
+      row.innerHTML = `
+        <div class="meta">
+          <b>${escapeHtml(u.username)} • ${escapeHtml(u.display || "")}</b>
+          <span>${(u.roles||[]).join(", ") || "-"}</span>
+        </div>
+        <div class="pills">
+          ${(u.roles||[]).slice(0,3).map(r => `<span class="pill2">${escapeHtml(r)}</span>`).join("")}
+          ${(u.roles||[]).length>3 ? `<span class="pill2">+${(u.roles||[]).length-3}</span>` : ""}
+        </div>
+      `;
+      list.appendChild(row);
+    });
+  }
+
+  function renderReportList(db){
+    const list = document.getElementById("reportList");
+    list.innerHTML = "";
+    const reps = (db.reports || []).slice().sort((a,b)=> (a.firm+a.cat+a.name).localeCompare(b.firm+b.cat+b.name));
+    reps.forEach(r => {
+      const row = document.createElement("div");
+      row.className = "item";
+      row.innerHTML = `
+        <div class="meta">
+          <b>${escapeHtml(r.name)}</b>
+          <span>${escapeHtml(r.firm)} • ${escapeHtml(r.cat)} • ${r.url ? "URL var" : "URL yok"}</span>
+        </div>
+        <div class="pills">
+          <span class="pill2">${escapeHtml(r.firm)}</span>
+          <span class="pill2">${escapeHtml(r.cat)}</span>
+        </div>
+      `;
+      list.appendChild(row);
+    });
+  }
+
+  function renderUrlReportSelect(db){
+    const sel = document.getElementById("urlReportSel");
+    sel.innerHTML = "";
+    (db.reports || []).slice().sort((a,b)=>a.name.localeCompare(b.name)).forEach(r => {
+      const opt = document.createElement("option");
+      opt.value = r.id;
+      opt.textContent = `${r.name} (${r.firm}/${r.cat})`;
+      sel.appendChild(opt);
+    });
+  }
+
+  function escapeHtml(s){
+    return String(s||"").replace(/[&<>"']/g, (c)=>({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[c]));
+  }
+
+  function genId(){
+    return "r" + Math.random().toString(16).slice(2,10) + Date.now().toString(16).slice(-4);
+  }
+
+  /**************** Admin actions ****************/
+  function onFirmDisplayInput(){
+    const wdb = loadWorkingDB();
+    document.getElementById("firmKeyOut").value = firmKeyFromInput(document.getElementById("firmDisplayIn").value, wdb) || "";
+  }
+
+  function addFirm(){
+    const wdb = loadWorkingDB();
+    const display = trim(document.getElementById("firmDisplayIn").value);
+    if (!display){
+      setMsg("firmMsg","Firma adı boş olamaz.","err"); return;
+    }
+    const key = firmKeyFromInput(display, wdb) || firmKeyAuto(display);
+    if (!key){
+      setMsg("firmMsg","Firma key üretilemedi.","err"); return;
+    }
+    const exists = (wdb.firms || []).some(f => f.key === key);
+    if (exists){
+      setMsg("firmMsg",`Bu firma key zaten var: ${key}`,"warn"); return;
+    }
+
+    wdb.firms = wdb.firms || [];
+    wdb.firms.push({ key, display });
+
+    // İsteğe bağlı: alias da ekleyelim (kullanıcının yazdığı hali normalize ederek)
+    const aliasKey = normalizeFirmNameForAlias(display);
+    wdb.aliases = wdb.aliases || {};
+    wdb.aliases[aliasKey] = key;
+
+    setWorkingDB(wdb);
+    setMsg("firmMsg",`Firma eklendi: ${display} (${key})`,"ok");
+    renderAdmin();
+  }
+
+  function addAliasForFirmInput(){
+    const wdb = loadWorkingDB();
+    const display = trim(document.getElementById("firmDisplayIn").value);
+    if (!display){
+      setMsg("firmMsg","Alias eklemek için önce firma yaz.","err"); return;
+    }
+    const firmKey = firmKeyFromInput(display, wdb) || firmKeyAuto(display);
+    if (!firmKey){
+      setMsg("firmMsg","Firma key üretilemedi.","err"); return;
+    }
+    const aliasKey = normalizeFirmNameForAlias(display);
+    wdb.aliases = wdb.aliases || {};
+    wdb.aliases[aliasKey] = firmKey;
+    setWorkingDB(wdb);
+    setMsg("firmMsg",`Alias eklendi: "${aliasKey}" -> ${firmKey}`,"ok");
+    renderAdmin();
+  }
+
+  function addUser(){
+    const wdb = loadWorkingDB();
+    const username = trim(document.getElementById("newUserU").value);
+    const password = document.getElementById("newUserP").value || "";
+    const display = trim(document.getElementById("newUserD").value);
+    const roles = getCheckedRoles("userRoleBox");
+
+    if (!username || !password){
+      setMsg("userMsg","Kullanıcı adı ve şifre zorunlu.","err"); return;
+    }
+    if (norm(username) === norm(ADMIN_LOGIN.username)){
+      setMsg("userMsg","Bu kullanıcı adı Admin için ayrılmış.","err"); return;
+    }
+    const exists = (wdb.users || []).some(u => norm(u.username) === norm(username));
+    if (exists){
+      setMsg("userMsg","Bu kullanıcı adı zaten var.","warn"); return;
+    }
+    if (!roles.length){
+      setMsg("userMsg","En az 1 rol seçilmelidir.","err"); return;
+    }
+
+    wdb.users = wdb.users || [];
+    wdb.users.push({ username, password, display, roles });
+
+    setWorkingDB(wdb);
+    setMsg("userMsg",`Kullanıcı eklendi: ${username}`,"ok");
+
+    // inputları temizle
+    document.getElementById("newUserU").value = "";
+    document.getElementById("newUserP").value = "";
+    document.getElementById("newUserD").value = "";
+    renderAdmin();
+  }
+
+  function addReport(){
+    const wdb = loadWorkingDB();
+    const firm = document.getElementById("repFirmSel").value;
+    const cat  = trim(document.getElementById("repCat").value);
+    const name = trim(document.getElementById("repName").value);
+    const desc = trim(document.getElementById("repDesc").value);
+    const url  = trim(document.getElementById("repUrl").value);
+    const roles = getCheckedRoles("repRoleBox");
+
+    if (!firm || !cat || !name){
+      setMsg("repMsg","Firma, kategori ve rapor adı zorunlu.","err"); return;
+    }
+    if (!roles.length){
+      setMsg("repMsg","Bu rapor için en az 1 rol seç.","err"); return;
+    }
+
+    const id = genId();
+    wdb.reports = wdb.reports || [];
+    wdb.reports.push({
+      id, firm, cat, name, url, desc,
+      acl: { allowRoles: roles }
+    });
+
+    setWorkingDB(wdb);
+    setMsg("repMsg",`Rapor eklendi: ${name}`,"ok");
+
+    // input temizle
+    document.getElementById("repCat").value = "";
+    document.getElementById("repName").value = "";
+    document.getElementById("repDesc").value = "";
+    document.getElementById("repUrl").value = "";
+    renderAdmin();
+  }
+
+  function updateUrl(){
+    const wdb = loadWorkingDB();
+    const id = document.getElementById("urlReportSel").value;
+    const url = trim(document.getElementById("urlNew").value);
+    if (!id){
+      setMsg("urlMsg","Rapor seç.","err"); return;
+    }
+    const rep = (wdb.reports || []).find(r => r.id === id);
+    if (!rep){
+      setMsg("urlMsg","Rapor bulunamadı.","err"); return;
+    }
+    rep.url = url;
+    setWorkingDB(wdb);
+    setMsg("urlMsg","URL güncellendi.","ok");
+    document.getElementById("urlNew").value = "";
+    renderAdmin();
+  }
+
+  function deleteReport(){
+    const wdb = loadWorkingDB();
+    const id = document.getElementById("urlReportSel").value;
+    if (!id){
+      setMsg("urlMsg","Silmek için rapor seç.","err"); return;
+    }
+    const before = (wdb.reports||[]).length;
+    wdb.reports = (wdb.reports || []).filter(r => r.id !== id);
+    const after = wdb.reports.length;
+    setWorkingDB(wdb);
+    setMsg("urlMsg", before !== after ? "Rapor silindi." : "Rapor bulunamadı.","ok");
+    renderAdmin();
+  }
+
+  function discardDraft(){
+    discardWorking();
+    setMsg("flowMsg","Taslak değişiklikler atıldı.","ok");
+    renderAdmin();
+  }
+
+  function goPortalFromAdmin(){
+    setMsg("flowMsg","Portal’a geçildi. Kaydet butonu (varsa) sağ üstte.","ok");
+    showAdmin(false);
+    showPortal(true);
     refreshTopbar();
-    showLogin(true);
-    render();
+    setPortalTitle(getSession());
+    // admin portalında liste göstermiyoruz; sadece save için portal header yeterli
+    // ama istersen adminin de portalı görmesi için burada özel bir admin portal render ekleyebilirsin.
   }
 
   /********************************************************************
-   * 7) Events + Boot
+   * Save button (Portal’da)
    ********************************************************************/
-  document.getElementById("q").addEventListener("input", render);
-  document.getElementById("filter").addEventListener("change", render);
+  function onSave(){
+    const session = getSession();
+    if (!session || !hasRole(session,"ADMIN")){
+      return;
+    }
+    const ok = commitWorkingToDB();
+    refreshTopbar();
+    if (ok){
+      // admin ekranını güncelle
+      renderAdmin();
+      alert("Kaydedildi. Portal verisi güncellendi.");
+    } else {
+      alert("Kaydedilecek taslak yok.");
+    }
+  }
 
+  /********************************************************************
+   * Admin button
+   ********************************************************************/
+  function openAdmin(){
+    const session = getSession();
+    if (!session || !hasRole(session,"ADMIN")) return;
+    showAdmin(true);
+    refreshTopbar();
+    setPortalTitle(session);
+    renderAdmin();
+  }
+
+  /********************************************************************
+   * Events + Boot
+   ********************************************************************/
   document.getElementById("loginBtn").addEventListener("click", doLogin);
   document.getElementById("logoutBtn").addEventListener("click", doLogout);
+  document.getElementById("adminBtn").addEventListener("click", openAdmin);
+  document.getElementById("saveBtn").addEventListener("click", onSave);
 
-  // Enter ile login
-  ["u","p"].forEach(id => {
+  ["u","p","firmName"].forEach(id => {
     document.getElementById(id).addEventListener("keydown", (e) => {
       if (e.key === "Enter") doLogin();
     });
   });
 
-  // Yetkisizleri göster toggle portalı etkilesin
-  document.getElementById("showUnauthorized").addEventListener("change", render);
+  document.getElementById("q").addEventListener("input", renderPortal);
 
-  // İlk açılış
+  // admin events
+  document.getElementById("firmDisplayIn").addEventListener("input", onFirmDisplayInput);
+  document.getElementById("addFirmBtn").addEventListener("click", addFirm);
+  document.getElementById("addAliasBtn").addEventListener("click", addAliasForFirmInput);
+  document.getElementById("addUserBtn").addEventListener("click", addUser);
+  document.getElementById("addReportBtn").addEventListener("click", addReport);
+  document.getElementById("updateUrlBtn").addEventListener("click", updateUrl);
+  document.getElementById("deleteReportBtn").addEventListener("click", deleteReport);
+  document.getElementById("discardBtn").addEventListener("click", discardDraft);
+  document.getElementById("goPortalBtn").addEventListener("click", goPortalFromAdmin);
+
   (function boot(){
+    ensureDB();
     const session = getSession();
-    showLogin(!session);
+    if (!session){
+      showLogin(true);
+      showPortal(false);
+      showAdmin(false);
+      refreshTopbar();
+      setPortalTitle(null);
+      return;
+    }
+
+    showLogin(false);
     refreshTopbar();
-    render();
+    setPortalTitle(session);
+
+    if (hasRole(session,"ADMIN") && session.mode === "ADMIN"){
+      showAdmin(true);
+      renderAdmin();
+      return;
+    }
+
+    selectedCat = "ALL";
+    showAdmin(false);
+    showPortal(true);
+    buildCategoryChips();
+    renderPortal();
   })();
 </script>
-
 </body>
 </html>

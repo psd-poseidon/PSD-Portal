@@ -110,7 +110,14 @@
       max-width: 100%;
     }
 
-    .chips{ display:flex; gap:16px; flex-wrap:wrap; align-items:center; }
+  .chips{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  column-gap:16px; /* chiplerin yan yana boşluğu */
+  row-gap:24px;    /* 👈 FİRMA ↔ KATEGORİ ARASI BOŞLUK */
+}
+
     .chipBtn{
       border:1px solid var(--border);
       background:rgba(255,255,255,.04);

@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SUDESAN PORTAL — Ekran Kısayolları</title>
+
   <style>
     :root{
       --bg:#0b1220;
@@ -16,6 +17,9 @@
       --dupack:#2f855a;
       --other:#6b46c1;
       --disabled:#374151;
+
+      --danger:#ef4444;
+      --ok:#22c55e;
     }
     *{box-sizing:border-box}
     body{
@@ -26,10 +30,15 @@
                   var(--bg);
       color:var(--text);
     }
+
     header{
-      padding:28px 18px 14px;
+      padding:22px 18px 12px;
       max-width:1100px;
       margin:0 auto;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
     }
     h1{
       margin:0 0 6px;
@@ -42,6 +51,47 @@
       font-size:13px;
       line-height:1.4;
     }
+
+    .topbar-right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      text-align:right;
+    }
+    .who{
+      font-size:12px;
+      color:rgba(255,255,255,.80);
+      padding:8px 10px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:rgba(255,255,255,.04);
+    }
+    .chip{
+      display:inline-block;
+      margin-left:6px;
+      font-size:11px;
+      padding:3px 8px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.06);
+      color:rgba(255,255,255,.9);
+    }
+    .linkbtn{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:9px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-size:12px;
+      transition: transform .06s ease, border-color .06s ease;
+      white-space:nowrap;
+    }
+    .linkbtn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.18); }
+    .linkbtn:active{ transform: translateY(0px); }
+
     .toolbar{
       max-width:1100px;
       margin:10px auto 0;
@@ -62,6 +112,7 @@
     }
     .input{flex:1; min-width:240px;}
     .select{min-width:190px;}
+
     .wrap{
       max-width:1100px;
       margin:0 auto;
@@ -89,7 +140,11 @@
       gap:12px;
     }
     @media (max-width: 880px){ .grid{grid-template-columns: repeat(2, minmax(0, 1fr));} }
-    @media (max-width: 560px){ .grid{grid-template-columns: 1fr;} }
+    @media (max-width: 560px){
+      header{flex-direction:column; align-items:flex-start;}
+      .topbar-right{justify-content:flex-start; text-align:left;}
+      .grid{grid-template-columns: 1fr;}
+    }
 
     .btn{
       text-align:left;
@@ -100,7 +155,7 @@
       padding: 14px 14px 12px;
       border-radius: 14px;
       cursor:pointer;
-      transition: transform .06s ease, border-color .06s ease, background .06s ease;
+      transition: transform .06s ease, border-color .06s ease, background .06s ease, opacity .06s ease;
       position:relative;
       overflow:hidden;
       min-height:72px;
@@ -118,12 +173,12 @@
       color: rgba(255,255,255,.92);
       background: rgba(255,255,255,.06);
     }
-
     .name{
       font-weight:800;
       font-size:13px;
       margin:0 0 6px;
       line-height:1.2;
+      padding-right:84px;
     }
     .desc{
       margin:0;
@@ -153,12 +208,15 @@
       background: linear-gradient(120deg, rgba(168,85,247,.14), transparent 55%);
       pointer-events:none;
     }
+
     .disabled{
       background: rgba(255,255,255,.04);
       color: rgba(255,255,255,.55);
       cursor:not-allowed;
+      opacity:.85;
     }
     .disabled:hover{ transform:none; border-color: var(--border); }
+
     footer{
       max-width:1100px;
       margin:0 auto;
@@ -166,12 +224,170 @@
       color: rgba(255,255,255,.45);
       font-size:12px;
     }
+
+    /* ===== LOGIN OVERLAY ===== */
+    .overlay{
+      position:fixed;
+      inset:0;
+      background: radial-gradient(1000px 700px at 20% 0%, rgba(59,130,246,.25), transparent 55%),
+                  radial-gradient(900px 650px at 80% 0%, rgba(34,197,94,.20), transparent 55%),
+                  rgba(7,10,18,.78);
+      backdrop-filter: blur(6px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      z-index:9999;
+    }
+    .overlay.show{ display:flex; }
+
+    .login-card{
+      width:min(980px, 100%);
+      border:1px solid var(--border);
+      border-radius:18px;
+      background: rgba(17,26,46,.92);
+      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+      overflow:hidden;
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+    }
+    @media (max-width: 860px){
+      .login-card{ grid-template-columns:1fr; }
+      .login-left{ display:none; }
+    }
+
+    .login-left{
+      padding:28px;
+      border-right:1px solid var(--border);
+      background:
+        linear-gradient(120deg, rgba(59,130,246,.22), transparent 55%),
+        linear-gradient(210deg, rgba(34,197,94,.16), transparent 55%),
+        rgba(255,255,255,.03);
+      min-height:360px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:16px;
+    }
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .brand h2{
+      margin:0;
+      font-size:20px;
+      letter-spacing:.3px;
+    }
+    .brand p{
+      margin:0;
+      color:rgba(255,255,255,.78);
+      font-size:13px;
+      line-height:1.5;
+    }
+    .badge-row{ display:flex; gap:8px; flex-wrap:wrap; }
+    .badge{
+      font-size:11px;
+      padding:5px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.06);
+      color:rgba(255,255,255,.9);
+    }
+
+    .login-right{
+      padding:28px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      justify-content:center;
+      min-height:360px;
+    }
+    .login-title{
+      margin:0;
+      font-size:18px;
+      letter-spacing:.2px;
+    }
+    .login-sub{
+      margin:0 0 6px;
+      color: var(--muted);
+      font-size:13px;
+      line-height:1.4;
+    }
+
+    .field{
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      margin-top:8px;
+    }
+    .label{
+      font-size:12px;
+      color:rgba(255,255,255,.78);
+    }
+    .login-input{
+      width:100%;
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px 12px;
+      border-radius: 12px;
+      outline: none;
+      font-size: 13px;
+    }
+    .primary{
+      width:100%;
+      margin-top:10px;
+      padding:12px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.14);
+      background: linear-gradient(120deg, rgba(59,130,246,.28), rgba(34,197,94,.16));
+      color:var(--text);
+      cursor:pointer;
+      font-weight:700;
+      letter-spacing:.2px;
+    }
+    .primary:hover{ border-color: rgba(255,255,255,.22); }
+    .msg{
+      margin-top:8px;
+      font-size:12px;
+      min-height:18px;
+      color:rgba(255,255,255,.78);
+    }
+    .msg.err{ color: rgba(239,68,68,.95); }
+    .msg.ok{ color: rgba(34,197,94,.95); }
+    .tiny{
+      color: rgba(255,255,255,.45);
+      font-size:11px;
+      margin-top:10px;
+      line-height:1.4;
+    }
+    .toggle{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin-top:8px;
+      font-size:12px;
+      color:rgba(255,255,255,.75);
+      user-select:none;
+    }
+    .toggle input{ transform: translateY(1px); }
   </style>
 </head>
+
 <body>
+
   <header>
-    <h1>SUDESAN PORTAL — Ekran Kısayolları</h1>
-    <p class="sub">Butonlara tıklayınca ilgili Google Sheet / Looker Studio ekranı yeni sekmede açılır. URL boş olanlar pasiftir.</p>
+    <div>
+      <h1>SUDESAN PORTAL — Ekran Kısayolları</h1>
+      <p class="sub">Butonlara tıklayınca ilgili Google Sheet / Looker Studio ekranı yeni sekmede açılır. URL boş olanlar pasiftir.</p>
+    </div>
+
+    <div class="topbar-right">
+      <div class="who" id="whoBox" style="display:none;"></div>
+      <button class="linkbtn" id="logoutBtn" style="display:none;">Çıkış</button>
+    </div>
   </header>
 
   <div class="toolbar">
@@ -190,41 +406,166 @@
     İpucu: Linkleri düzenlemek için bu sayfadaki <code>DATA</code> listesini güncellemeniz yeterli.
   </footer>
 
+  <!-- LOGIN OVERLAY -->
+  <div class="overlay" id="loginOverlay">
+    <div class="login-card">
+      <div class="login-left">
+        <div class="brand">
+          <h2>SUDESAN Portal</h2>
+          <p>Yetkinize göre raporlar listelenir. Bu ekran hızlı erişim içindir.</p>
+          <div class="badge-row">
+            <span class="badge">Rol Bazlı Erişim</span>
+            <span class="badge">Hızlı Arama</span>
+            <span class="badge">Filtreleme</span>
+          </div>
+        </div>
+        <div style="color:rgba(255,255,255,.55);font-size:12px;line-height:1.5;">
+          <div>• Kullanıcıları <code>USERS</code> listesinde tanımlayın</div>
+          <div>• Rapor yetkilerini her kayıt için <code>acl</code> ile belirleyin</div>
+        </div>
+      </div>
+
+      <div class="login-right">
+        <h3 class="login-title">Giriş</h3>
+        <p class="login-sub">Kullanıcı adı ve şifrenizle giriş yapın.</p>
+
+        <div class="field">
+          <div class="label">Kullanıcı Adı</div>
+          <input id="u" class="login-input" autocomplete="username" placeholder="örn: alper" />
+        </div>
+        <div class="field">
+          <div class="label">Şifre</div>
+          <input id="p" type="password" class="login-input" autocomplete="current-password" placeholder="••••••••" />
+        </div>
+
+        <label class="toggle">
+          <input type="checkbox" id="showUnauthorized" />
+          Yetkisiz raporları da listede göster (pasif)
+        </label>
+
+        <button class="primary" id="loginBtn">Giriş Yap</button>
+        <div class="msg" id="loginMsg"></div>
+
+        <div class="tiny">
+          * Not: Bu yapı frontend gating’dir. Linklerin gerçek güvenliği için Google paylaşım izinleri / Apps Script backend gerekir.
+        </div>
+      </div>
+    </div>
+  </div>
+
 <script>
-  // 1) Buraya linkleri ekle (url boşsa pasif olur)
-  const DATA = [
-    {cat:"ÜRETİM", name:"Sudesan | Üretim Verimlilik ve Duruş Takip Ekranı", url:"", desc:"Google Sheet / takip ekranı"},
-    {cat:"ÜRETİM", name:"Dupack | Üretim Verimlilik ve Duruş Takip Ekranı", url:"", desc:"Google Sheet / takip ekranı"},
-    {cat:"ÜRETİM", name:"Sudesan | Fazla Mesai Maliyet Takip Ekranı", url:"", desc:"Google Sheet / maliyet"},
-    {cat:"ÜRETİM", name:"Sudesan | Fazla Mesai Takip Ekranı", url:"", desc:"Google Sheet / takip"},
-    {cat:"İK", name:"Sudesan | Kadro Yıl Dağılım", url:"", desc:"Google Sheet / HR raporu"},
-    {cat:"LOJİSTİK", name:"Sudesan | BIM Sevkiyat OTIF Raporu", url:"", desc:"Google Sheet / OTIF"},
-    {cat:"DEPO", name:"Sudesan | Depo Faaliyet Tablosu", url:"", desc:"Google Sheet / depo faaliyet"},
-    {cat:"LOJİSTİK", name:"Sudesan | BIM LTL/FTL Dağıtım Fark Analizi", url:"", desc:"Google Sheet / analiz"},
-    {cat:"DEPO", name:"Sudesan | Çevrim Sayım & Kontrol Takip Ekranı", url:"", desc:"Google Sheet / sayım kontrol"},
-    {cat:"BAKIM", name:"Sudesan | Bakım Takip Yazılım Teklifleri", url:"", desc:"Google Sheet / teklif takibi"},
-    {cat:"STRATEJİ", name:"Sudesan | Stratejik Yol Haritası", url:"", desc:"Google Sheet / roadmap"},
-    {cat:"KPI", name:"Sudesan | KPI Süreç Künyeleri", url:"", desc:"Google Sheet / KPI"},
-    {cat:"KPI", name:"Sudesan | KPI Süreç Künyeleri >> 11-Planlama", url:"", desc:"Google Sheet / KPI - Planlama"},
-    {cat:"KPI", name:"Sudesan | KPI Süreç Künyeleri >> 12-Satınalma ve İthalat Yönetimi", url:"", desc:"Google Sheet / KPI - Satınalma"},
-    {cat:"KPI", name:"Sudesan | KPI Süreç Künyeleri >> 14-Depo Yönetimi", url:"", desc:"Google Sheet / KPI - Depo"},
-    {cat:"KPI", name:"Sudesan | KPI Süreç Künyeleri >> 15-Üretim", url:"", desc:"Google Sheet / KPI - Üretim"},
-    {cat:"FİNANS", name:"Sudesan | Bütçe Planlama-Takip & Kontrol Ekranı", url:"", desc:"Google Sheet / bütçe"},
-    {cat:"YÖNETİM", name:"Sudesan | Minerva Devam Eden İş Maddeleri", url:"", desc:"Google Sheet / iş listesi"},
-    {cat:"DEPO", name:"Sudesan | Depo Operasyon Zaman Etüdü Ekranı", url:"", desc:"Google Sheet / zaman etüdü"},
-    {cat:"SATINALMA", name:"Sudesan | Tedarikçi OTIF Raporu", url:"", desc:"Google Sheet / OTIF"},
-    {cat:"DEPO", name:"Sudesan | Stok Analiz Raporu", url:"", desc:"Google Sheet / stok analiz"},
-    {cat:"DEPO", name:"Sudesan | Hammadde Stok Takibi Ekranı", url:"", desc:"Google Sheet / stok takip"},
-    {cat:"FİNANS", name:"Sudesan | Elida Beauty Costing", url:"", desc:"Google Sheet / costing"},
-    {cat:"OPERASYON", name:"Sudesan | Mars Performans Takip Ekranı", url:"", desc:"Google Sheet / performans"},
-    {cat:"OPERASYON", name:"Sudesan | Mars Araç Talep ve Tedarik Takip Ekranı", url:"", desc:"Google Sheet / araç talep"},
-    {cat:"DASHBOARD", name:"Sudesan | Looker Dashboard", url:"", desc:"Looker Studio dashboard"},
-    {cat:"DASHBOARD", name:"Dupack | Üretim Verimlilik ve Duruş Dashboard", url:"", desc:"Looker Studio dashboard"},
-    {cat:"DASHBOARD", name:"Sudesan | Üretim Verimlilik ve Duruş Dashboard", url:"", desc:"Looker Studio dashboard"},
-    {cat:"FİNANS", name:"Sudesan | Finansal Tablolar", url:"", desc:"Google Sheet / finans"}
+  /********************************************************************
+   * 1) USERS (kullanıcılar) — demo amaçlıdır.
+   *    Gerçek güvenlik için backend (Apps Script Web App) önerilir.
+   ********************************************************************/
+  const USERS = [
+    { username:"admin",  password:"admin123", display:"Admin",   roles:["ADMIN"] },
+
+    { username:"alper",  password:"1234",     display:"Alper",   roles:["SUDESAN_VIEW","FINANCE_VIEW","KPI_VIEW","DASHBOARD_VIEW"] },
+    { username:"zeynep", password:"1234",     display:"Zeynep",  roles:["SUDESAN_VIEW","DASHBOARD_VIEW"] },
+    { username:"mars",   password:"1234",     display:"Mars Ops",roles:["OPERATIONS_VIEW","SUDESAN_VIEW"] },
+    { username:"dupack", password:"1234",     display:"Dupack",  roles:["DUPACK_VIEW","DASHBOARD_VIEW"] },
   ];
 
-  const norm = (s="") => s.toLowerCase().trim();
+  /********************************************************************
+   * 2) DATA (rapor listesi) — senin mevcut listen + ACL eklendi
+   *    acl yoksa: login olan herkes görür.
+   *    acl.allowRoles: listeden bir rol eşleşirse görünür
+   *    acl.allowUsers: kullanıcı adı eşleşirse görünür
+   ********************************************************************/
+  const DATA = [
+    {cat:"ÜRETİM", name:"Sudesan | Üretim Verimlilik ve Duruş Takip Ekranı", url:"", desc:"Google Sheet / takip ekranı",
+      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW"] }},
+
+    {cat:"ÜRETİM", name:"Dupack | Üretim Verimlilik ve Duruş Takip Ekranı", url:"", desc:"Google Sheet / takip ekranı",
+      acl:{ allowRoles:["ADMIN","DUPACK_VIEW"] }},
+
+    {cat:"ÜRETİM", name:"Sudesan | Fazla Mesai Maliyet Takip Ekranı", url:"", desc:"Google Sheet / maliyet",
+      acl:{ allowRoles:["ADMIN","FINANCE_VIEW"] }},
+
+    {cat:"ÜRETİM", name:"Sudesan | Fazla Mesai Takip Ekranı", url:"", desc:"Google Sheet / takip",
+      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW"] }},
+
+    {cat:"İK", name:"Sudesan | Kadro Yıl Dağılım", url:"", desc:"Google Sheet / HR raporu",
+      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW"] }},
+
+    {cat:"LOJİSTİK", name:"Sudesan | BIM Sevkiyat OTIF Raporu", url:"", desc:"Google Sheet / OTIF",
+      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW","OPERATIONS_VIEW"] }},
+
+    {cat:"DEPO", name:"Sudesan | Depo Faaliyet Tablosu", url:"", desc:"Google Sheet / depo faaliyet",
+      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW","OPERATIONS_VIEW"] }},
+
+    {cat:"LOJİSTİK", name:"Sudesan | BIM LTL/FTL Dağıtım Fark Analizi", url:"", desc:"Google Sheet / analiz",
+      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW","OPERATIONS_VIEW"] }},
+
+    {cat:"DEPO", name:"Sudesan | Çevrim Sayım & Kontrol Takip Ekranı", url:"", desc:"Google Sheet / sayım kontrol",
+      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW","OPERATIONS_VIEW"] }},
+
+    {cat:"BAKIM", name:"Sudesan | Bakım Takip Yazılım Teklifleri", url:"", desc:"Google Sheet / teklif takibi",
+      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW"] }},
+
+    {cat:"STRATEJİ", name:"Sudesan | Stratejik Yol Haritası", url:"", desc:"Google Sheet / roadmap",
+      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW"] }},
+
+    {cat:"KPI", name:"Sudesan | KPI Süreç Künyeleri", url:"", desc:"Google Sheet / KPI",
+      acl:{ allowRoles:["ADMIN","KPI_VIEW"] }},
+
+    {cat:"KPI", name:"Sudesan | KPI Süreç Künyeleri >> 11-Planlama", url:"", desc:"Google Sheet / KPI - Planlama",
+      acl:{ allowRoles:["ADMIN","KPI_VIEW"] }},
+
+    {cat:"KPI", name:"Sudesan | KPI Süreç Künyeleri >> 12-Satınalma ve İthalat Yönetimi", url:"", desc:"Google Sheet / KPI - Satınalma",
+      acl:{ allowRoles:["ADMIN","KPI_VIEW"] }},
+
+    {cat:"KPI", name:"Sudesan | KPI Süreç Künyeleri >> 14-Depo Yönetimi", url:"", desc:"Google Sheet / KPI - Depo",
+      acl:{ allowRoles:["ADMIN","KPI_VIEW"] }},
+
+    {cat:"KPI", name:"Sudesan | KPI Süreç Künyeleri >> 15-Üretim", url:"", desc:"Google Sheet / KPI - Üretim",
+      acl:{ allowRoles:["ADMIN","KPI_VIEW"] }},
+
+    {cat:"FİNANS", name:"Sudesan | Bütçe Planlama-Takip & Kontrol Ekranı", url:"", desc:"Google Sheet / bütçe",
+      acl:{ allowRoles:["ADMIN","FINANCE_VIEW"] }},
+
+    {cat:"YÖNETİM", name:"Sudesan | Minerva Devam Eden İş Maddeleri", url:"", desc:"Google Sheet / iş listesi",
+      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW"] }},
+
+    {cat:"DEPO", name:"Sudesan | Depo Operasyon Zaman Etüdü Ekranı", url:"", desc:"Google Sheet / zaman etüdü",
+      acl:{ allowRoles:["ADMIN","OPERATIONS_VIEW","SUDESAN_VIEW"] }},
+
+    {cat:"SATINALMA", name:"Sudesan | Tedarikçi OTIF Raporu", url:"", desc:"Google Sheet / OTIF",
+      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW"] }},
+
+    {cat:"DEPO", name:"Sudesan | Stok Analiz Raporu", url:"", desc:"Google Sheet / stok analiz",
+      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW","OPERATIONS_VIEW"] }},
+
+    {cat:"DEPO", name:"Sudesan | Hammadde Stok Takibi Ekranı", url:"", desc:"Google Sheet / stok takip",
+      acl:{ allowRoles:["ADMIN","SUDESAN_VIEW","OPERATIONS_VIEW"] }},
+
+    {cat:"FİNANS", name:"Sudesan | Elida Beauty Costing", url:"", desc:"Google Sheet / costing",
+      acl:{ allowRoles:["ADMIN","FINANCE_VIEW"] }},
+
+    {cat:"OPERASYON", name:"Sudesan | Mars Performans Takip Ekranı", url:"", desc:"Google Sheet / performans",
+      acl:{ allowRoles:["ADMIN","OPERATIONS_VIEW"] }},
+
+    {cat:"OPERASYON", name:"Sudesan | Mars Araç Talep ve Tedarik Takip Ekranı", url:"", desc:"Google Sheet / araç talep",
+      acl:{ allowRoles:["ADMIN","OPERATIONS_VIEW"] }},
+
+    {cat:"DASHBOARD", name:"Sudesan | Looker Dashboard", url:"", desc:"Looker Studio dashboard",
+      acl:{ allowRoles:["ADMIN","DASHBOARD_VIEW","SUDESAN_VIEW"] }},
+
+    {cat:"DASHBOARD", name:"Dupack | Üretim Verimlilik ve Duruş Dashboard", url:"", desc:"Looker Studio dashboard",
+      acl:{ allowRoles:["ADMIN","DASHBOARD_VIEW","DUPACK_VIEW"] }},
+
+    {cat:"DASHBOARD", name:"Sudesan | Üretim Verimlilik ve Duruş Dashboard", url:"", desc:"Looker Studio dashboard",
+      acl:{ allowRoles:["ADMIN","DASHBOARD_VIEW","SUDESAN_VIEW"] }},
+
+    {cat:"FİNANS", name:"Sudesan | Finansal Tablolar", url:"", desc:"Google Sheet / finans",
+      acl:{ allowRoles:["ADMIN","FINANCE_VIEW"] }},
+  ];
+
+  /********************************************************************
+   * 3) Helpers
+   ********************************************************************/
+  const norm = (s="") => String(s).toLowerCase().trim();
   const tagOf = (name) => {
     const n = norm(name);
     if (n.includes("sudesan")) return "SUDESAN";
@@ -238,11 +579,101 @@
     return Object.keys(m).sort().map(k => ({cat:k, items:m[k]}));
   }
 
+  /********************************************************************
+   * 4) Session
+   ********************************************************************/
+  const SESSION_KEY = "SUDESAN_PORTAL_SESSION_V1";
+
+  function setSession(user){
+    localStorage.setItem(SESSION_KEY, JSON.stringify({
+      username: user.username,
+      display: user.display,
+      roles: user.roles || [],
+      ts: Date.now()
+    }));
+  }
+  function getSession(){
+    try{
+      const raw = localStorage.getItem(SESSION_KEY);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    }catch(e){ return null; }
+  }
+  function clearSession(){
+    localStorage.removeItem(SESSION_KEY);
+  }
+  function hasRole(session, role){
+    if (!session) return false;
+    return (session.roles || []).includes(role);
+  }
+
+  function isAllowed(item, session){
+    if (!session) return false;
+
+    // ADMIN her şeye erişir
+    if (hasRole(session, "ADMIN")) return true;
+
+    const acl = item.acl;
+    if (!acl) return true; // acl yoksa login olan herkes
+
+    if (Array.isArray(acl.allowUsers) && acl.allowUsers.length){
+      if (acl.allowUsers.includes(session.username)) return true;
+    }
+    if (Array.isArray(acl.allowRoles) && acl.allowRoles.length){
+      for (const r of acl.allowRoles){
+        if (hasRole(session, r)) return true;
+      }
+    }
+    return false;
+  }
+
+  /********************************************************************
+   * 5) Render
+   ********************************************************************/
+  function showLogin(show){
+    const ov = document.getElementById("loginOverlay");
+    if (show) ov.classList.add("show");
+    else ov.classList.remove("show");
+  }
+
+  function refreshTopbar(){
+    const session = getSession();
+    const whoBox = document.getElementById("whoBox");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    if (!session){
+      whoBox.style.display = "none";
+      logoutBtn.style.display = "none";
+      return;
+    }
+
+    whoBox.style.display = "block";
+    logoutBtn.style.display = "inline-block";
+
+    const roles = (session.roles || []).map(r => `<span class="chip">${r}</span>`).join("");
+    whoBox.innerHTML = `<div><strong>${session.display || session.username}</strong>${roles}</div>`;
+  }
+
   function render(){
+    const session = getSession();
+
+    // Login yoksa içerik gösterme
+    if (!session){
+      showLogin(true);
+      document.getElementById("app").innerHTML = "";
+      return;
+    }
+
     const q = norm(document.getElementById("q").value);
     const f = document.getElementById("filter").value;
+    const showUnauthorized = document.getElementById("showUnauthorized").checked;
 
-    const filtered = DATA.filter(x => {
+    const base = DATA.filter(x => {
+      const allowed = isAllowed(x, session);
+      return showUnauthorized ? true : allowed;
+    });
+
+    const filtered = base.filter(x => {
       const t = tagOf(x.name);
       if (f !== "ALL" && t !== f) return false;
       if (!q) return true;
@@ -272,6 +703,8 @@
 
       sec.items.forEach(x => {
         const tag = tagOf(x.name);
+        const allowed = isAllowed(x, session);
+
         const btn = document.createElement("button");
         btn.className = "btn " + (tag==="SUDESAN" ? "tag-sudesan" : tag==="DUPACK" ? "tag-dupack" : "tag-other");
 
@@ -285,13 +718,14 @@
 
         const ds = document.createElement("div");
         ds.className = "desc";
-        ds.textContent = x.desc || "";
+        ds.textContent = allowed ? (x.desc || "") : ((x.desc || "") + ((x.desc && x.desc.trim()) ? " • " : "") + "Erişim yok");
 
         btn.appendChild(pill);
         btn.appendChild(nm);
         btn.appendChild(ds);
 
-        if (!x.url){
+        // url yoksa ya da yetkisizse pasif
+        if (!x.url || !allowed){
           btn.classList.add("disabled");
           btn.onclick = () => {};
         } else {
@@ -307,9 +741,68 @@
     });
   }
 
+  /********************************************************************
+   * 6) Login / Logout
+   ********************************************************************/
+  function doLogin(){
+    const u = norm(document.getElementById("u").value);
+    const p = document.getElementById("p").value || "";
+    const msg = document.getElementById("loginMsg");
+
+    msg.className = "msg";
+    msg.textContent = "";
+
+    const user = USERS.find(x => norm(x.username) === u && x.password === p);
+
+    if (!user){
+      msg.className = "msg err";
+      msg.textContent = "Hatalı kullanıcı adı veya şifre.";
+      return;
+    }
+
+    setSession(user);
+    msg.className = "msg ok";
+    msg.textContent = "Giriş başarılı.";
+
+    showLogin(false);
+    refreshTopbar();
+    render();
+  }
+
+  function doLogout(){
+    clearSession();
+    refreshTopbar();
+    showLogin(true);
+    render();
+  }
+
+  /********************************************************************
+   * 7) Events + Boot
+   ********************************************************************/
   document.getElementById("q").addEventListener("input", render);
   document.getElementById("filter").addEventListener("change", render);
-  render();
+
+  document.getElementById("loginBtn").addEventListener("click", doLogin);
+  document.getElementById("logoutBtn").addEventListener("click", doLogout);
+
+  // Enter ile login
+  ["u","p"].forEach(id => {
+    document.getElementById(id).addEventListener("keydown", (e) => {
+      if (e.key === "Enter") doLogin();
+    });
+  });
+
+  // Yetkisizleri göster toggle portalı etkilesin
+  document.getElementById("showUnauthorized").addEventListener("change", render);
+
+  // İlk açılış
+  (function boot(){
+    const session = getSession();
+    showLogin(!session);
+    refreshTopbar();
+    render();
+  })();
 </script>
+
 </body>
 </html>

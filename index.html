@@ -19,6 +19,7 @@
       --info:#60a5fa;
     }
     *{box-sizing:border-box}
+    html, body{ height:100%; }
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
@@ -26,12 +27,20 @@
                   radial-gradient(1000px 600px at 80% 0%, rgba(34,197,94,.20), transparent 60%),
                   var(--bg);
       color:var(--text);
+      min-height:100vh;
+    }
+
+    /* FULLSCREEN PORTAL LAYOUT */
+    .portal-shell{
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
     }
 
     header{
-      padding:22px 18px 10px;
-      max-width:1100px;
-      margin:0 auto;
+      padding:18px 18px 10px;
+      width:100%;
+      margin:0;
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
@@ -48,6 +57,22 @@
       justify-content:flex-end;
       text-align:right;
     }
+
+    .toplogo{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 10px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:rgba(255,255,255,.04);
+      white-space:nowrap;
+    }
+    .toplogo svg{ display:block; width:120px; height:auto; }
+    @media (max-width:560px){
+      .toplogo svg{ width:110px; }
+    }
+
     .who{
       font-size:12px;
       color:rgba(255,255,255,.80);
@@ -75,8 +100,8 @@
 
     /* portal toolbar */
     .toolbar{
-      max-width:1100px;
-      margin:10px auto 0;
+      width:100%;
+      margin:0;
       padding:0 18px 10px;
       display:flex;
       flex-direction:column;
@@ -96,7 +121,7 @@
       border-radius: 12px;
       outline: none;
       font-size: 13px;
-      width: 300px;
+      width: 320px;
       max-width: 100%;
     }
 
@@ -121,9 +146,10 @@
     }
 
     .wrap{
-      max-width:1100px;
-      margin:0 auto;
+      width:100%;
+      margin:0;
       padding: 0 18px 28px;
+      flex:1;
     }
     .section{
       margin:14px 0 18px;
@@ -228,8 +254,8 @@
     .disabled:hover{ transform:none; border-color: var(--border); }
 
     footer{
-      max-width:1100px;
-      margin:0 auto;
+      width:100%;
+      margin:0;
       padding: 0 18px 26px;
       color: rgba(255,255,255,.45);
       font-size:12px;
@@ -278,7 +304,15 @@
       justify-content:center;
       gap:14px;
     }
-    .login-left h2{ margin:0; font-size:22px; letter-spacing:.3px; }
+
+    .hero-logo{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:6px;
+    }
+    .hero-logo svg{ width:170px; height:auto; display:block; }
+    .login-left h2{ margin:0; font-size:18px; letter-spacing:.3px; color:#eaf0ff; }
     .login-left p{ margin:0; color:rgba(255,255,255,.78); font-size:13px; line-height:1.6; }
 
     .login-right{
@@ -351,7 +385,7 @@
     }
 
     /* ADMIN */
-    .admin-wrap{ max-width:1100px; margin:0 auto; padding: 0 18px 28px; }
+    .admin-wrap{ width:100%; margin:0; padding: 0 18px 28px; }
     .admin-grid{
       display:grid;
       grid-template-columns: 1fr 1fr;
@@ -388,6 +422,7 @@
       cursor:pointer;
       font-size: 12px;
       font-weight: 650;
+      transition: transform .06s ease, border-color .06s ease;
     }
     .btn2:hover{ border-color: rgba(255,255,255,.18); transform: translateY(-1px); }
     .btn2:active{ transform: translateY(0px); }
@@ -489,226 +524,268 @@
 </head>
 
 <body>
+  <div class="portal-shell">
 
-  <header>
-    <div>
-      <h1 id="portalTitle">PSD-Portal</h1>
-      <p class="sub" id="portalSub">Butonlara tıklayınca ilgili Google Sheet / Looker Studio ekranı yeni sekmede açılır. URL boş olanlar pasiftir.</p>
+    <header>
+      <div>
+        <h1 id="portalTitle">PSD-Portal</h1>
+        <p class="sub" id="portalSub">Butonlara tıklayınca ilgili Google Sheet / Looker Studio ekranı yeni sekmede açılır. URL boş olanlar pasiftir.</p>
+      </div>
+
+      <div class="topbar-right">
+        <!-- TOP LOGO (Portal sağ üst) -->
+        <div class="toplogo" id="topLogoBox" style="display:none;" title="PSD Poseidon">
+          <!-- Inline SVG (kırılmaz) -->
+          <svg viewBox="0 0 320 70" xmlns="http://www.w3.org/2000/svg" aria-label="PSD Poseidon">
+            <defs>
+              <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#60a5fa" stop-opacity="0.95"/>
+                <stop offset="1" stop-color="#22c55e" stop-opacity="0.85"/>
+              </linearGradient>
+            </defs>
+            <rect x="0" y="0" width="320" height="70" rx="14" fill="rgba(255,255,255,0.02)" />
+            <g transform="translate(14,12)">
+              <path d="M18 34c10-8 18-18 18-26 0-4-3-7-7-7-5 0-8 4-11 9-3-5-6-9-11-9-4 0-7 3-7 7 0 8 8 18 18 26z" fill="url(#g1)" opacity="0.95"/>
+              <circle cx="18" cy="34" r="13" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2"/>
+            </g>
+            <text x="64" y="30" font-family="ui-sans-serif,system-ui" font-size="18" fill="#eaf0ff" font-weight="800" letter-spacing="0.8">PSD</text>
+            <text x="64" y="52" font-family="ui-sans-serif,system-ui" font-size="14" fill="rgba(234,240,255,0.78)" font-weight="600" letter-spacing="0.4">Poseidon Portal</text>
+          </svg>
+        </div>
+
+        <div class="who" id="whoBox" style="display:none;"></div>
+
+        <button class="linkbtn warn" id="adminBtn" style="display:none;" type="button">Admin</button>
+        <button class="linkbtn primary" id="saveBtn" style="display:none;" type="button">Kaydet</button>
+        <button class="linkbtn" id="logoutBtn" style="display:none;" type="button">Çıkış</button>
+      </div>
+    </header>
+
+    <!-- PORTAL TOOLBAR -->
+    <div class="toolbar" id="portalToolbar" style="display:none;">
+      <div class="toolbar-row">
+        <input id="q" class="input" placeholder="Ara (ad/açıklama)..." />
+        <div class="chips" id="chips"></div>
+      </div>
     </div>
 
-    <div class="topbar-right">
-      <div class="who" id="whoBox" style="display:none;"></div>
+    <!-- PORTAL VIEW -->
+    <div class="wrap" id="portalApp" style="display:none;"></div>
 
-      <button class="linkbtn warn" id="adminBtn" style="display:none;" type="button">Admin</button>
-      <button class="linkbtn primary" id="saveBtn" style="display:none;" type="button">Kaydet</button>
-      <button class="linkbtn" id="logoutBtn" style="display:none;" type="button">Çıkış</button>
-    </div>
-  </header>
-
-  <!-- PORTAL TOOLBAR -->
-  <div class="toolbar" id="portalToolbar" style="display:none;">
-    <div class="toolbar-row">
-      <input id="q" class="input" placeholder="Ara (ad/açıklama)..." />
-      <div class="chips" id="chips"></div>
-    </div>
-  </div>
-
-  <!-- PORTAL VIEW -->
-  <div class="wrap" id="portalApp" style="display:none;"></div>
-
-  <!-- ADMIN VIEW -->
-  <div class="admin-wrap" id="adminView" style="display:none;">
-    <div class="section">
-      <div class="section-title">
-        <span>Admin Paneli</span>
-        <span style="font-size:12px;color:rgba(255,255,255,.55)" id="pendingInfo"></span>
-      </div>
-      <div style="color:rgba(255,255,255,.70);font-size:12px;line-height:1.45">
-        Admin tarafında yapılan değişiklikler taslak olarak tutulur. Portal’a dönünce sağ üstte <b>Kaydet</b> görünür; kaydedince herkes için güncellenir.
-      </div>
-    </div>
-
-    <div class="admin-grid">
-
-      <!-- ROLE MANAGEMENT -->
-      <div class="panel">
-        <h3>0) Rol Yönetimi (Ekle / Aktif-Pasif / Düzenle / Sil)</h3>
-
-        <div class="row">
-          <div class="field">
-            <div class="label">Yeni Rol Kodu <span class="hint">(örn: SUDESAN_VIEW)</span></div>
-            <input id="roleNewKey" class="login-input" placeholder="ROL_KODU" />
-          </div>
-          <div class="field">
-            <div class="label">Açıklama <span class="hint">(opsiyonel)</span></div>
-            <input id="roleNewDesc" class="login-input" placeholder="örn: Sudesan raporlarını görüntüleme" />
-          </div>
+    <!-- ADMIN VIEW -->
+    <div class="admin-wrap" id="adminView" style="display:none;">
+      <div class="section">
+        <div class="section-title">
+          <span>Admin Paneli</span>
+          <span style="font-size:12px;color:rgba(255,255,255,.55)" id="pendingInfo"></span>
         </div>
-
-        <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn2 ok" id="addRoleBtn" type="button">Rolü Ekle</button>
-          <button class="btn2" id="normalizeRolesBtn" type="button">Rol Kodlarını Normalize Et</button>
+        <div style="color:rgba(255,255,255,.70);font-size:12px;line-height:1.45">
+          Admin tarafında yapılan değişiklikler taslak olarak tutulur. Portal’a dönünce sağ üstte <b>Kaydet</b> görünür; kaydedince herkes için güncellenir.
         </div>
-
-        <div class="msg" id="roleMsg"></div>
-
-        <div class="smallNote">
-          Not: Rol “Pasif” yapılınca kullanıcıda rol dursa bile erişim sağlamaz. (Rapor/Firma ACL’de yok sayılır.)
-        </div>
-
-        <div class="list" id="roleList"></div>
       </div>
 
-      <!-- Firms + firm-role requirement -->
-      <div class="panel">
-        <h3>1) Firma Yönetimi (Firma Ekle + Firmaya Rol Tanımla)</h3>
+      <div class="admin-grid">
 
-        <div class="row">
-          <div class="field">
-            <div class="label">Yeni Firma Adı <span class="hint">(örn: Sudesan / Kuzey Pet)</span></div>
-            <input id="firmDisplayIn" class="login-input" placeholder="Firma adı" />
+        <!-- ROLE MANAGEMENT -->
+        <div class="panel">
+          <h3>0) Rol Yönetimi (Ekle / Aktif-Pasif / Düzenle / Sil)</h3>
+
+          <div class="row">
+            <div class="field">
+              <div class="label">Yeni Rol Kodu <span class="hint">(örn: SUDESAN_VIEW)</span></div>
+              <input id="roleNewKey" class="login-input" placeholder="ROL_KODU" />
+            </div>
+            <div class="field">
+              <div class="label">Açıklama <span class="hint">(opsiyonel)</span></div>
+              <input id="roleNewDesc" class="login-input" placeholder="örn: Sudesan raporlarını görüntüleme" />
+            </div>
           </div>
-          <div class="field">
-            <div class="label">Firma Key (otomatik)</div>
-            <input id="firmKeyOut" class="login-input" placeholder="otomatik oluşur" disabled />
-          </div>
-        </div>
 
-        <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn2 ok" id="addFirmBtn" type="button">Firmayı Ekle</button>
-          <button class="btn2" id="addAliasBtn" type="button">Bu Yazımı Alias Olarak Ekle</button>
-        </div>
-
-        <div class="msg" id="firmMsg"></div>
-
-        <div class="hr"></div>
-
-        <div class="field">
-          <div class="label">Firma Seç <span class="hint">(giriş için gerekli roller)</span></div>
-          <select id="firmSelForRoles" class="select"></select>
-        </div>
-
-        <div class="label" style="margin-top:10px;">Bu firmaya giriş için gerekli roller</div>
-        <div class="rolesBox" id="firmRoleBox"></div>
-
-        <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn2 info" id="saveFirmRolesBtn" type="button">Firma Rollerini Güncelle</button>
-        </div>
-        <div class="msg" id="firmRoleMsg"></div>
-
-        <div class="list" id="firmList"></div>
-      </div>
-
-      <!-- Users -->
-      <div class="panel">
-        <h3>3) Kullanıcı Ekle & Yetkilendir</h3>
-
-        <div class="row">
-          <div class="field">
-            <div class="label">Kullanıcı Adı</div>
-            <input id="newUserU" class="login-input" placeholder="örn: zeynep" />
-          </div>
-          <div class="field">
-            <div class="label">Şifre</div>
-            <input id="newUserP" class="login-input" placeholder="örn: 1234" />
-          </div>
-          <div class="field">
-            <div class="label">Görünen Ad</div>
-            <input id="newUserD" class="login-input" placeholder="örn: Zeynep" />
-          </div>
-          <div class="field">
-            <div class="label">Not</div>
-            <input class="login-input" value="Roller aşağıdan seçilir" disabled />
-          </div>
-        </div>
-
-        <div class="label" style="margin-top:10px;">Roller (sadece aktif roller)</div>
-        <div class="rolesBox" id="userRoleBox"></div>
-
-        <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn2 ok" id="addUserBtn" type="button">Kullanıcıyı Ekle</button>
-        </div>
-
-        <div class="msg" id="userMsg"></div>
-        <div class="list" id="userList"></div>
-      </div>
-
-      <!-- Reports CRUD -->
-      <div class="panel">
-        <h3>2) Rapor Yönetimi (Ekle / Düzenle / Sil)</h3>
-
-        <div class="field">
-          <div class="label">Mevcut Raporlar</div>
-          <select id="repPickSel" class="select"></select>
-        </div>
-
-        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
-          <button class="btn2 info" id="loadReportBtn" type="button">Seçili Raporu Yükle (Düzenle)</button>
-          <button class="btn2 danger" id="deletePickedReportBtn" type="button">Seçili Raporu Sil</button>
-          <button class="btn2" id="clearReportFormBtn" type="button">Formu Temizle (Yeni)</button>
-        </div>
-
-        <div class="hr"></div>
-
-        <div class="row">
-          <div class="field">
-            <div class="label">Firma</div>
-            <select id="repFirmSel" class="select"></select>
-          </div>
-          <div class="field">
-            <div class="label">Kategori</div>
-            <input id="repCat" class="login-input" placeholder="örn: DEPO / ÜRETİM / KPI" />
-          </div>
-          <div class="field">
-            <div class="label">Rapor Adı</div>
-            <input id="repName" class="login-input" placeholder="örn: Sudesan | Stok Analiz Raporu" />
-          </div>
-          <div class="field">
-            <div class="label">Açıklama</div>
-            <input id="repDesc" class="login-input" placeholder="örn: Google Sheet / stok analiz" />
-          </div>
-          <div class="field" style="grid-column:1/-1;">
-            <div class="label">URL</div>
-            <input id="repUrl" class="login-input" placeholder="https://..." />
-          </div>
-        </div>
-
-        <div class="label" style="margin-top:10px;">Bu raporu görebilecek roller (sadece aktif roller)</div>
-        <div class="rolesBox" id="repRoleBox"></div>
-
-        <input id="repEditingId" type="hidden" />
-
-        <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn2 ok" id="upsertReportBtn" type="button">Kaydet (Ekle / Güncelle)</button>
-        </div>
-
-        <div class="msg" id="repMsg"></div>
-        <div class="list" id="reportList"></div>
-
-        <div class="section" style="margin-top:12px;">
-          <div class="section-title"><span>5) Kaydet Akışı</span></div>
-          <div style="color:rgba(255,255,255,.70);font-size:12px;line-height:1.45">
-            Admin panelinde eklediğin her şey “taslak” olarak bekler. Portal’a dön ve sağ üstte çıkan <b>Kaydet</b> butonuna bas.
-          </div>
           <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn2 warn" id="goPortalBtn" type="button">Portal’a Dön</button>
-            <button class="btn2" id="discardBtn" type="button">Taslak Değişiklikleri At</button>
+            <button class="btn2 ok" id="addRoleBtn" type="button">Rolü Ekle</button>
+            <button class="btn2" id="normalizeRolesBtn" type="button">Rol Kodlarını Normalize Et</button>
           </div>
-          <div class="msg" id="flowMsg"></div>
+
+          <div class="msg" id="roleMsg"></div>
+
+          <div class="smallNote">
+            Not: Rol “Pasif” yapılınca kullanıcıda rol dursa bile erişim sağlamaz. (Rapor/Firma ACL’de yok sayılır.)
+          </div>
+
+          <div class="list" id="roleList"></div>
         </div>
+
+        <!-- Firms + firm-role requirement -->
+        <div class="panel">
+          <h3>1) Firma Yönetimi (Firma Ekle + Firmaya Rol Tanımla)</h3>
+
+          <div class="row">
+            <div class="field">
+              <div class="label">Yeni Firma Adı <span class="hint">(örn: Sudesan / Kuzey Pet)</span></div>
+              <input id="firmDisplayIn" class="login-input" placeholder="Firma adı" />
+            </div>
+            <div class="field">
+              <div class="label">Firma Key (otomatik)</div>
+              <input id="firmKeyOut" class="login-input" placeholder="otomatik oluşur" disabled />
+            </div>
+          </div>
+
+          <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn2 ok" id="addFirmBtn" type="button">Firmayı Ekle</button>
+            <button class="btn2" id="addAliasBtn" type="button">Bu Yazımı Alias Olarak Ekle</button>
+          </div>
+
+          <div class="msg" id="firmMsg"></div>
+
+          <div class="hr"></div>
+
+          <div class="field">
+            <div class="label">Firma Seç <span class="hint">(giriş için gerekli roller)</span></div>
+            <select id="firmSelForRoles" class="select"></select>
+          </div>
+
+          <div class="label" style="margin-top:10px;">Bu firmaya giriş için gerekli roller</div>
+          <div class="rolesBox" id="firmRoleBox"></div>
+
+          <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn2 info" id="saveFirmRolesBtn" type="button">Firma Rollerini Güncelle</button>
+          </div>
+          <div class="msg" id="firmRoleMsg"></div>
+
+          <div class="list" id="firmList"></div>
+        </div>
+
+        <!-- Users -->
+        <div class="panel">
+          <h3>3) Kullanıcı Ekle & Yetkilendir</h3>
+
+          <div class="row">
+            <div class="field">
+              <div class="label">Kullanıcı Adı</div>
+              <input id="newUserU" class="login-input" placeholder="örn: zeynep" />
+            </div>
+            <div class="field">
+              <div class="label">Şifre</div>
+              <input id="newUserP" class="login-input" placeholder="örn: 1234" />
+            </div>
+            <div class="field">
+              <div class="label">Görünen Ad</div>
+              <input id="newUserD" class="login-input" placeholder="örn: Zeynep" />
+            </div>
+            <div class="field">
+              <div class="label">Not</div>
+              <input class="login-input" value="Roller aşağıdan seçilir" disabled />
+            </div>
+          </div>
+
+          <div class="label" style="margin-top:10px;">Roller (sadece aktif roller)</div>
+          <div class="rolesBox" id="userRoleBox"></div>
+
+          <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn2 ok" id="addUserBtn" type="button">Kullanıcıyı Ekle</button>
+          </div>
+
+          <div class="msg" id="userMsg"></div>
+          <div class="list" id="userList"></div>
+        </div>
+
+        <!-- Reports CRUD -->
+        <div class="panel">
+          <h3>2) Rapor Yönetimi (Ekle / Düzenle / Sil)</h3>
+
+          <div class="field">
+            <div class="label">Mevcut Raporlar</div>
+            <select id="repPickSel" class="select"></select>
+          </div>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+            <button class="btn2 info" id="loadReportBtn" type="button">Seçili Raporu Yükle (Düzenle)</button>
+            <button class="btn2 danger" id="deletePickedReportBtn" type="button">Seçili Raporu Sil</button>
+            <button class="btn2" id="clearReportFormBtn" type="button">Formu Temizle (Yeni)</button>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="row">
+            <div class="field">
+              <div class="label">Firma</div>
+              <select id="repFirmSel" class="select"></select>
+            </div>
+            <div class="field">
+              <div class="label">Kategori</div>
+              <input id="repCat" class="login-input" placeholder="örn: DEPO / ÜRETİM / KPI" />
+            </div>
+            <div class="field">
+              <div class="label">Rapor Adı</div>
+              <input id="repName" class="login-input" placeholder="örn: Sudesan | Stok Analiz Raporu" />
+            </div>
+            <div class="field">
+              <div class="label">Açıklama</div>
+              <input id="repDesc" class="login-input" placeholder="örn: Google Sheet / stok analiz" />
+            </div>
+            <div class="field" style="grid-column:1/-1;">
+              <div class="label">URL</div>
+              <input id="repUrl" class="login-input" placeholder="https://..." />
+            </div>
+          </div>
+
+          <div class="label" style="margin-top:10px;">Bu raporu görebilecek roller (sadece aktif roller)</div>
+          <div class="rolesBox" id="repRoleBox"></div>
+
+          <input id="repEditingId" type="hidden" />
+
+          <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn2 ok" id="upsertReportBtn" type="button">Kaydet (Ekle / Güncelle)</button>
+          </div>
+
+          <div class="msg" id="repMsg"></div>
+          <div class="list" id="reportList"></div>
+
+          <div class="section" style="margin-top:12px;">
+            <div class="section-title"><span>5) Kaydet Akışı</span></div>
+            <div style="color:rgba(255,255,255,.70);font-size:12px;line-height:1.45">
+              Admin panelinde eklediğin her şey “taslak” olarak bekler. Portal’a dön ve sağ üstte çıkan <b>Kaydet</b> butonuna bas.
+            </div>
+            <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="btn2 warn" id="goPortalBtn" type="button">Portal’a Dön</button>
+              <button class="btn2" id="discardBtn" type="button">Taslak Değişiklikleri At</button>
+            </div>
+            <div class="msg" id="flowMsg"></div>
+          </div>
+        </div>
+
       </div>
-
     </div>
-  </div>
 
-  <footer id="footer" style="display:none;">
-    İpucu: Admin ile eklenenler kalıcı hale gelmesi için Portal ekranında <code>Kaydet</code> butonuna basılmalıdır.
-  </footer>
+    <footer id="footer" style="display:none;">
+      İpucu: Admin ile eklenenler kalıcı hale gelmesi için Portal ekranında <code>Kaydet</code> butonuna basılmalıdır.
+    </footer>
+
+  </div><!-- /portal-shell -->
 
   <!-- LOGIN OVERLAY -->
   <div class="overlay" id="loginOverlay">
     <div class="login-card">
       <div class="login-left">
+        <!-- HERO LOGO (Login sol) -->
+        <div class="hero-logo">
+          <svg viewBox="0 0 360 90" xmlns="http://www.w3.org/2000/svg" aria-label="PSD Poseidon">
+            <defs>
+              <linearGradient id="hg" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#60a5fa" stop-opacity="0.95"/>
+                <stop offset="1" stop-color="#22c55e" stop-opacity="0.9"/>
+              </linearGradient>
+            </defs>
+            <rect x="0" y="0" width="360" height="90" rx="18" fill="rgba(255,255,255,0.02)" />
+            <g transform="translate(18,18)">
+              <path d="M26 50c14-10 26-24 26-36 0-6-5-11-11-11-8 0-12 7-15 14-3-7-7-14-15-14-6 0-11 5-11 11 0 12 12 26 26 36z" fill="url(#hg)"/>
+              <circle cx="26" cy="50" r="18" fill="none" stroke="rgba(255,255,255,0.20)" stroke-width="2.5"/>
+            </g>
+            <text x="90" y="45" font-family="ui-sans-serif,system-ui" font-size="26" fill="#eaf0ff" font-weight="900" letter-spacing="1">PSD</text>
+            <text x="90" y="70" font-family="ui-sans-serif,system-ui" font-size="16" fill="rgba(234,240,255,0.78)" font-weight="650" letter-spacing="0.6">Poseidon</text>
+          </svg>
+        </div>
+
         <h2>PSD-Portal</h2>
         <p>
           PSD Poseidon, farklı dallarda mühendislerden oluşan “multi-disipliner” bir mühendislik çözümleri topluluğudur.
@@ -834,42 +911,39 @@
   /********************************************************************
    * Seed DB (V2)
    ********************************************************************/
-const SEED_DB = {
-  firms: [
-    { key:"SUDESAN", display:"Sudesan", active:true },
-    { key:"DUPACK",  display:"Dupack",  active:true }
-  ],
-  aliases: { "sudesan":"SUDESAN", "dupack":"DUPACK" },
+  const SEED_DB = {
+    firms: [
+      { key:"SUDESAN", display:"Sudesan", active:true },
+      { key:"DUPACK",  display:"Dupack",  active:true }
+    ],
+    aliases: { "sudesan":"SUDESAN", "dupack":"DUPACK" },
 
-  // NEW: role objects
-  roles: [
-    { key:"SUDESAN_VIEW",    desc:"Sudesan raporlarını görüntüleme", active:true },
-    { key:"DUPACK_VIEW",     desc:"Dupack raporlarını görüntüleme", active:true },
-    { key:"OPERATIONS_VIEW", desc:"Operasyon raporları", active:true },
-    { key:"FINANCE_VIEW",    desc:"Finans raporları", active:true },
-    { key:"KPI_VIEW",        desc:"KPI raporları", active:true },
-    { key:"DASHBOARD_VIEW",  desc:"Dashboard raporları", active:true }
-  ],
+    roles: [
+      { key:"SUDESAN_VIEW",    desc:"Sudesan raporlarını görüntüleme", active:true },
+      { key:"DUPACK_VIEW",     desc:"Dupack raporlarını görüntüleme", active:true },
+      { key:"OPERATIONS_VIEW", desc:"Operasyon raporları", active:true },
+      { key:"FINANCE_VIEW",    desc:"Finans raporları", active:true },
+      { key:"KPI_VIEW",        desc:"KPI raporları", active:true },
+      { key:"DASHBOARD_VIEW",  desc:"Dashboard raporları", active:true }
+    ],
 
-  // NEW: firm giriş için gerekli roller (tanımlanmazsa fallback: FIRMKEY_VIEW)
-  firmAccessRoles: {
-    "SUDESAN":["SUDESAN_VIEW"],
-    "DUPACK":["DUPACK_VIEW"]
-  },
+    firmAccessRoles: {
+      "SUDESAN":["SUDESAN_VIEW"],
+      "DUPACK":["DUPACK_VIEW"]
+    },
 
-  users: [
-    { username:"alper",  password:"1234", display:"Alper",  roles:["SUDESAN_VIEW","FINANCE_VIEW","KPI_VIEW","DASHBOARD_VIEW"], active:true },
-    { username:"zeynep", password:"1234", display:"Zeynep", roles:["SUDESAN_VIEW","DASHBOARD_VIEW"], active:true },
-    { username:"dupack", password:"1234", display:"Dupack", roles:["DUPACK_VIEW","DASHBOARD_VIEW"], active:true }
-  ],
+    users: [
+      { username:"alper",  password:"1234", display:"Alper",  roles:["SUDESAN_VIEW","FINANCE_VIEW","KPI_VIEW","DASHBOARD_VIEW"], active:true },
+      { username:"zeynep", password:"1234", display:"Zeynep", roles:["SUDESAN_VIEW","DASHBOARD_VIEW"], active:true },
+      { username:"dupack", password:"1234", display:"Dupack", roles:["DUPACK_VIEW","DASHBOARD_VIEW"], active:true }
+    ],
 
-  reports: [
-    { id:"r1", firm:"SUDESAN", cat:"DEPO", name:"Sudesan | Stok Analiz Raporu", url:"", desc:"Google Sheet / stok analiz", acl:{allowRoles:["SUDESAN_VIEW","OPERATIONS_VIEW"]} },
-    { id:"r2", firm:"SUDESAN", cat:"DASHBOARD", name:"Sudesan | Looker Dashboard", url:"", desc:"Looker Studio dashboard", acl:{allowRoles:["DASHBOARD_VIEW","SUDESAN_VIEW"]} },
-    { id:"r3", firm:"DUPACK",  cat:"DASHBOARD", name:"Dupack | Üretim Verimlilik ve Duruş Dashboard", url:"", desc:"Looker Studio dashboard", acl:{allowRoles:["DASHBOARD_VIEW","DUPACK_VIEW"]} }
-  ]
-};
-
+    reports: [
+      { id:"r1", firm:"SUDESAN", cat:"DEPO", name:"Sudesan | Stok Analiz Raporu", url:"", desc:"Google Sheet / stok analiz", acl:{allowRoles:["SUDESAN_VIEW","OPERATIONS_VIEW"]} },
+      { id:"r2", firm:"SUDESAN", cat:"DASHBOARD", name:"Sudesan | Looker Dashboard", url:"", desc:"Looker Studio dashboard", acl:{allowRoles:["DASHBOARD_VIEW","SUDESAN_VIEW"]} },
+      { id:"r3", firm:"DUPACK",  cat:"DASHBOARD", name:"Dupack | Üretim Verimlilik ve Duruş Dashboard", url:"", desc:"Looker Studio dashboard", acl:{allowRoles:["DASHBOARD_VIEW","DUPACK_VIEW"]} }
+    ]
+  };
 
   function ensureDB(){
     const existing = getLocalJSON(DB_KEY);
@@ -880,6 +954,7 @@ const SEED_DB = {
   function loadCommittedDB(){
     ensureDB();
     const db = getLocalJSON(DB_KEY);
+
     // backward-compat cleanup
     if (!db.roles && db.rolesCatalog){
       db.roles = (db.rolesCatalog||[]).map(k => ({key:k, desc:"", active:true}));
@@ -888,21 +963,12 @@ const SEED_DB = {
     }
     if (!db.firmAccessRoles) db.firmAccessRoles = {};
 
-    // ---- MIGRATION: firms/users active default ----
-let dirty = false;
+    // MIGRATION: firms/users active default
+    let dirty = false;
+    (db.firms || []).forEach(f => { if (typeof f.active === "undefined") { f.active = true; dirty = true; } });
+    (db.users || []).forEach(u => { if (typeof u.active === "undefined") { u.active = true; dirty = true; } });
+    if (dirty) setLocalJSON(DB_KEY, db);
 
-(db.firms || []).forEach(f => {
-  if (typeof f.active === "undefined") { f.active = true; dirty = true; }
-});
-
-(db.users || []).forEach(u => {
-  if (typeof u.active === "undefined") { u.active = true; dirty = true; }
-});
-
-if (dirty) setLocalJSON(DB_KEY, db);
-// ---------------------------------------------
-
-    
     return db;
   }
 
@@ -940,7 +1006,6 @@ if (dirty) setLocalJSON(DB_KEY, db);
     if (!session) return false;
     if (Array.isArray(session.roles) && session.roles.includes("ADMIN")) return true;
 
-    // inactive role => no power
     const meta = roleMetaMap(db || loadCommittedDB());
     if (role && meta[role] && meta[role].active === false) return false;
 
@@ -952,10 +1017,7 @@ if (dirty) setLocalJSON(DB_KEY, db);
     if (Array.isArray(session.roles) && session.roles.includes("ADMIN")) return true;
 
     const far = (db.firmAccessRoles && db.firmAccessRoles[firmKey]) ? db.firmAccessRoles[firmKey] : null;
-
-    // fallback: if no mapping, allow if user has <FIRMKEY>_VIEW (and it's active)
     const required = (Array.isArray(far) && far.length) ? far : [`${firmKey}_VIEW`];
-
     return required.some(r => hasRole(session, r, db));
   }
 
@@ -963,7 +1025,6 @@ if (dirty) setLocalJSON(DB_KEY, db);
     if (!session) return false;
     if (Array.isArray(session.roles) && session.roles.includes("ADMIN")) return true;
 
-    // firm gate
     if (item && item.firm && !firmAccessAllowed(session, item.firm, db)) return false;
 
     const acl = item.acl || {};
@@ -971,7 +1032,6 @@ if (dirty) setLocalJSON(DB_KEY, db);
     const allowRoles = Array.isArray(acl.allowRoles) ? acl.allowRoles : [];
     if (allowUsers.includes(session.username)) return true;
 
-    // allowRoles: only active roles count
     return allowRoles.some(r => hasRole(session, r, db));
   }
 
@@ -1009,12 +1069,14 @@ if (dirty) setLocalJSON(DB_KEY, db);
     const logoutBtn = document.getElementById("logoutBtn");
     const adminBtn = document.getElementById("adminBtn");
     const saveBtn = document.getElementById("saveBtn");
+    const topLogoBox = document.getElementById("topLogoBox");
 
     if (!session){
       whoBox.style.display = "none";
       logoutBtn.style.display = "none";
       adminBtn.style.display = "none";
       saveBtn.style.display = "none";
+      topLogoBox.style.display = "none";
       return;
     }
 
@@ -1025,10 +1087,12 @@ if (dirty) setLocalJSON(DB_KEY, db);
       whoBox.textContent = `${session.display} • Admin`;
       adminBtn.style.display = "inline-block";
       saveBtn.style.display = hasPendingChanges() ? "inline-block" : "none";
+      topLogoBox.style.display = "none";
     } else {
       whoBox.textContent = `${session.display} • ${session.firmDisplay}`;
       adminBtn.style.display = "none";
       saveBtn.style.display = "none";
+      topLogoBox.style.display = "flex";  // Portal sağ üst logo görünür
     }
   }
 
@@ -1126,20 +1190,21 @@ if (dirty) setLocalJSON(DB_KEY, db);
       return;
     }
 
-    const q = norm(document.getElementById("q").value);
+    // firm active check
     const firmObj2 = (db.firms || []).find(f => f.key === session.firmKey);
-if (!firmObj2 || firmObj2.active === false){
-  const app = document.getElementById("portalApp");
-  app.innerHTML = `
-    <div class="section">
-      <div class="section-title">Firma Pasif</div>
-      <div style="color:var(--muted);font-size:13px;line-height:1.5">
-        Bu firma pasif olduğu için portal içeriği görüntülenemez.
-      </div>
-    </div>`;
-  return;
-}
+    if (!firmObj2 || firmObj2.active === false){
+      const app = document.getElementById("portalApp");
+      app.innerHTML = `
+        <div class="section">
+          <div class="section-title">Firma Pasif</div>
+          <div style="color:var(--muted);font-size:13px;line-height:1.5">
+            Bu firma pasif olduğu için portal içeriği görüntülenemez.
+          </div>
+        </div>`;
+      return;
+    }
 
+    const q = norm(document.getElementById("q").value);
 
     const firmList = (db.reports || []).filter(x => x.firm === session.firmKey);
     const allowedList = firmList.filter(x => isAllowed(x, session, db));
@@ -1246,23 +1311,17 @@ if (!firmObj2 || firmObj2.active === false){
 
     // Normal user login
     const db = loadCommittedDB();
-  const user = (db.users || []).find(x => norm(x.username) === norm(u) && x.password === p);
-  if (!user){
-  msg.className = "msg err";
-  msg.textContent = "Hatalı kullanıcı adı veya şifre.";
-  return;
-}
+    const user = (db.users || []).find(x => norm(x.username) === norm(u) && x.password === p);
 
-// ✅ pasif kullanıcı kontrolü doğru yer
-if (user.active === false){
-  msg.className = "msg err";
-  msg.textContent = "Bu kullanıcı pasif durumdadır.";
-  return;
-}
-
-
+    if (!user){
       msg.className = "msg err";
       msg.textContent = "Hatalı kullanıcı adı veya şifre.";
+      return;
+    }
+
+    if (user.active === false){
+      msg.className = "msg err";
+      msg.textContent = "Bu kullanıcı pasif durumdadır.";
       return;
     }
 
@@ -1275,12 +1334,11 @@ if (user.active === false){
 
     const firmKey = firmKeyFromInput(fd, db);
     const firmObj = (db.firms || []).find(f => f.key === firmKey);
-if (!firmObj || firmObj.active === false){
-  msg.className = "msg err";
-  msg.textContent = "Bu firma pasif veya tanımsız.";
-  return;
-}
-
+    if (!firmObj || firmObj.active === false){
+      msg.className = "msg err";
+      msg.textContent = "Bu firma pasif veya tanımsız.";
+      return;
+    }
 
     const session = {
       username: user.username,
@@ -1327,7 +1385,7 @@ if (!firmObj || firmObj.active === false){
   }
 
   /********************************************************************
-   * Admin
+   * Admin helpers
    ********************************************************************/
   function genId(){
     return "r" + Math.random().toString(16).slice(2,10) + Date.now().toString(16).slice(-4);
@@ -1397,7 +1455,6 @@ if (!firmObj || firmObj.active === false){
 
   function fillFirmSelects(db){
     const firms = (db.firms || []).slice().sort((a,b)=>a.display.localeCompare(b.display));
-
     const repFirmSel = document.getElementById("repFirmSel");
     const firmSelForRoles = document.getElementById("firmSelForRoles");
 
@@ -1452,105 +1509,87 @@ if (!firmObj || firmObj.active === false){
           <button class="btn2 danger" type="button" data-del="${escapeHtml(r.key)}">Sil</button>
         </div>
       `;
-
       list.appendChild(row);
     });
 
-    // bind
-    list.querySelectorAll("[data-act]").forEach(b => {
-      b.onclick = () => toggleRoleActive(b.getAttribute("data-act"));
-    });
-    list.querySelectorAll("[data-ren]").forEach(b => {
-      b.onclick = () => renameRole(b.getAttribute("data-ren"));
-    });
-    list.querySelectorAll("[data-del]").forEach(b => {
-      b.onclick = () => deleteRole(b.getAttribute("data-del"));
-    });
+    list.querySelectorAll("[data-act]").forEach(b => b.onclick = () => toggleRoleActive(b.getAttribute("data-act")));
+    list.querySelectorAll("[data-ren]").forEach(b => b.onclick = () => renameRole(b.getAttribute("data-ren")));
+    list.querySelectorAll("[data-del]").forEach(b => b.onclick = () => deleteRole(b.getAttribute("data-del")));
   }
 
   function renderFirmList(db){
-  const list = document.getElementById("firmList");
-  list.innerHTML = "";
+    const list = document.getElementById("firmList");
+    list.innerHTML = "";
 
-  const far = db.firmAccessRoles || {};
-  const rolesMeta = roleMetaMap(db);
+    const far = db.firmAccessRoles || {};
+    const rolesMeta = roleMetaMap(db);
 
-  (db.firms || []).slice().sort((a,b)=>a.display.localeCompare(b.display)).forEach(f => {
-    const req = Array.isArray(far[f.key]) ? far[f.key] : [`${f.key}_VIEW`];
-    const pills = req.slice(0,4).map(rr => {
-      const m = rolesMeta[rr];
-      const off = m && m.active === false;
-      return `<span class="pill2 ${off?"off":""}">${escapeHtml(rr)}</span>`;
-    }).join("") + (req.length>4 ? `<span class="pill2">+${req.length-4}</span>` : "");
+    (db.firms || []).slice().sort((a,b)=>a.display.localeCompare(b.display)).forEach(f => {
+      const req = Array.isArray(far[f.key]) ? far[f.key] : [`${f.key}_VIEW`];
+      const pills = req.slice(0,4).map(rr => {
+        const m = rolesMeta[rr];
+        const off = m && m.active === false;
+        return `<span class="pill2 ${off?"off":""}">${escapeHtml(rr)}</span>`;
+      }).join("") + (req.length>4 ? `<span class="pill2">+${req.length-4}</span>` : "");
 
-    const active = f.active !== false;
-    const pillClass = active ? "pill2" : "pill2 off";
+      const active = f.active !== false;
+      const pillClass = active ? "pill2" : "pill2 off";
 
-    const row = document.createElement("div");
-    row.className = "item";
-    row.innerHTML = `
-      <div class="meta">
-        <b>${escapeHtml(f.display)}</b>
-        <span>Key: ${escapeHtml(f.key)} • Giriş Rol(leri): ${req.length}</span>
-      </div>
-      <div class="pills">
-        ${pills}
-        <span class="${pillClass}">${active ? "AKTİF" : "PASİF"}</span>
-        <button class="btn2 ${active ? "warn" : "ok"}" type="button" data-fact="${escapeHtml(f.key)}">${active ? "Pasif Yap" : "Aktif Yap"}</button>
-        <button class="btn2 danger" type="button" data-fdel="${escapeHtml(f.key)}">Sil</button>
-      </div>
-    `;
-    list.appendChild(row);
-  });
+      const row = document.createElement("div");
+      row.className = "item";
+      row.innerHTML = `
+        <div class="meta">
+          <b>${escapeHtml(f.display)}</b>
+          <span>Key: ${escapeHtml(f.key)} • Giriş Rol(leri): ${req.length}</span>
+        </div>
+        <div class="pills">
+          ${pills}
+          <span class="${pillClass}">${active ? "AKTİF" : "PASİF"}</span>
+          <button class="btn2 ${active ? "warn" : "ok"}" type="button" data-fact="${escapeHtml(f.key)}">${active ? "Pasif Yap" : "Aktif Yap"}</button>
+          <button class="btn2 danger" type="button" data-fdel="${escapeHtml(f.key)}">Sil</button>
+        </div>
+      `;
+      list.appendChild(row);
+    });
 
-  list.querySelectorAll("[data-fact]").forEach(b => {
-    b.onclick = () => toggleFirmActive(b.getAttribute("data-fact"));
-  });
-  list.querySelectorAll("[data-fdel]").forEach(b => {
-    b.onclick = () => deleteFirm(b.getAttribute("data-fdel"));
-  });
-}
-
+    list.querySelectorAll("[data-fact]").forEach(b => b.onclick = () => toggleFirmActive(b.getAttribute("data-fact")));
+    list.querySelectorAll("[data-fdel]").forEach(b => b.onclick = () => deleteFirm(b.getAttribute("data-fdel")));
+  }
 
   function renderUserList(db){
-  const list = document.getElementById("userList");
-  list.innerHTML = "";
-  const meta = roleMetaMap(db);
+    const list = document.getElementById("userList");
+    list.innerHTML = "";
+    const meta = roleMetaMap(db);
 
-  (db.users || []).slice().sort((a,b)=>a.username.localeCompare(b.username)).forEach(u => {
-    const pills = (u.roles||[]).slice(0,4).map(rr => {
-      const off = meta[rr] && meta[rr].active === false;
-      return `<span class="pill2 ${off?"off":""}">${escapeHtml(rr)}</span>`;
-    }).join("") + ((u.roles||[]).length>4 ? `<span class="pill2">+${(u.roles||[]).length-4}</span>` : "");
+    (db.users || []).slice().sort((a,b)=>a.username.localeCompare(b.username)).forEach(u => {
+      const pills = (u.roles||[]).slice(0,4).map(rr => {
+        const off = meta[rr] && meta[rr].active === false;
+        return `<span class="pill2 ${off?"off":""}">${escapeHtml(rr)}</span>`;
+      }).join("") + ((u.roles||[]).length>4 ? `<span class="pill2">+${(u.roles||[]).length-4}</span>` : "");
 
-    const active = u.active !== false;
-    const pillClass = active ? "pill2" : "pill2 off";
+      const active = u.active !== false;
+      const pillClass = active ? "pill2" : "pill2 off";
 
-    const row = document.createElement("div");
-    row.className = "item";
-    row.innerHTML = `
-      <div class="meta">
-        <b>${escapeHtml(u.username)} • ${escapeHtml(u.display || "")}</b>
-        <span>${escapeHtml((u.roles||[]).join(", ") || "-")}</span>
-      </div>
-      <div class="pills">
-        ${pills}
-        <span class="${pillClass}">${active ? "AKTİF" : "PASİF"}</span>
-        <button class="btn2 ${active ? "warn" : "ok"}" type="button" data-uact="${escapeHtml(u.username)}">${active ? "Pasif Yap" : "Aktif Yap"}</button>
-        <button class="btn2 danger" type="button" data-udel="${escapeHtml(u.username)}">Sil</button>
-      </div>
-    `;
-    list.appendChild(row);
-  });
+      const row = document.createElement("div");
+      row.className = "item";
+      row.innerHTML = `
+        <div class="meta">
+          <b>${escapeHtml(u.username)} • ${escapeHtml(u.display || "")}</b>
+          <span>${escapeHtml((u.roles||[]).join(", ") || "-")}</span>
+        </div>
+        <div class="pills">
+          ${pills}
+          <span class="${pillClass}">${active ? "AKTİF" : "PASİF"}</span>
+          <button class="btn2 ${active ? "warn" : "ok"}" type="button" data-uact="${escapeHtml(u.username)}">${active ? "Pasif Yap" : "Aktif Yap"}</button>
+          <button class="btn2 danger" type="button" data-udel="${escapeHtml(u.username)}">Sil</button>
+        </div>
+      `;
+      list.appendChild(row);
+    });
 
-  list.querySelectorAll("[data-uact]").forEach(b => {
-    b.onclick = () => toggleUserActive(b.getAttribute("data-uact"));
-  });
-  list.querySelectorAll("[data-udel]").forEach(b => {
-    b.onclick = () => deleteUser(b.getAttribute("data-udel"));
-  });
-}
-
+    list.querySelectorAll("[data-uact]").forEach(b => b.onclick = () => toggleUserActive(b.getAttribute("data-uact")));
+    list.querySelectorAll("[data-udel]").forEach(b => b.onclick = () => deleteUser(b.getAttribute("data-udel")));
+  }
 
   function renderReportList(db){
     const list = document.getElementById("reportList");
@@ -1591,13 +1630,10 @@ if (!firmObj || firmObj.active === false){
     const desc = trim(document.getElementById("roleNewDesc").value);
     const key = normalizeRoleKey(keyRaw);
 
-    if (!key){
-      setMsg("roleMsg","Rol kodu boş olamaz.","err"); return;
-    }
+    if (!key){ setMsg("roleMsg","Rol kodu boş olamaz.","err"); return; }
     if (!wdb.roles) wdb.roles = [];
-    if (wdb.roles.some(r => r.key === key)){
-      setMsg("roleMsg","Bu rol zaten var.","warn"); return;
-    }
+    if (wdb.roles.some(r => r.key === key)){ setMsg("roleMsg","Bu rol zaten var.","warn"); return; }
+
     wdb.roles.push({ key, desc, active:true });
     setWorkingDB(wdb);
 
@@ -1624,28 +1660,21 @@ if (!firmObj || firmObj.active === false){
     if (!r){ setMsg("roleMsg","Rol bulunamadı.","err"); return; }
 
     const newKey = normalizeRoleKey(prompt("Yeni rol kodu:", roleKey) || "");
-    if (!newKey) return;
-    if (newKey === roleKey) return;
+    if (!newKey || newKey === roleKey) return;
     if ((wdb.roles||[]).some(x => x.key === newKey)){
       setMsg("roleMsg","Bu rol kodu zaten var.","err"); return;
     }
 
-    // update roles table
     r.key = newKey;
 
-    // update users
-    (wdb.users||[]).forEach(u => {
-      u.roles = (u.roles||[]).map(x => x === roleKey ? newKey : x);
-    });
+    (wdb.users||[]).forEach(u => { u.roles = (u.roles||[]).map(x => x === roleKey ? newKey : x); });
 
-    // update reports acl
     (wdb.reports||[]).forEach(rep => {
       if (rep.acl && Array.isArray(rep.acl.allowRoles)){
         rep.acl.allowRoles = rep.acl.allowRoles.map(x => x === roleKey ? newKey : x);
       }
     });
 
-    // update firmAccessRoles
     wdb.firmAccessRoles = wdb.firmAccessRoles || {};
     Object.keys(wdb.firmAccessRoles).forEach(fk => {
       wdb.firmAccessRoles[fk] = (wdb.firmAccessRoles[fk]||[]).map(x => x === roleKey ? newKey : x);
@@ -1675,22 +1704,14 @@ if (!firmObj || firmObj.active === false){
     );
     if (!proceed) return;
 
-    // remove role object
     wdb.roles = (wdb.roles||[]).filter(r => r.key !== roleKey);
-
-    // remove from users
-    (wdb.users||[]).forEach(u => {
-      u.roles = (u.roles||[]).filter(x => x !== roleKey);
-    });
-
-    // remove from reports
+    (wdb.users||[]).forEach(u => { u.roles = (u.roles||[]).filter(x => x !== roleKey); });
     (wdb.reports||[]).forEach(rep => {
       if (rep.acl && Array.isArray(rep.acl.allowRoles)){
         rep.acl.allowRoles = rep.acl.allowRoles.filter(x => x !== roleKey);
       }
     });
 
-    // remove from firmAccessRoles
     wdb.firmAccessRoles = wdb.firmAccessRoles || {};
     Object.keys(wdb.firmAccessRoles).forEach(fk => {
       wdb.firmAccessRoles[fk] = (wdb.firmAccessRoles[fk]||[]).filter(x => x !== roleKey);
@@ -1705,7 +1726,6 @@ if (!firmObj || firmObj.active === false){
     const wdb = loadWorkingDB();
     if (!wdb.roles) wdb.roles = [];
     wdb.roles.forEach(r => { r.key = normalizeRoleKey(r.key); });
-    // dedupe by key (keep first)
     const seen = new Set();
     wdb.roles = wdb.roles.filter(r => (seen.has(r.key) ? false : (seen.add(r.key), true)));
     setWorkingDB(wdb);
@@ -1718,13 +1738,15 @@ if (!firmObj || firmObj.active === false){
    ********************************************************************/
   function onFirmDisplayInput(){
     const wdb = loadWorkingDB();
-    document.getElementById("firmKeyOut").value = firmKeyFromInput(document.getElementById("firmDisplayIn").value, wdb) || "";
+    document.getElementById("firmKeyOut").value =
+      firmKeyFromInput(document.getElementById("firmDisplayIn").value, wdb) || "";
   }
 
   function addFirm(){
     const wdb = loadWorkingDB();
     const display = trim(document.getElementById("firmDisplayIn").value);
     if (!display){ setMsg("firmMsg","Firma adı boş olamaz.","err"); return; }
+
     const key = firmKeyFromInput(display, wdb) || firmKeyAuto(display);
     const exists = (wdb.firms || []).some(f => f.key === key);
     if (exists){ setMsg("firmMsg",`Bu firma key zaten var: ${key}`,"warn"); return; }
@@ -1736,7 +1758,6 @@ if (!firmObj || firmObj.active === false){
     wdb.aliases = wdb.aliases || {};
     wdb.aliases[aliasKey] = key;
 
-    // default firm access roles: try <KEY>_VIEW if exists; else empty until set
     wdb.firmAccessRoles = wdb.firmAccessRoles || {};
     const roleSet = new Set((wdb.roles||[]).map(r => r.key));
     const defaultRole = `${key}_VIEW`;
@@ -1783,49 +1804,41 @@ if (!firmObj || firmObj.active === false){
   }
 
   function toggleFirmActive(firmKey){
-  const wdb = loadWorkingDB();
-  const f = (wdb.firms||[]).find(x => x.key === firmKey);
-  if (!f){ setMsg("firmMsg","Firma bulunamadı.","err"); return; }
-  f.active = (f.active === false) ? true : false;
+    const wdb = loadWorkingDB();
+    const f = (wdb.firms||[]).find(x => x.key === firmKey);
+    if (!f){ setMsg("firmMsg","Firma bulunamadı.","err"); return; }
+    f.active = (f.active === false) ? true : false;
+    setWorkingDB(wdb);
+    setMsg("firmMsg",`${firmKey} => ${f.active ? "AKTİF" : "PASİF"}`,"info");
+    renderAdmin();
+  }
 
-  // Firma pasife alınırsa: raporlar durur ama silinmez (güvenli yaklaşım).
-  setWorkingDB(wdb);
-  setMsg("firmMsg",`${firmKey} => ${f.active ? "AKTİF" : "PASİF"}`,"info");
-  renderAdmin();
-}
+  function deleteFirm(firmKey){
+    const wdb = loadWorkingDB();
+    const f = (wdb.firms||[]).find(x => x.key === firmKey);
+    if (!f){ setMsg("firmMsg","Firma bulunamadı.","err"); return; }
 
-function deleteFirm(firmKey){
-  const wdb = loadWorkingDB();
-  const f = (wdb.firms||[]).find(x => x.key === firmKey);
-  if (!f){ setMsg("firmMsg","Firma bulunamadı.","err"); return; }
+    const repCount = (wdb.reports||[]).filter(r => r.firm === firmKey).length;
+    const ok = confirm(
+      `Firma silinsin mi?\n\n${f.display} (${f.key})\n\nEtkiler:\n- ${repCount} rapor silinecek\n- Firma giriş rol tanımı silinecek\n- Alias kayıtları temizlenecek`
+    );
+    if (!ok) return;
 
-  const repCount = (wdb.reports||[]).filter(r => r.firm === firmKey).length;
-  const ok = confirm(
-    `Firma silinsin mi?\n\n${f.display} (${f.key})\n\nEtkiler:\n- ${repCount} rapor silinecek\n- Firma giriş rol tanımı silinecek\n- Alias kayıtları temizlenecek`
-  );
-  if (!ok) return;
+    wdb.firms = (wdb.firms||[]).filter(x => x.key !== firmKey);
+    wdb.reports = (wdb.reports||[]).filter(r => r.firm !== firmKey);
 
-  // 1) firma sil
-  wdb.firms = (wdb.firms||[]).filter(x => x.key !== firmKey);
+    wdb.firmAccessRoles = wdb.firmAccessRoles || {};
+    delete wdb.firmAccessRoles[firmKey];
 
-  // 2) raporları sil
-  wdb.reports = (wdb.reports||[]).filter(r => r.firm !== firmKey);
+    wdb.aliases = wdb.aliases || {};
+    Object.keys(wdb.aliases).forEach(a => {
+      if (wdb.aliases[a] === firmKey) delete wdb.aliases[a];
+    });
 
-  // 3) firmAccessRoles sil
-  wdb.firmAccessRoles = wdb.firmAccessRoles || {};
-  delete wdb.firmAccessRoles[firmKey];
-
-  // 4) aliases temizle (bu firmaya işaret edenler)
-  wdb.aliases = wdb.aliases || {};
-  Object.keys(wdb.aliases).forEach(a => {
-    if (wdb.aliases[a] === firmKey) delete wdb.aliases[a];
-  });
-
-  setWorkingDB(wdb);
-  setMsg("firmMsg",`Firma silindi: ${firmKey}`,"ok");
-  renderAdmin();
-}
-
+    setWorkingDB(wdb);
+    setMsg("firmMsg",`Firma silindi: ${firmKey}`,"ok");
+    renderAdmin();
+  }
 
   /********************************************************************
    * Admin Actions: Users
@@ -1855,40 +1868,35 @@ function deleteFirm(firmKey){
   }
 
   function toggleUserActive(username){
-  const wdb = loadWorkingDB();
-  const u = (wdb.users||[]).find(x => norm(x.username) === norm(username));
-  if (!u){ setMsg("userMsg","Kullanıcı bulunamadı.","err"); return; }
-
-  // Admin hesabını pasifleştirmeyi engelle (zaten db.users içinde olmamalı ama güvenlik)
-  if (norm(u.username) === norm(ADMIN_LOGIN.username)){
-    setMsg("userMsg","Admin kullanıcısı değiştirilemez.","err");
-    return;
+    const wdb = loadWorkingDB();
+    const u = (wdb.users||[]).find(x => norm(x.username) === norm(username));
+    if (!u){ setMsg("userMsg","Kullanıcı bulunamadı.","err"); return; }
+    if (norm(u.username) === norm(ADMIN_LOGIN.username)){
+      setMsg("userMsg","Admin kullanıcısı değiştirilemez.","err");
+      return;
+    }
+    u.active = (u.active === false) ? true : false;
+    setWorkingDB(wdb);
+    setMsg("userMsg",`${u.username} => ${u.active ? "AKTİF" : "PASİF"}`,"info");
+    renderAdmin();
   }
 
-  u.active = (u.active === false) ? true : false;
-  setWorkingDB(wdb);
-  setMsg("userMsg",`${u.username} => ${u.active ? "AKTİF" : "PASİF"}`,"info");
-  renderAdmin();
-}
+  function deleteUser(username){
+    const wdb = loadWorkingDB();
+    const u = (wdb.users||[]).find(x => norm(x.username) === norm(username));
+    if (!u){ setMsg("userMsg","Kullanıcı bulunamadı.","err"); return; }
+    if (norm(u.username) === norm(ADMIN_LOGIN.username)){
+      setMsg("userMsg","Admin kullanıcısı silinemez.","err");
+      return;
+    }
+    const ok = confirm(`Kullanıcı silinsin mi?\n\n${u.username} • ${u.display || ""}`);
+    if (!ok) return;
 
-function deleteUser(username){
-  const wdb = loadWorkingDB();
-  const u = (wdb.users||[]).find(x => norm(x.username) === norm(username));
-  if (!u){ setMsg("userMsg","Kullanıcı bulunamadı.","err"); return; }
-
-  if (norm(u.username) === norm(ADMIN_LOGIN.username)){
-    setMsg("userMsg","Admin kullanıcısı silinemez.","err");
-    return;
+    wdb.users = (wdb.users||[]).filter(x => norm(x.username) !== norm(username));
+    setWorkingDB(wdb);
+    setMsg("userMsg",`Kullanıcı silindi: ${username}`,"ok");
+    renderAdmin();
   }
-
-  const ok = confirm(`Kullanıcı silinsin mi?\n\n${u.username} • ${u.display || ""}`);
-  if (!ok) return;
-
-  wdb.users = (wdb.users||[]).filter(x => norm(x.username) !== norm(username));
-  setWorkingDB(wdb);
-  setMsg("userMsg",`Kullanıcı silindi: ${username}`,"ok");
-  renderAdmin();
-}
 
   /********************************************************************
    * Admin Actions: Reports CRUD
@@ -1899,7 +1907,6 @@ function deleteUser(username){
     document.getElementById("repName").value = "";
     document.getElementById("repDesc").value = "";
     document.getElementById("repUrl").value = "";
-    // roles checkboxes are rebuilt on renderAdmin; just re-render to reset
     setMsg("repMsg","Form temizlendi (yeni rapor).","info");
     renderAdmin();
   }
@@ -1917,7 +1924,6 @@ function deleteUser(username){
     document.getElementById("repDesc").value = rep.desc || "";
     document.getElementById("repUrl").value = rep.url || "";
 
-    // set role checkboxes
     const actRoles = activeRoles(wdb).sort();
     const allow = (rep.acl && Array.isArray(rep.acl.allowRoles)) ? rep.acl.allowRoles : [];
     buildRoleCheckboxes("repRoleBox", actRoles, allow);
@@ -1978,7 +1984,6 @@ function deleteUser(username){
       return;
     }
 
-    // new report
     wdb.reports.push({
       id: genId(),
       firm, cat, name, url, desc,
@@ -2072,7 +2077,7 @@ function deleteUser(username){
   document.getElementById("goPortalBtn").addEventListener("click", goPortalFromAdmin);
 
   /********************************************************************
-   * Boot
+   * Boot (Portal sayfası açılınca otomatik açılsın)
    ********************************************************************/
   (function boot(){
     ensureDB();

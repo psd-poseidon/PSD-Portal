@@ -834,41 +834,42 @@
   /********************************************************************
    * Seed DB (V2)
    ********************************************************************/
-  const SEED_DB = {
+const SEED_DB = {
   firms: [
-  { key:"SUDESAN", display:"Sudesan", active:true },
-  { key:"DUPACK",  display:"Dupack",  active:true }
-],,
-    aliases: { "sudesan":"SUDESAN", "dupack":"DUPACK" },
+    { key:"SUDESAN", display:"Sudesan", active:true },
+    { key:"DUPACK",  display:"Dupack",  active:true }
+  ],
+  aliases: { "sudesan":"SUDESAN", "dupack":"DUPACK" },
 
-    // NEW: role objects
-    roles: [
-      { key:"SUDESAN_VIEW",    desc:"Sudesan raporlarını görüntüleme", active:true },
-      { key:"DUPACK_VIEW",     desc:"Dupack raporlarını görüntüleme", active:true },
-      { key:"OPERATIONS_VIEW", desc:"Operasyon raporları", active:true },
-      { key:"FINANCE_VIEW",    desc:"Finans raporları", active:true },
-      { key:"KPI_VIEW",        desc:"KPI raporları", active:true },
-      { key:"DASHBOARD_VIEW",  desc:"Dashboard raporları", active:true }
-    ],
+  // NEW: role objects
+  roles: [
+    { key:"SUDESAN_VIEW",    desc:"Sudesan raporlarını görüntüleme", active:true },
+    { key:"DUPACK_VIEW",     desc:"Dupack raporlarını görüntüleme", active:true },
+    { key:"OPERATIONS_VIEW", desc:"Operasyon raporları", active:true },
+    { key:"FINANCE_VIEW",    desc:"Finans raporları", active:true },
+    { key:"KPI_VIEW",        desc:"KPI raporları", active:true },
+    { key:"DASHBOARD_VIEW",  desc:"Dashboard raporları", active:true }
+  ],
 
-    // NEW: firm giriş için gerekli roller (tanımlanmazsa fallback: FIRMKEY_VIEW)
-    firmAccessRoles: {
-      "SUDESAN":["SUDESAN_VIEW"],
-      "DUPACK":["DUPACK_VIEW"]
-    },
+  // NEW: firm giriş için gerekli roller (tanımlanmazsa fallback: FIRMKEY_VIEW)
+  firmAccessRoles: {
+    "SUDESAN":["SUDESAN_VIEW"],
+    "DUPACK":["DUPACK_VIEW"]
+  },
 
   users: [
-  { username:"alper",  password:"1234", display:"Alper",  roles:["SUDESAN_VIEW","FINANCE_VIEW","KPI_VIEW","DASHBOARD_VIEW"], active:true },
-  { username:"zeynep", password:"1234", display:"Zeynep", roles:["SUDESAN_VIEW","DASHBOARD_VIEW"], active:true },
-  { username:"dupack", password:"1234", display:"Dupack", roles:["DUPACK_VIEW","DASHBOARD_VIEW"], active:true }
-],
+    { username:"alper",  password:"1234", display:"Alper",  roles:["SUDESAN_VIEW","FINANCE_VIEW","KPI_VIEW","DASHBOARD_VIEW"], active:true },
+    { username:"zeynep", password:"1234", display:"Zeynep", roles:["SUDESAN_VIEW","DASHBOARD_VIEW"], active:true },
+    { username:"dupack", password:"1234", display:"Dupack", roles:["DUPACK_VIEW","DASHBOARD_VIEW"], active:true }
+  ],
 
-    reports: [
-      { id:"r1", firm:"SUDESAN", cat:"DEPO", name:"Sudesan | Stok Analiz Raporu", url:"", desc:"Google Sheet / stok analiz", acl:{allowRoles:["SUDESAN_VIEW","OPERATIONS_VIEW"]} },
-      { id:"r2", firm:"SUDESAN", cat:"DASHBOARD", name:"Sudesan | Looker Dashboard", url:"", desc:"Looker Studio dashboard", acl:{allowRoles:["DASHBOARD_VIEW","SUDESAN_VIEW"]} },
-      { id:"r3", firm:"DUPACK",  cat:"DASHBOARD", name:"Dupack | Üretim Verimlilik ve Duruş Dashboard", url:"", desc:"Looker Studio dashboard", acl:{allowRoles:["DASHBOARD_VIEW","DUPACK_VIEW"]} }
-    ]
-  };
+  reports: [
+    { id:"r1", firm:"SUDESAN", cat:"DEPO", name:"Sudesan | Stok Analiz Raporu", url:"", desc:"Google Sheet / stok analiz", acl:{allowRoles:["SUDESAN_VIEW","OPERATIONS_VIEW"]} },
+    { id:"r2", firm:"SUDESAN", cat:"DASHBOARD", name:"Sudesan | Looker Dashboard", url:"", desc:"Looker Studio dashboard", acl:{allowRoles:["DASHBOARD_VIEW","SUDESAN_VIEW"]} },
+    { id:"r3", firm:"DUPACK",  cat:"DASHBOARD", name:"Dupack | Üretim Verimlilik ve Duruş Dashboard", url:"", desc:"Looker Studio dashboard", acl:{allowRoles:["DASHBOARD_VIEW","DUPACK_VIEW"]} }
+  ]
+};
+
 
   function ensureDB(){
     const existing = getLocalJSON(DB_KEY);
@@ -1245,13 +1246,20 @@ if (!firmObj2 || firmObj2.active === false){
 
     // Normal user login
     const db = loadCommittedDB();
-    const user = (db.users || []).find(x => norm(x.username) === norm(u) && x.password === p);
-    if (!user){
-      if (user.active === false){
+  const user = (db.users || []).find(x => norm(x.username) === norm(u) && x.password === p);
+  if (!user){
+  msg.className = "msg err";
+  msg.textContent = "Hatalı kullanıcı adı veya şifre.";
+  return;
+}
+
+// ✅ pasif kullanıcı kontrolü doğru yer
+if (user.active === false){
   msg.className = "msg err";
   msg.textContent = "Bu kullanıcı pasif durumdadır.";
   return;
 }
+
 
       msg.className = "msg err";
       msg.textContent = "Hatalı kullanıcı adı veya şifre.";
@@ -1722,7 +1730,7 @@ if (!firmObj || firmObj.active === false){
     if (exists){ setMsg("firmMsg",`Bu firma key zaten var: ${key}`,"warn"); return; }
 
     wdb.firms = wdb.firms || [];
-    wdb.firms.push({ key, display });
+    wdb.firms.push({ key, display, active:true });
 
     const aliasKey = normalizeFirmNameForAlias(display);
     wdb.aliases = wdb.aliases || {};

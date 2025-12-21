@@ -11,7 +11,7 @@
       --card:#111a2e;
       --muted:#9aa7bd;
       --text:#eaf0ff;
-      --border:rgba(255,255,255,.10); 
+      --border:rgba(255,255,255,.10);
 
       --danger:#ef4444;
       --ok:#22c55e;
@@ -536,7 +536,7 @@
       </div>
     </header>
 
-    <!-- PORTAL TOOLBAR -->
+    <!-- PORTAL TOOLBAR (Firma bazlı kullanıcılar) -->
     <div class="toolbar" id="portalToolbar" style="display:none;">
       <div class="toolbar-row">
         <input id="q" class="input" placeholder="Ara (ad/açıklama)..." />
@@ -544,8 +544,22 @@
       </div>
     </div>
 
+    <!-- KEY USER TOOLBAR (Tüm firmalar) -->
+    <div class="toolbar" id="keyToolbar" style="display:none;">
+      <div class="toolbar-row">
+        <input id="kq" class="input" placeholder="Ara (firma/kategori/ad/açıklama)..." />
+        <div class="chips" id="kFirmChips"></div>
+      </div>
+      <div class="toolbar-row">
+        <div class="chips" id="kCatChips"></div>
+      </div>
+    </div>
+
     <!-- PORTAL VIEW -->
     <div class="wrap" id="portalApp" style="display:none;"></div>
+
+    <!-- KEY USER VIEW -->
+    <div class="wrap" id="keyApp" style="display:none;"></div>
 
     <!-- ADMIN VIEW -->
     <div class="admin-wrap" id="adminView" style="display:none;">
@@ -559,10 +573,10 @@
         </div>
       </div>
 
-      <!-- ORDERED ADMIN GRID (1..7) -->
+      <!-- ORDERED ADMIN GRID (1..8) -->
       <div class="admin-grid">
 
-        <!-- 1) Firma Yönetimi (Ekle + Düzenle + Sil) -->
+        <!-- 1) Firma Yönetimi -->
         <div class="panel">
           <h3>1) Firma Yönetimi (Firma Ekle + Düzenle + Sil)</h3>
 
@@ -796,6 +810,48 @@
           <div class="msg" id="flowMsg"></div>
         </div>
 
+        <!-- 8) KEY USER Yönetimi (Yeni) -->
+        <div class="panel">
+          <h3>8) Key User Yönetimi (Tüm firmalara erişir)</h3>
+
+          <input id="keyUserEditingKey" type="hidden" />
+
+          <div class="smallNote">
+            Key User’lar firma ayrımı olmaksızın tüm linkleri görür. Login ekranında <b>firma girmeden</b> de giriş yapabilir.
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="row">
+            <div class="field">
+              <div class="label">Kullanıcı Adı</div>
+              <input id="keyUserU" class="login-input" placeholder="örn: key_alper" />
+            </div>
+            <div class="field">
+              <div class="label">Şifre</div>
+              <input id="keyUserP" class="login-input" placeholder="örn: 1234" />
+            </div>
+            <div class="field">
+              <div class="label">Görünen Ad</div>
+              <input id="keyUserD" class="login-input" placeholder="örn: Alper (Key)" />
+            </div>
+            <div class="field">
+              <div class="label">E-posta</div>
+              <input id="keyUserE" type="email" class="login-input" placeholder="örn: alper@psd.com.tr" />
+            </div>
+          </div>
+
+          <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn2 ok" id="addKeyUserBtn" type="button">Key User Ekle</button>
+            <button class="btn2 info" id="updateKeyUserBtn" type="button" style="display:none;">Key User Güncelle</button>
+            <button class="btn2 warn" id="resetKeyUserPwdBtn" type="button" style="display:none;">Şifreyi Sıfırla</button>
+            <button class="btn2" id="cancelKeyUserEditBtn" type="button" style="display:none;">İptal</button>
+          </div>
+
+          <div class="msg" id="keyUserMsg"></div>
+          <div class="list" id="keyUserList"></div>
+        </div>
+
       </div>
     </div>
 
@@ -834,7 +890,7 @@
 
       <div class="login-right">
         <h3 class="login-title">Giriş</h3>
-        <p class="login-sub">Kullanıcı adı, şifre ve firma ile giriş yapın.</p>
+        <p class="login-sub">Kullanıcı adı, şifre ve firma ile giriş yapın. <span class="hint">(Key User ise firma opsiyonel)</span></p>
 
         <div class="field">
           <div class="label">Kullanıcı Adı</div>
@@ -847,7 +903,7 @@
         </div>
 
         <div class="field">
-          <div class="label">Firma <span class="hint">(Boş Bırakılamaz)</span></div>
+          <div class="label">Firma <span class="hint">(Key User değilse Boş Bırakılamaz)</span></div>
           <input id="firmName" class="login-input" placeholder='' />
         </div>
 
@@ -948,7 +1004,7 @@
   }
 
   /********************************************************************
-   * Seed DB (V2)
+   * Seed DB (V2) + Key Users
    ********************************************************************/
   const SEED_DB = {
     firms: [
@@ -977,6 +1033,12 @@
       { username:"dupack", password:"1234", display:"Dupack", email:"", roles:["DUPACK_VIEW","DASHBOARD_VIEW"], active:true }
     ],
 
+    // NEW: Key Users (firma bağımsız tam erişim)
+    keyUsers: [
+      // örnek:
+      // { username:"keyuser", password:"1234", display:"Key User", email:"", active:true }
+    ],
+
     reports: [
       { id:"r1", firm:"SUDESAN", cat:"DEPO", name:"Sudesan | Stok Analiz Raporu", url:"", desc:"Google Sheet / stok analiz", acl:{allowRoles:["SUDESAN_VIEW","OPERATIONS_VIEW"]} },
       { id:"r2", firm:"SUDESAN", cat:"DASHBOARD", name:"Sudesan | Looker Dashboard", url:"", desc:"Looker Studio dashboard", acl:{allowRoles:["DASHBOARD_VIEW","SUDESAN_VIEW"]} },
@@ -995,13 +1057,15 @@
     const db = getLocalJSON(DB_KEY);
 
     if (!db.firmAccessRoles) db.firmAccessRoles = {};
+    if (!db.keyUsers) db.keyUsers = [];
 
-    // MIGRATION: firms/users active default
+    // MIGRATION: firms/users/keyUsers active default
     let dirty = false;
     (db.firms || []).forEach(f => { if (typeof f.active === "undefined") { f.active = true; dirty = true; } });
     (db.users || []).forEach(u => { if (typeof u.active === "undefined") { u.active = true; dirty = true; } });
-    if (dirty) setLocalJSON(DB_KEY, db);
+    (db.keyUsers || []).forEach(u => { if (typeof u.active === "undefined") { u.active = true; dirty = true; } });
 
+    if (dirty) setLocalJSON(DB_KEY, db);
     return db;
   }
 
@@ -1035,9 +1099,14 @@
   function getSession(){ return getLocalJSON(SESSION_KEY); }
   function clearSession(){ localStorage.removeItem(SESSION_KEY); }
 
+  function isKeyUserSession(session){
+    return !!(session && session.isKeyUser === true && session.mode === "KEY");
+  }
+
   function hasRole(session, role, db){
     if (!session) return false;
     if (Array.isArray(session.roles) && session.roles.includes("ADMIN")) return true;
+    if (isKeyUserSession(session)) return true; // Key User her role'ü bypass eder
 
     const meta = roleMetaMap(db || loadCommittedDB());
     if (role && meta[role] && meta[role].active === false) return false;
@@ -1048,6 +1117,7 @@
   function firmAccessAllowed(session, firmKey, db){
     if (!session) return false;
     if (Array.isArray(session.roles) && session.roles.includes("ADMIN")) return true;
+    if (isKeyUserSession(session)) return true; // firma gating yok
 
     const far = (db.firmAccessRoles && db.firmAccessRoles[firmKey]) ? db.firmAccessRoles[firmKey] : null;
     const required = (Array.isArray(far) && far.length) ? far : [`${firmKey}_VIEW`];
@@ -1057,6 +1127,7 @@
   function isAllowed(item, session, db){
     if (!session) return false;
     if (Array.isArray(session.roles) && session.roles.includes("ADMIN")) return true;
+    if (isKeyUserSession(session)) return true; // rapor ACL + firma sınırı yok
 
     if (item && item.firm && !firmAccessAllowed(session, item.firm, db)) return false;
 
@@ -1086,7 +1157,14 @@
     if (session.mode === "ADMIN"){
       h.textContent = "PSD-Portal (Admin)";
       document.title = "PSD-Portal (Admin)";
-      sub.textContent = "Admin: Firma/Rol/Kullanıcı/Rapor yönetimi. Değişiklikleri Kaydet ile kalıcı yap.";
+      sub.textContent = "Admin: Firma/Rol/Kullanıcı/Rapor/Key User yönetimi. Değişiklikleri Kaydet ile kalıcı yap.";
+      return;
+    }
+
+    if (session.mode === "KEY"){
+      h.textContent = "PSD-Portal (Key User)";
+      document.title = "PSD-Portal (Key User)";
+      sub.textContent = "Key User: Tüm firmalardaki linkler görünür. Filtrelemek için firma/kategori chiplerini kullan.";
       return;
     }
 
@@ -1115,17 +1193,21 @@
 
     whoBox.style.display = "block";
     logoutBtn.style.display = "inline-block";
+    topLogoBox.style.display = (session.mode === "PORTAL" || session.mode === "KEY") ? "flex" : "none";
 
     if (session.mode === "ADMIN"){
       whoBox.textContent = `${session.display} • Admin`;
       adminBtn.style.display = "inline-block";
       saveBtn.style.display = hasPendingChanges() ? "inline-block" : "none";
       topLogoBox.style.display = "none";
+    } else if (session.mode === "KEY"){
+      whoBox.textContent = `${session.display} • Key User`;
+      adminBtn.style.display = "none";
+      saveBtn.style.display = "none";
     } else {
       whoBox.textContent = `${session.display} • ${session.firmDisplay}`;
       adminBtn.style.display = "none";
       saveBtn.style.display = "none";
-      topLogoBox.style.display = "flex";
     }
   }
 
@@ -1138,14 +1220,30 @@
     document.getElementById("portalToolbar").style.display = show ? "block" : "none";
     document.getElementById("portalApp").style.display = show ? "block" : "none";
     document.getElementById("footer").style.display = show ? "block" : "none";
+    if (show) {
+      document.getElementById("keyToolbar").style.display = "none";
+      document.getElementById("keyApp").style.display = "none";
+    }
+  }
+  function showKey(show){
+    document.getElementById("keyToolbar").style.display = show ? "block" : "none";
+    document.getElementById("keyApp").style.display = show ? "block" : "none";
+    document.getElementById("footer").style.display = show ? "block" : "none";
+    if (show) {
+      document.getElementById("portalToolbar").style.display = "none";
+      document.getElementById("portalApp").style.display = "none";
+    }
   }
   function showAdmin(show){
     document.getElementById("adminView").style.display = show ? "block" : "none";
-    if (show) showPortal(false);
+    if (show){
+      showPortal(false);
+      showKey(false);
+    }
   }
 
   /********************************************************************
-   * Portal rendering
+   * Portal rendering (Firma bazlı)
    ********************************************************************/
   let selectedCat = "ALL";
 
@@ -1202,8 +1300,14 @@
       showAdmin(true);
       return;
     }
+    if (session.mode === "KEY"){
+      showKey(true);
+      renderKeyPortal();
+      return;
+    }
 
     showAdmin(false);
+    showKey(false);
     showPortal(true);
     setPortalTitle(session);
 
@@ -1312,6 +1416,207 @@
   }
 
   /********************************************************************
+   * KEY USER Portal (Tüm firmalar)
+   ********************************************************************/
+  let selectedFirmK = "ALL";
+  let selectedCatK = "ALL";
+
+  function firmDisplayByKey(db, key){
+    const f = (db.firms||[]).find(x => x.key === key);
+    return f ? f.display : key;
+  }
+
+  function uniqueFirmKeys(db){
+    return (db.firms||[])
+      .filter(f => f && f.active !== false)
+      .map(f => f.key)
+      .sort((a,b)=> firmDisplayByKey(db,a).localeCompare(firmDisplayByKey(db,b)));
+  }
+
+  function uniqueCatsAll(db, firmKeyOrAll){
+    const set = new Set(
+      (db.reports||[])
+        .filter(r => (firmKeyOrAll === "ALL" ? true : r.firm === firmKeyOrAll))
+        .map(r => r.cat)
+        .filter(Boolean)
+    );
+    return Array.from(set).sort();
+  }
+
+  function buildKeyFirmChips(){
+    const session = getSession();
+    const chips = document.getElementById("kFirmChips");
+    chips.innerHTML = "";
+    if (!session || session.mode !== "KEY") return;
+
+    const db = loadCommittedDB();
+    const firms = uniqueFirmKeys(db);
+    const all = ["ALL", ...firms];
+
+    all.forEach(fk => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "chipBtn" + (fk === selectedFirmK ? " active" : "");
+      b.textContent = (fk === "ALL") ? "Tüm Firmalar" : firmDisplayByKey(db, fk);
+      b.onclick = () => {
+        selectedFirmK = fk;
+        selectedCatK = "ALL"; // firma değişince kategori reset
+        buildKeyFirmChips();
+        buildKeyCatChips();
+        renderKeyPortal();
+      };
+      chips.appendChild(b);
+    });
+  }
+
+  function buildKeyCatChips(){
+    const session = getSession();
+    const chips = document.getElementById("kCatChips");
+    chips.innerHTML = "";
+    if (!session || session.mode !== "KEY") return;
+
+    const db = loadCommittedDB();
+    const cats = uniqueCatsAll(db, selectedFirmK);
+    const all = ["ALL", ...cats];
+
+    all.forEach(c => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "chipBtn" + (c === selectedCatK ? " active" : "");
+      b.textContent = (c === "ALL") ? "Tümü" : c;
+      b.onclick = () => {
+        selectedCatK = c;
+        buildKeyCatChips();
+        renderKeyPortal();
+      };
+      chips.appendChild(b);
+    });
+  }
+
+  function groupByFirmThenCat(list){
+    const m = {};
+    list.forEach(r => {
+      if (!m[r.firm]) m[r.firm] = {};
+      if (!m[r.firm][r.cat]) m[r.firm][r.cat] = [];
+      m[r.firm][r.cat].push(r);
+    });
+
+    const firmKeys = Object.keys(m).sort((a,b)=> a.localeCompare(b));
+    const out = [];
+    firmKeys.forEach(fk => {
+      const cats = Object.keys(m[fk]).sort();
+      cats.forEach(cat => {
+        out.push({ firm: fk, cat, items: m[fk][cat] });
+      });
+    });
+    return out;
+  }
+
+  function renderKeyPortal(){
+    const session = getSession();
+    if (!session || session.mode !== "KEY"){
+      return;
+    }
+
+    showAdmin(false);
+    showPortal(false);
+    showKey(true);
+    setPortalTitle(session);
+
+    const db = loadCommittedDB();
+
+    const q = norm(document.getElementById("kq").value);
+
+    // Key User her şeyi görür ama firma pasif ise göstermeyelim (istersen kaldırabilirsin)
+    const activeFirmSet = new Set((db.firms||[]).filter(f=>f.active!==false).map(f=>f.key));
+
+    let list = (db.reports || []).slice();
+    list = list.filter(r => activeFirmSet.has(r.firm));
+
+    if (selectedFirmK !== "ALL"){
+      list = list.filter(r => r.firm === selectedFirmK);
+    }
+    if (selectedCatK !== "ALL"){
+      list = list.filter(r => r.cat === selectedCatK);
+    }
+
+    list = list.filter(r => {
+      if (!q) return true;
+      const hay = norm(
+        firmDisplayByKey(db, r.firm) + " " +
+        (r.firm||"") + " " +
+        (r.cat||"") + " " +
+        (r.name||"") + " " +
+        (r.desc||"")
+      );
+      return hay.includes(q);
+    });
+
+    const app = document.getElementById("keyApp");
+    app.innerHTML = "";
+
+    if (!list.length){
+      app.innerHTML = `
+        <div class="section">
+          <div class="section-title">Sonuç yok</div>
+          <div style="color:var(--muted);font-size:13px;">
+            Bu filtre için rapor bulunamadı.
+          </div>
+        </div>`;
+      return;
+    }
+
+    const sections = groupByFirmThenCat(list);
+    sections.forEach(sec => {
+      const box = document.createElement("div");
+      box.className = "section";
+
+      const title = document.createElement("div");
+      title.className = "section-title";
+      title.textContent = `${firmDisplayByKey(db, sec.firm)} • ${sec.cat}`;
+
+      const grid = document.createElement("div");
+      grid.className = "grid";
+
+      sec.items.forEach(x => {
+        const tag = tagOf(x.name);
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "btn " + (tag==="SUDESAN" ? "tag-sudesan" : tag==="DUPACK" ? "tag-dupack" : "tag-other");
+
+        const pill = document.createElement("div");
+        pill.className = "pill";
+        pill.textContent = x.firm; // Key user için firmayı pill yapalım
+
+        const nm = document.createElement("div");
+        nm.className = "name";
+        nm.textContent = x.name;
+
+        const ds = document.createElement("div");
+        ds.className = "desc";
+        ds.textContent = x.desc || "";
+
+        btn.appendChild(pill);
+        btn.appendChild(nm);
+        btn.appendChild(ds);
+
+        if (!x.url){
+          btn.classList.add("disabled");
+          btn.onclick = () => {};
+        } else {
+          btn.onclick = () => window.open(x.url, "_blank", "noopener,noreferrer");
+        }
+
+        grid.appendChild(btn);
+      });
+
+      box.appendChild(title);
+      box.appendChild(grid);
+      app.appendChild(box);
+    });
+  }
+
+  /********************************************************************
    * Login / Logout
    ********************************************************************/
   function doLogin(){
@@ -1340,8 +1645,42 @@
       return;
     }
 
-    // Normal user login
     const db = loadCommittedDB();
+
+    // Key User login (firma opsiyonel)
+    const ku = (db.keyUsers || []).find(x => norm(x.username) === norm(u) && x.password === p);
+    if (ku){
+      if (ku.active === false){
+        msg.className = "msg err";
+        msg.textContent = "Bu Key User pasif durumdadır.";
+        return;
+      }
+
+      setSession({
+        username: ku.username,
+        display: ku.display || ku.username,
+        roles: ["KEYUSER"],
+        mode: "KEY",
+        isKeyUser: true
+      });
+
+      msg.className = "msg ok";
+      msg.textContent = "Key User girişi başarılı.";
+      selectedFirmK = "ALL";
+      selectedCatK = "ALL";
+      showLogin(false);
+      showAdmin(false);
+      showPortal(false);
+      showKey(true);
+      refreshTopbar();
+      setPortalTitle(getSession());
+      buildKeyFirmChips();
+      buildKeyCatChips();
+      renderKeyPortal();
+      return;
+    }
+
+    // Normal user login
     const user = (db.users || []).find(x => norm(x.username) === norm(u) && x.password === p);
 
     if (!user){
@@ -1393,6 +1732,7 @@
     selectedCat = "ALL";
     showLogin(false);
     showAdmin(false);
+    showKey(false);
     showPortal(true);
     refreshTopbar();
     setPortalTitle(getSession());
@@ -1404,10 +1744,20 @@
   function doLogout(){
     clearSession();
     selectedCat = "ALL";
+    selectedFirmK = "ALL";
+    selectedCatK = "ALL";
+
     document.getElementById("q").value = "";
     document.getElementById("chips").innerHTML = "";
     document.getElementById("portalApp").innerHTML = "";
+
+    document.getElementById("kq").value = "";
+    document.getElementById("kFirmChips").innerHTML = "";
+    document.getElementById("kCatChips").innerHTML = "";
+    document.getElementById("keyApp").innerHTML = "";
+
     showPortal(false);
+    showKey(false);
     showAdmin(false);
     refreshTopbar();
     setPortalTitle(null);
@@ -1474,7 +1824,7 @@
     // active roles list for checkboxes
     const actRoles = activeRoles(wdb).sort();
 
-    // USER ROLE BOX: edit modunda seçili roller bozulmasın
+    // USER ROLE BOX
     const editingUserKey = document.getElementById("userEditingKey").value || "";
     if (!editingUserKey){
       buildRoleCheckboxes("userRoleBox", actRoles, []);
@@ -1483,13 +1833,11 @@
       buildRoleCheckboxes("userRoleBox", actRoles, (wu && wu.roles) ? wu.roles : []);
     }
 
-    // REP role checkboxes (edit rapor yüklendiğinde loadPickedReportIntoForm zaten dolduruyor; default boş)
-    // ama panel ilk açılışta boş kalsın
     if (!document.getElementById("repEditingId").value){
       buildRoleCheckboxes("repRoleBox", actRoles, []);
     }
 
-    // firm roles: based on selected firm
+    // firm roles
     const firmKey = document.getElementById("firmSelForRoles").value || (wdb.firms[0] ? wdb.firms[0].key : "");
     const currentFirmRoles = (wdb.firmAccessRoles && wdb.firmAccessRoles[firmKey]) ? wdb.firmAccessRoles[firmKey] : [];
     buildRoleCheckboxes("firmRoleBox", actRoles, currentFirmRoles);
@@ -1499,6 +1847,9 @@
     renderFirmList(wdb);
     renderUserList(wdb);
     renderReportList(wdb);
+
+    // KEY USER list (new)
+    renderKeyUserList(wdb);
 
     refreshTopbar();
   }
@@ -1820,7 +2171,7 @@
   function onFirmDisplayInput(){
     const wdb = loadWorkingDB();
     const editingKey = document.getElementById("firmEditingKey").value || "";
-    if (editingKey) return; // edit modunda key değişmez
+    if (editingKey) return;
     document.getElementById("firmKeyOut").value =
       firmKeyFromInput(document.getElementById("firmDisplayIn").value, wdb) || "";
   }
@@ -2011,7 +2362,7 @@
 
     document.getElementById("userEditingKey").value = u.username;
     document.getElementById("newUserU").value = u.username;
-    document.getElementById("newUserP").value = ""; // şifreyi göstermiyoruz
+    document.getElementById("newUserP").value = "";
     document.getElementById("newUserD").value = u.display || "";
     document.getElementById("newUserE").value = u.email || "";
 
@@ -2036,6 +2387,8 @@
 
     if (!username || !password){ setMsg("userMsg","Kullanıcı adı ve şifre zorunlu.","err"); return; }
     if (norm(username) === norm(ADMIN_LOGIN.username)){ setMsg("userMsg","Bu kullanıcı adı Admin için ayrılmış.","err"); return; }
+    if ((wdb.keyUsers||[]).some(x => norm(x.username) === norm(username))){ setMsg("userMsg","Bu kullanıcı adı Key User olarak zaten var.","err"); return; }
+
     const exists = (wdb.users || []).some(u => norm(u.username) === norm(username));
     if (exists){ setMsg("userMsg","Bu kullanıcı adı zaten var.","warn"); return; }
     if (!roles.length){ setMsg("userMsg","En az 1 rol seçilmelidir.","err"); return; }
@@ -2119,7 +2472,6 @@
     wdb.users = (wdb.users||[]).filter(x => norm(x.username) !== norm(username));
     setWorkingDB(wdb);
     setMsg("userMsg",`Kullanıcı silindi: ${username}`,"ok");
-    // silinen kullanıcı edit modundaysa formu temizle
     if ((document.getElementById("userEditingKey").value||"") && norm(document.getElementById("userEditingKey").value) === norm(username)){
       clearUserForm();
     }
@@ -2319,6 +2671,167 @@
   }
 
   /********************************************************************
+   * Admin Actions: KEY USERS (NEW)
+   ********************************************************************/
+  function clearKeyUserForm(){
+    document.getElementById("keyUserEditingKey").value = "";
+    document.getElementById("keyUserU").value = "";
+    document.getElementById("keyUserP").value = "";
+    document.getElementById("keyUserD").value = "";
+    document.getElementById("keyUserE").value = "";
+
+    document.getElementById("keyUserU").disabled = false;
+    document.getElementById("addKeyUserBtn").style.display = "inline-block";
+    document.getElementById("updateKeyUserBtn").style.display = "none";
+    document.getElementById("resetKeyUserPwdBtn").style.display = "none";
+    document.getElementById("cancelKeyUserEditBtn").style.display = "none";
+  }
+
+  function renderKeyUserList(db){
+    const list = document.getElementById("keyUserList");
+    if (!list) return;
+    list.innerHTML = "";
+
+    (db.keyUsers || []).slice().sort((a,b)=>a.username.localeCompare(b.username)).forEach(u => {
+      const active = u.active !== false;
+      const pillClass = active ? "pill2" : "pill2 off";
+
+      const row = document.createElement("div");
+      row.className = "item";
+      row.innerHTML = `
+        <div class="meta">
+          <b>${escapeHtml(u.username)} • ${escapeHtml(u.display || "")}</b>
+          <span>${escapeHtml(u.email || "")}</span>
+        </div>
+        <div class="pills">
+          <span class="pill2">KEY USER</span>
+          <span class="${pillClass}">${active ? "AKTİF" : "PASİF"}</span>
+          <button class="btn2 info" type="button" data-kedit="${escapeHtml(u.username)}">Düzenle</button>
+          <button class="btn2 ${active ? "warn" : "ok"}" type="button" data-kact="${escapeHtml(u.username)}">${active ? "Pasif Yap" : "Aktif Yap"}</button>
+          <button class="btn2 danger" type="button" data-kdel="${escapeHtml(u.username)}">Sil</button>
+        </div>
+      `;
+      list.appendChild(row);
+    });
+
+    list.querySelectorAll("[data-kedit]").forEach(b => b.onclick = () => startEditKeyUser(b.getAttribute("data-kedit")));
+    list.querySelectorAll("[data-kact]").forEach(b => b.onclick = () => toggleKeyUserActive(b.getAttribute("data-kact")));
+    list.querySelectorAll("[data-kdel]").forEach(b => b.onclick = () => deleteKeyUser(b.getAttribute("data-kdel")));
+  }
+
+  function addKeyUser(){
+    const wdb = loadWorkingDB();
+    wdb.keyUsers = wdb.keyUsers || [];
+
+    const username = trim(document.getElementById("keyUserU").value);
+    const password = document.getElementById("keyUserP").value || "";
+    const display  = trim(document.getElementById("keyUserD").value);
+    const email    = trim(document.getElementById("keyUserE").value);
+
+    if (!username || !password){
+      setMsg("keyUserMsg","Kullanıcı adı ve şifre zorunlu.","err"); return;
+    }
+    if (norm(username) === norm(ADMIN_LOGIN.username)){
+      setMsg("keyUserMsg","Bu kullanıcı adı Admin için ayrılmış.","err"); return;
+    }
+    if ((wdb.users||[]).some(u => norm(u.username) === norm(username))){
+      setMsg("keyUserMsg","Bu kullanıcı adı normal kullanıcı olarak zaten var.","err"); return;
+    }
+    if (wdb.keyUsers.some(u => norm(u.username) === norm(username))){
+      setMsg("keyUserMsg","Bu Key User zaten var.","warn"); return;
+    }
+
+    wdb.keyUsers.push({ username, password, display, email, active:true });
+    setWorkingDB(wdb);
+    setMsg("keyUserMsg",`Key User eklendi: ${username}`,"ok");
+    clearKeyUserForm();
+    renderAdmin();
+  }
+
+  function startEditKeyUser(username){
+    const wdb = loadWorkingDB();
+    const u = (wdb.keyUsers||[]).find(x => norm(x.username) === norm(username));
+    if (!u){ setMsg("keyUserMsg","Key User bulunamadı.","err"); return; }
+
+    document.getElementById("keyUserEditingKey").value = u.username;
+    document.getElementById("keyUserU").value = u.username;
+    document.getElementById("keyUserP").value = "";
+    document.getElementById("keyUserD").value = u.display || "";
+    document.getElementById("keyUserE").value = u.email || "";
+
+    document.getElementById("keyUserU").disabled = true;
+    document.getElementById("addKeyUserBtn").style.display = "none";
+    document.getElementById("updateKeyUserBtn").style.display = "inline-block";
+    document.getElementById("resetKeyUserPwdBtn").style.display = "inline-block";
+    document.getElementById("cancelKeyUserEditBtn").style.display = "inline-block";
+
+    setMsg("keyUserMsg",`Düzenleme modu: ${u.username}`,"info");
+  }
+
+  function updateKeyUser(){
+    const wdb = loadWorkingDB();
+    const editing = document.getElementById("keyUserEditingKey").value || "";
+    if (!editing){ setMsg("keyUserMsg","Güncellenecek Key User seçilmedi.","err"); return; }
+
+    const u = (wdb.keyUsers||[]).find(x => norm(x.username) === norm(editing));
+    if (!u){ setMsg("keyUserMsg","Key User bulunamadı.","err"); return; }
+
+    u.display = trim(document.getElementById("keyUserD").value);
+    u.email   = trim(document.getElementById("keyUserE").value);
+
+    setWorkingDB(wdb);
+    setMsg("keyUserMsg",`Key User güncellendi: ${u.username}`,"ok");
+    clearKeyUserForm();
+    renderAdmin();
+  }
+
+  function resetKeyUserPassword(){
+    const wdb = loadWorkingDB();
+    const editing = document.getElementById("keyUserEditingKey").value || "";
+    if (!editing){ setMsg("keyUserMsg","Şifre sıfırlamak için Key User seç.","err"); return; }
+
+    const u = (wdb.keyUsers||[]).find(x => norm(x.username) === norm(editing));
+    if (!u){ setMsg("keyUserMsg","Key User bulunamadı.","err"); return; }
+
+    const newPwd = document.getElementById("keyUserP").value || "";
+    if (!newPwd){ setMsg("keyUserMsg","Yeni şifre alanını doldur.","err"); return; }
+
+    u.password = newPwd;
+    setWorkingDB(wdb);
+    setMsg("keyUserMsg","Key User şifresi güncellendi (taslak).","ok");
+    document.getElementById("keyUserP").value = "";
+    renderAdmin();
+  }
+
+  function toggleKeyUserActive(username){
+    const wdb = loadWorkingDB();
+    const u = (wdb.keyUsers||[]).find(x => norm(x.username) === norm(username));
+    if (!u){ setMsg("keyUserMsg","Key User bulunamadı.","err"); return; }
+    u.active = (u.active === false) ? true : false;
+    setWorkingDB(wdb);
+    setMsg("keyUserMsg",`${u.username} => ${u.active ? "AKTİF" : "PASİF"}`,"info");
+    renderAdmin();
+  }
+
+  function deleteKeyUser(username){
+    const wdb = loadWorkingDB();
+    const u = (wdb.keyUsers||[]).find(x => norm(x.username) === norm(username));
+    if (!u){ setMsg("keyUserMsg","Key User bulunamadı.","err"); return; }
+
+    const ok = confirm(`Key User silinsin mi?\n\n${u.username} • ${u.display || ""}`);
+    if (!ok) return;
+
+    wdb.keyUsers = (wdb.keyUsers||[]).filter(x => norm(x.username) !== norm(username));
+    setWorkingDB(wdb);
+    setMsg("keyUserMsg",`Key User silindi: ${username}`,"ok");
+
+    if ((document.getElementById("keyUserEditingKey").value||"") && norm(document.getElementById("keyUserEditingKey").value) === norm(username)){
+      clearKeyUserForm();
+    }
+    renderAdmin();
+  }
+
+  /********************************************************************
    * Save flow
    ********************************************************************/
   function discardDraft(){
@@ -2330,11 +2843,21 @@
   function goPortalFromAdmin(){
     setMsg("flowMsg","Portal’a geçildi. Kaydet butonu (varsa) sağ üstte.","ok");
     showAdmin(false);
-    showPortal(true);
+
+    const session = getSession();
     refreshTopbar();
-    setPortalTitle(getSession());
-    buildCategoryChips();
-    renderPortal();
+    setPortalTitle(session);
+
+    if (session && session.mode === "KEY"){
+      showKey(true);
+      buildKeyFirmChips();
+      buildKeyCatChips();
+      renderKeyPortal();
+    } else {
+      showPortal(true);
+      buildCategoryChips();
+      renderPortal();
+    }
   }
 
   function onSave(){
@@ -2375,6 +2898,8 @@
 
   document.getElementById("q").addEventListener("input", renderPortal);
 
+  document.getElementById("kq").addEventListener("input", renderKeyPortal);
+
   // roles
   document.getElementById("addRoleBtn").addEventListener("click", addRole);
   document.getElementById("normalizeRolesBtn").addEventListener("click", normalizeRoles);
@@ -2412,6 +2937,12 @@
   document.getElementById("discardBtn").addEventListener("click", discardDraft);
   document.getElementById("goPortalBtn").addEventListener("click", goPortalFromAdmin);
 
+  // key users
+  document.getElementById("addKeyUserBtn").addEventListener("click", addKeyUser);
+  document.getElementById("updateKeyUserBtn").addEventListener("click", updateKeyUser);
+  document.getElementById("resetKeyUserPwdBtn").addEventListener("click", resetKeyUserPassword);
+  document.getElementById("cancelKeyUserEditBtn").addEventListener("click", () => { clearKeyUserForm(); setMsg("keyUserMsg","Düzenleme iptal edildi.","info"); renderAdmin(); });
+
   /********************************************************************
    * Boot (Portal sayfası açılınca otomatik açılsın)
    ********************************************************************/
@@ -2422,6 +2953,7 @@
     if (!session){
       showLogin(true);
       showPortal(false);
+      showKey(false);
       showAdmin(false);
       refreshTopbar();
       setPortalTitle(null);
@@ -2438,8 +2970,21 @@
       return;
     }
 
+    if (session.mode === "KEY"){
+      selectedFirmK = "ALL";
+      selectedCatK = "ALL";
+      showAdmin(false);
+      showPortal(false);
+      showKey(true);
+      buildKeyFirmChips();
+      buildKeyCatChips();
+      renderKeyPortal();
+      return;
+    }
+
     selectedCat = "ALL";
     showAdmin(false);
+    showKey(false);
     showPortal(true);
     buildCategoryChips();
     renderPortal();

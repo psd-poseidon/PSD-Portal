@@ -6,26 +6,76 @@
   <title>PSD-Portal</title>
 
   <style>
+    /* =========================================================
+       THEME (Dark = Login / Light = Admin+Portal+KeyUser)
+       ========================================================= */
     :root{
-      --bg:#0b1220;
+      /* page */
+      --pageBg: #0b1220;
+      --pageGlow1: rgba(255,255,255,.25);
+      --pageGlow2: rgba(255,255,255,.25);
+
+      /* surfaces */
       --card:#111a2e;
+      --panel: rgba(255,255,255,.03);
+      --panel2: rgba(255,255,255,.04);
       --muted:#9aa7bd;
       --text:#eaf0ff;
       --border:rgba(255,255,255,.10);
 
+      /* accents */
       --danger:#ef4444;
       --ok:#22c55e;
       --warn:#f59e0b;
       --info:#60a5fa;
+
+      /* common component */
+      --btnBg: var(--card);
+      --chipBg: rgba(255,255,255,.04);
+      --chipBgActive: rgba(255,255,255,.08);
+      --chipText: rgba(255,255,255,.85);
+      --inputBg: rgba(255,255,255,.06);
+      --toplineText: rgba(255,255,255,.80);
+      --subtleText: rgba(255,255,255,.55);
+      --footerText: rgba(255,255,255,.45);
+      --pillBg: rgba(255,255,255,.06);
+      --pillText: rgba(255,255,255,.92);
     }
+
+    /* Light theme overrides */
+    body.theme-light{
+      --pageBg: #f5f7fb;
+      --pageGlow1: rgba(96,165,250,.14);
+      --pageGlow2: rgba(34,197,94,.10);
+
+      --card:#ffffff;
+      --panel: rgba(0,0,0,.03);
+      --panel2: rgba(0,0,0,.04);
+      --muted:#4b5563;
+      --text:#0b1220;
+      --border:rgba(0,0,0,.12);
+
+      --btnBg: #ffffff;
+      --chipBg: rgba(0,0,0,.04);
+      --chipBgActive: rgba(0,0,0,.07);
+      --chipText: rgba(0,0,0,.82);
+      --inputBg: rgba(0,0,0,.04);
+      --toplineText: rgba(0,0,0,.72);
+      --subtleText: rgba(0,0,0,.55);
+      --footerText: rgba(0,0,0,.45);
+      --pillBg: rgba(0,0,0,.05);
+      --pillText: rgba(0,0,0,.84);
+    }
+
     *{box-sizing:border-box}
     html, body{ height:100%; }
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      background: radial-gradient(1000px 600px at 20% 0%, rgba(255,255,255,.25), transparent 60%),
-                  radial-gradient(1000px 600px at 80% 0%, rgba(255,255,255,.25), transparent 60%),
-                  var(--bg);
+      background:
+        radial-gradient(1000px 600px at 20% 0%, var(--pageGlow1), transparent 60%),
+        radial-gradient(1000px 600px at 80% 0%, var(--pageGlow2), transparent 60%),
+        var(--pageBg);
       color:var(--text);
       min-height:100vh;
     }
@@ -60,16 +110,16 @@
 
     .who{
       font-size:12px;
-      color:rgba(255,255,255,.80);
+      color:var(--toplineText);
       padding:8px 10px;
       border:1px solid var(--border);
       border-radius:12px;
-      background:rgba(255,255,255,.04);
+      background: var(--panel2);
       white-space:nowrap;
     }
     .linkbtn{
       border:1px solid var(--border);
-      background:rgba(255,255,255,.06);
+      background: var(--panel2);
       color:var(--text);
       padding:9px 12px;
       border-radius:12px;
@@ -78,7 +128,7 @@
       transition: transform .06s ease, border-color .06s ease;
       white-space:nowrap;
     }
-    .linkbtn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.18); }
+    .linkbtn:hover{ transform: translateY(-1px); border-color: rgba(127,127,127,.25); }
     .linkbtn:active{ transform: translateY(0px); }
     .linkbtn.primary{ border-color: rgba(34,197,94,.25); background: rgba(34,197,94,.12); }
     .linkbtn.warn{ border-color: rgba(245,158,11,.25); background: rgba(245,158,11,.12); }
@@ -99,7 +149,7 @@
       align-items:center;
     }
     .input{
-      background: rgba(255,255,255,.06);
+      background: var(--inputBg);
       border: 1px solid var(--border);
       color: var(--text);
       padding: 9px 10px;
@@ -110,18 +160,18 @@
       max-width: 100%;
     }
 
-  .chips{
-  display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  column-gap:16px; /* chiplerin yan yana boşluğu */
-  row-gap:24px;    /* 👈 FİRMA ↔ KATEGORİ ARASI BOŞLUK */
-}
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      column-gap:16px;
+      row-gap:24px;
+    }
 
     .chipBtn{
       border:1px solid var(--border);
-      background:rgba(255,255,255,.04);
-      color:rgba(255,255,255,.85);
+      background: var(--chipBg);
+      color: var(--chipText);
       padding:8px 10px;
       border-radius:999px;
       cursor:pointer;
@@ -130,11 +180,11 @@
       user-select:none;
       white-space:nowrap;
     }
-    .chipBtn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.18); }
+    .chipBtn:hover{ transform: translateY(-1px); border-color: rgba(127,127,127,.25); }
     .chipBtn.active{
-      background: rgba(255,255,255,.08);
-      border-color: rgba(255,255,255,.22);
-      color: rgba(255,255,255,.95);
+      background: var(--chipBgActive);
+      border-color: rgba(127,127,127,.25);
+      color: var(--text);
     }
 
     .wrap{
@@ -146,7 +196,7 @@
     .section{
       margin:14px 0 18px;
       padding:14px;
-      background: rgba(255,255,255,.03);
+      background: var(--panel);
       border: 1px solid var(--border);
       border-radius: 16px;
     }
@@ -157,7 +207,8 @@
       margin:0 0 12px;
       font-size:14px;
       letter-spacing:.2px;
-      color: #dbe6ff;
+      color: var(--text);
+      opacity: .92;
     }
 
     .grid{
@@ -177,7 +228,7 @@
       text-align:left;
       width:100%;
       border: 1px solid var(--border);
-      background: var(--card);
+      background: var(--btnBg);
       color: var(--text);
       padding: 11px 12px 10px;
       border-radius: 12px;
@@ -187,7 +238,7 @@
       overflow:hidden;
       min-height:62px;
     }
-    .btn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.18); }
+    .btn:hover{ transform: translateY(-1px); border-color: rgba(127,127,127,.25); }
     .btn:active{ transform: translateY(0px); }
 
     .pill{
@@ -197,8 +248,8 @@
       padding:3px 7px;
       border-radius:999px;
       border:1px solid var(--border);
-      color: rgba(255,255,255,.92);
-      background: rgba(255,255,255,.06);
+      color: var(--pillText);
+      background: var(--pillBg);
     }
 
     .name{
@@ -215,6 +266,7 @@
       line-height:1.3;
     }
 
+    /* tags (works on both themes) */
     .tag-sudesan{ outline: 1px solid rgba(59,130,246,.35); }
     .tag-sudesan::before{
       content:"";
@@ -238,8 +290,8 @@
     }
 
     .disabled{
-      background: rgba(255,255,255,.04);
-      color: rgba(255,255,255,.55);
+      background: var(--panel2);
+      color: var(--subtleText);
       cursor:not-allowed;
       opacity:.85;
     }
@@ -249,13 +301,11 @@
       width:100%;
       margin:0;
       padding: 0 18px 26px;
-      color: rgba(255,255,255,.45);
+      color: var(--footerText);
       font-size:12px;
     }
 
-    /*
-
-    /* LOGIN */
+    /* LOGIN (always blue-ish, independent from theme) */
     .overlay{
       position:fixed;
       inset:0;
@@ -273,13 +323,14 @@
 
     .login-card{
       width:min(980px, 100%);
-      border:1px solid var(--border);
+      border:1px solid rgba(255,255,255,.10);
       border-radius:18px;
       background: rgba(17,26,46,.92);
       box-shadow: 0 20px 60px rgba(0,0,0,.45);
       overflow:hidden;
       display:grid;
       grid-template-columns: 1.05fr .95fr;
+      color:#eaf0ff;
     }
     @media (max-width: 860px){
       .login-card{ grid-template-columns:1fr; }
@@ -287,7 +338,7 @@
     }
     .login-left{
       padding:28px;
-      border-right:1px solid var(--border);
+      border-right:1px solid rgba(255,255,255,.10);
       background:
         linear-gradient(120deg, rgba(59,130,246,.22), transparent 55%),
         linear-gradient(210deg, rgba(34,197,94,.16), transparent 55%),
@@ -308,7 +359,7 @@
       min-height:360px;
     }
     .login-title{ margin:0; font-size:18px; letter-spacing:.2px; }
-    .login-sub{ margin:0 0 6px; color: var(--muted); font-size:13px; line-height:1.4; }
+    .login-sub{ margin:0 0 6px; color: rgba(234,240,255,.70); font-size:13px; line-height:1.4; }
 
     .field{
       width:100%;
@@ -319,24 +370,32 @@
     }
     .label{
       font-size:12px;
-      color:rgba(255,255,255,.78);
+      color:rgba(234,240,255,.78);
       display:flex;
       justify-content:space-between;
       gap:8px;
       align-items:center;
     }
-    .hint{ font-size:11px; color:rgba(255,255,255,.45); }
+    .hint{ font-size:11px; color:rgba(234,240,255,.45); }
 
     .login-input, .select{
       width:100%;
       background: rgba(255,255,255,.06);
-      border: 1px solid var(--border);
-      color: var(--text);
+      border: 1px solid rgba(255,255,255,.10);
+      color: #eaf0ff;
       padding: 12px 12px;
       border-radius: 12px;
       outline: none;
       font-size: 13px;
     }
+    /* Light theme: admin/portal selects & inputs use page vars, not login vars */
+    body.theme-light .login-input,
+    body.theme-light .select{
+      background: var(--inputBg);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
     .primary{
       width:100%;
       margin-top:10px;
@@ -344,7 +403,7 @@
       border-radius:12px;
       border:1px solid rgba(255,255,255,.14);
       background: linear-gradient(120deg, rgba(59,130,246,.28), rgba(34,197,94,.16));
-      color:var(--text);
+      color:#eaf0ff;
       cursor:pointer;
       font-weight:700;
       letter-spacing:.2px;
@@ -354,7 +413,7 @@
       margin-top:8px;
       font-size:12px;
       min-height:18px;
-      color:rgba(255,255,255,.78);
+      color:rgba(127,127,127,.90);
     }
     .msg.err{ color: rgba(239,68,68,.95); }
     .msg.ok{ color: rgba(34,197,94,.95); }
@@ -362,7 +421,7 @@
     .msg.info{ color: rgba(96,165,250,.95); }
 
     .tiny{
-      color: rgba(255,255,255,.45);
+      color: rgba(234,240,255,.55);
       font-size:11px;
       margin-top:10px;
       line-height:1.4;
@@ -378,7 +437,7 @@
     @media (max-width: 900px){ .admin-grid{ grid-template-columns: 1fr; } }
 
     .panel{
-      background: rgba(255,255,255,.03);
+      background: var(--panel);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding:14px;
@@ -386,7 +445,8 @@
     .panel h3{
       margin:0 0 10px;
       font-size:14px;
-      color:#dbe6ff;
+      color: var(--text);
+      opacity:.92;
       letter-spacing:.2px;
     }
 
@@ -399,7 +459,7 @@
 
     .btn2{
       border:1px solid var(--border);
-      background: rgba(255,255,255,.06);
+      background: var(--panel2);
       color: var(--text);
       padding: 10px 12px;
       border-radius: 12px;
@@ -408,7 +468,7 @@
       font-weight: 650;
       transition: transform .06s ease, border-color .06s ease;
     }
-    .btn2:hover{ border-color: rgba(255,255,255,.18); transform: translateY(-1px); }
+    .btn2:hover{ border-color: rgba(127,127,127,.25); transform: translateY(-1px); }
     .btn2:active{ transform: translateY(0px); }
     .btn2.ok{ border-color: rgba(34,197,94,.25); background: rgba(34,197,94,.10); }
     .btn2.danger{ border-color: rgba(239,68,68,.25); background: rgba(239,68,68,.10); }
@@ -433,7 +493,7 @@
       padding:10px;
       border-radius:12px;
       border:1px solid var(--border);
-      background: rgba(255,255,255,.03);
+      background: var(--panel);
     }
     .item .meta{
       display:flex;
@@ -449,7 +509,7 @@
     }
     .item .meta span{
       font-size:11px;
-      color: rgba(255,255,255,.55);
+      color: var(--subtleText);
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
@@ -467,8 +527,8 @@
       padding:3px 7px;
       border-radius:999px;
       border:1px solid var(--border);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.9);
+      background: var(--pillBg);
+      color: var(--pillText);
       white-space:nowrap;
     }
     .pill2.off{ opacity:.55; text-decoration: line-through; }
@@ -481,21 +541,22 @@
       padding:10px;
       border:1px solid var(--border);
       border-radius:12px;
-      background: rgba(255,255,255,.03);
+      background: var(--panel);
     }
     .chk{
       display:flex;
       gap:8px;
       align-items:center;
       font-size:12px;
-      color: rgba(255,255,255,.85);
+      color: var(--text);
+      opacity:.88;
       user-select:none;
     }
     .chk input{ transform: translateY(1px); }
 
     .smallNote{
       font-size:11px;
-      color: rgba(255,255,255,.55);
+      color: var(--subtleText);
       line-height:1.4;
       margin-top:8px;
     }
@@ -507,7 +568,7 @@
   </style>
 </head>
 
-<body>
+<body class="theme-dark">
   <div class="portal-shell">
 
     <header>
@@ -519,7 +580,6 @@
       <div class="topbar-right">
         <!-- TOP LOGO (Portal sağ üst) -->
         <div class="toplogo" id="topLogoBox" style="display:none;" title="">
-          <!-- Inline SVG (kırılmaz) -->
           <svg viewBox="0 0 320 70" xmlns="http://www.w3.org/2000/svg" aria-label="PSD Poseidon">
             <defs>
               <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
@@ -575,14 +635,13 @@
       <div class="section">
         <div class="section-title">
           <span>Admin Paneli</span>
-          <span style="font-size:12px;color:rgba(255,255,255,.55)" id="pendingInfo"></span>
+          <span style="font-size:12px;opacity:.70" id="pendingInfo"></span>
         </div>
-        <div style="color:rgba(255,255,255,.70);font-size:12px;line-height:1.45">
+        <div style="opacity:.80;font-size:12px;line-height:1.45">
           Admin tarafında yapılan değişiklikler taslak olarak tutulur. Portal’a dönünce sağ üstte <b>Kaydet</b> görünür; kaydedince herkes için güncellenir.
         </div>
       </div>
 
-      <!-- ORDERED ADMIN GRID (1..8) -->
       <div class="admin-grid">
 
         <!-- 1) Firma Yönetimi -->
@@ -805,7 +864,7 @@
         <div class="panel">
           <h3>7) Kaydet</h3>
 
-          <div style="color:rgba(255,255,255,.70);font-size:12px;line-height:1.45">
+          <div style="opacity:.80;font-size:12px;line-height:1.45">
             Admin panelinde eklediğin her şey “taslak” olarak bekler. Sağ üstte çıkan <b>Kaydet</b> butonuna basınca kalıcı olur.
           </div>
 
@@ -819,7 +878,7 @@
           <div class="msg" id="flowMsg"></div>
         </div>
 
-        <!-- 8) KEY USER Yönetimi (Yeni) -->
+        <!-- 8) KEY USER Yönetimi -->
         <div class="panel">
           <h3>8) Key User Yönetimi (Tüm firmalara erişir)</h3>
 
@@ -916,7 +975,7 @@
           <input id="firmName" class="login-input" placeholder='' />
         </div>
 
-        <button class="primary" id="loginBtn" type="button" onclick="window.__doLogin && window.__doLogin()">Giriş Yap</button>
+        <button class="primary" id="loginBtn" type="button">Giriş Yap</button>
         <div class="msg" id="loginMsg"></div>
 
         <div class="tiny">
@@ -965,6 +1024,18 @@
     return String(s||"").replace(/[&<>"']/g, (c)=>({
       "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
     }[c]));
+  }
+
+  /********************************************************************
+   * THEME SWITCH
+   * - Login screen stays blue-ish (overlay)
+   * - Admin/Portal/KeyUser become white (theme-light)
+   ********************************************************************/
+  function applyThemeFromSession(session){
+    const body = document.body;
+    const shouldLight = !!(session && (session.mode === "PORTAL" || session.mode === "ADMIN" || session.mode === "KEY"));
+    body.classList.toggle("theme-light", shouldLight);
+    body.classList.toggle("theme-dark", !shouldLight);
   }
 
   /********************************************************************
@@ -1042,9 +1113,7 @@
       { username:"dupack", password:"1234", display:"Dupack", email:"", roles:["DUPACK_VIEW","DASHBOARD_VIEW"], active:true }
     ],
 
-    // NEW: Key Users (firma bağımsız tam erişim)
     keyUsers: [
-      // örnek:
       // { username:"keyuser", password:"1234", display:"Key User", email:"", active:true }
     ],
 
@@ -1115,7 +1184,7 @@
   function hasRole(session, role, db){
     if (!session) return false;
     if (Array.isArray(session.roles) && session.roles.includes("ADMIN")) return true;
-    if (isKeyUserSession(session)) return true; // Key User her role'ü bypass eder
+    if (isKeyUserSession(session)) return true;
 
     const meta = roleMetaMap(db || loadCommittedDB());
     if (role && meta[role] && meta[role].active === false) return false;
@@ -1126,7 +1195,7 @@
   function firmAccessAllowed(session, firmKey, db){
     if (!session) return false;
     if (Array.isArray(session.roles) && session.roles.includes("ADMIN")) return true;
-    if (isKeyUserSession(session)) return true; // firma gating yok
+    if (isKeyUserSession(session)) return true;
 
     const far = (db.firmAccessRoles && db.firmAccessRoles[firmKey]) ? db.firmAccessRoles[firmKey] : null;
     const required = (Array.isArray(far) && far.length) ? far : [`${firmKey}_VIEW`];
@@ -1136,7 +1205,7 @@
   function isAllowed(item, session, db){
     if (!session) return false;
     if (Array.isArray(session.roles) && session.roles.includes("ADMIN")) return true;
-    if (isKeyUserSession(session)) return true; // rapor ACL + firma sınırı yok
+    if (isKeyUserSession(session)) return true;
 
     if (item && item.firm && !firmAccessAllowed(session, item.firm, db)) return false;
 
@@ -1191,6 +1260,8 @@
     const saveBtn = document.getElementById("saveBtn");
     const topLogoBox = document.getElementById("topLogoBox");
 
+    applyThemeFromSession(session);
+
     if (!session){
       whoBox.style.display = "none";
       logoutBtn.style.display = "none";
@@ -1224,7 +1295,11 @@
     const ov = document.getElementById("loginOverlay");
     if (show) ov.classList.add("show");
     else ov.classList.remove("show");
+
+    // login görünürken tema dark kalsın
+    if (show) applyThemeFromSession(null);
   }
+
   function showPortal(show){
     document.getElementById("portalToolbar").style.display = show ? "block" : "none";
     document.getElementById("portalApp").style.display = show ? "block" : "none";
@@ -1303,15 +1378,25 @@
     if (!session){
       showLogin(true);
       setPortalTitle(null);
+      refreshTopbar();
       return;
     }
+
+    applyThemeFromSession(session);
+
     if (session.mode === "ADMIN"){
       showAdmin(true);
+      renderAdmin();
+      refreshTopbar();
+      setPortalTitle(session);
       return;
     }
     if (session.mode === "KEY"){
       showKey(true);
+      buildKeyFirmChips();
+      buildKeyCatChips();
       renderKeyPortal();
+      refreshTopbar();
       return;
     }
 
@@ -1422,6 +1507,8 @@
       box.appendChild(grid);
       app.appendChild(box);
     });
+
+    refreshTopbar();
   }
 
   /********************************************************************
@@ -1469,7 +1556,7 @@
       b.textContent = (fk === "ALL") ? "Tüm Firmalar" : firmDisplayByKey(db, fk);
       b.onclick = () => {
         selectedFirmK = fk;
-        selectedCatK = "ALL"; // firma değişince kategori reset
+        selectedCatK = "ALL";
         buildKeyFirmChips();
         buildKeyCatChips();
         renderKeyPortal();
@@ -1527,16 +1614,16 @@
       return;
     }
 
+    applyThemeFromSession(session);
+
     showAdmin(false);
     showPortal(false);
     showKey(true);
     setPortalTitle(session);
 
     const db = loadCommittedDB();
-
     const q = norm(document.getElementById("kq").value);
 
-    // Key User her şeyi görür ama firma pasif ise göstermeyelim (istersen kaldırabilirsin)
     const activeFirmSet = new Set((db.firms||[]).filter(f=>f.active!==false).map(f=>f.key));
 
     let list = (db.reports || []).slice();
@@ -1595,7 +1682,7 @@
 
         const pill = document.createElement("div");
         pill.className = "pill";
-        pill.textContent = x.firm; // Key user için firmayı pill yapalım
+        pill.textContent = x.firm;
 
         const nm = document.createElement("div");
         nm.className = "name";
@@ -1623,6 +1710,8 @@
       box.appendChild(grid);
       app.appendChild(box);
     });
+
+    refreshTopbar();
   }
 
   /********************************************************************
@@ -1748,7 +1837,6 @@
     buildCategoryChips();
     renderPortal();
   }
-  window.__doLogin = doLogin;
 
   function doLogout(){
     clearSession();
@@ -1768,6 +1856,7 @@
     showPortal(false);
     showKey(false);
     showAdmin(false);
+
     refreshTopbar();
     setPortalTitle(null);
     showLogin(true);
@@ -1811,6 +1900,8 @@
   function renderAdmin(){
     const session = getSession();
     if (!session || session.mode !== "ADMIN") return;
+
+    applyThemeFromSession(session);
 
     const wdb = loadWorkingDB();
     setWorkingDB(wdb);
@@ -1857,7 +1948,7 @@
     renderUserList(wdb);
     renderReportList(wdb);
 
-    // KEY USER list (new)
+    // KEY USER list
     renderKeyUserList(wdb);
 
     refreshTopbar();
@@ -2274,14 +2365,6 @@
     renderAdmin();
   }
 
-  function loadFirmRoles(){
-    const wdb = loadWorkingDB();
-    const fk = document.getElementById("firmSelForRoles").value;
-    const actRoles = activeRoles(wdb).sort();
-    const current = (wdb.firmAccessRoles && wdb.firmAccessRoles[fk]) ? wdb.firmAccessRoles[fk] : [];
-    buildRoleCheckboxes("firmRoleBox", actRoles, current);
-  }
-
   function saveFirmRoles(){
     const wdb = loadWorkingDB();
     const fk = document.getElementById("firmSelForRoles").value;
@@ -2341,7 +2424,7 @@
   }
 
   /********************************************************************
-   * Admin Actions: Users (CRUD + edit)
+   * Admin Actions: Users
    ********************************************************************/
   function clearUserForm(){
     document.getElementById("userEditingKey").value = "";
@@ -2488,7 +2571,7 @@
   }
 
   /********************************************************************
-   * Admin Actions: Reports CRUD
+   * Admin Actions: Reports
    ********************************************************************/
   function clearReportForm(){
     document.getElementById("repEditingId").value = "";
@@ -2604,7 +2687,7 @@
       .sort((a,b)=> (a.cat+a.name).localeCompare(b.cat+b.name));
 
     if (!reps.length){
-      list.innerHTML = `<div style="color:rgba(255,255,255,.55);font-size:12px;">Bu firmada rapor yok.</div>`;
+      list.innerHTML = `<div style="opacity:.70;font-size:12px;">Bu firmada rapor yok.</div>`;
       return;
     }
 
@@ -2680,7 +2763,7 @@
   }
 
   /********************************************************************
-   * Admin Actions: KEY USERS (NEW)
+   * Admin Actions: KEY USERS
    ********************************************************************/
   function clearKeyUserForm(){
     document.getElementById("keyUserEditingKey").value = "";
@@ -2807,7 +2890,7 @@
 
     u.password = newPwd;
     setWorkingDB(wdb);
-    setMsg("keyUserMsg","Key User şifresi güncellendi (taslak).","ok");
+    setMsg("keyUserMsg","Şifre güncellendi (taslak).","ok");
     document.getElementById("keyUserP").value = "";
     renderAdmin();
   }
@@ -2833,7 +2916,6 @@
     wdb.keyUsers = (wdb.keyUsers||[]).filter(x => norm(x.username) !== norm(username));
     setWorkingDB(wdb);
     setMsg("keyUserMsg",`Key User silindi: ${username}`,"ok");
-
     if ((document.getElementById("keyUserEditingKey").value||"") && norm(document.getElementById("keyUserEditingKey").value) === norm(username)){
       clearKeyUserForm();
     }
@@ -2841,131 +2923,114 @@
   }
 
   /********************************************************************
-   * Save flow
+   * Admin flow buttons
    ********************************************************************/
+  function goPortalFromAdmin(){
+    // Admin görünümünde kal (tema light), portal içerikleri zaten admin dışı modlarda.
+    // İstersen burada bir uyarı/mesaj gösterebilirsin.
+    setMsg("flowMsg","Portal’a dönmek için Çıkış yapıp normal kullanıcıyla giriş yapabilirsiniz.","info");
+  }
+
   function discardDraft(){
+    const ok = confirm("Taslak değişiklikler silinsin mi? (Geri alınamaz)");
+    if (!ok) return;
     discardWorking();
     setMsg("flowMsg","Taslak değişiklikler atıldı.","ok");
     renderAdmin();
   }
 
-  function goPortalFromAdmin(){
-    setMsg("flowMsg","Portal’a geçildi. Kaydet butonu (varsa) sağ üstte.","ok");
-    showAdmin(false);
-
-    const session = getSession();
+  /********************************************************************
+   * Save (commit)
+   ********************************************************************/
+  function saveAll(){
+    const ok = confirm("Taslak değişiklikler kalıcı olarak kaydedilsin mi?");
+    if (!ok) return;
+    const success = commitWorkingToDB();
+    setMsg("flowMsg", success ? "Kaydedildi." : "Kaydedilecek taslak yok.", success ? "ok" : "warn");
     refreshTopbar();
-    setPortalTitle(session);
-
-    if (session && session.mode === "KEY"){
-      showKey(true);
-      buildKeyFirmChips();
-      buildKeyCatChips();
-      renderKeyPortal();
-    } else {
-      showPortal(true);
-      buildCategoryChips();
-      renderPortal();
-    }
-  }
-
-  function onSave(){
-    const session = getSession();
-    if (!session || session.mode !== "ADMIN") return;
-    const ok = commitWorkingToDB();
-    refreshTopbar();
-    if (ok){
-      renderAdmin();
-      alert("Kaydedildi. Portal verisi güncellendi.");
-    } else {
-      alert("Kaydedilecek taslak yok.");
-    }
-  }
-
-  function openAdmin(){
-    const session = getSession();
-    if (!session || session.mode !== "ADMIN") return;
-    showAdmin(true);
-    refreshTopbar();
-    setPortalTitle(session);
     renderAdmin();
   }
 
   /********************************************************************
-   * Bindings
+   * Event bindings + auto open (Portal auto / fullscreen)
    ********************************************************************/
-  document.getElementById("loginBtn").addEventListener("click", doLogin);
-  document.getElementById("logoutBtn").addEventListener("click", doLogout);
-  document.getElementById("adminBtn").addEventListener("click", openAdmin);
-  document.getElementById("saveBtn").addEventListener("click", onSave);
+  function bindUI(){
+    // Login
+    document.getElementById("loginBtn").addEventListener("click", doLogin);
+    document.getElementById("p").addEventListener("keydown", (e)=>{ if(e.key==="Enter") doLogin(); });
+    document.getElementById("firmName").addEventListener("keydown", (e)=>{ if(e.key==="Enter") doLogin(); });
+    document.getElementById("u").addEventListener("keydown", (e)=>{ if(e.key==="Enter") doLogin(); });
 
-  ["u","p","firmName"].forEach(id => {
-    document.getElementById(id).addEventListener("keydown", (e) => {
-      if (e.key === "Enter") doLogin();
-    });
-  });
+    // Topbar
+    document.getElementById("logoutBtn").addEventListener("click", doLogout);
+    document.getElementById("adminBtn").addEventListener("click", ()=>{ showAdmin(true); renderAdmin(); refreshTopbar(); });
+    document.getElementById("saveBtn").addEventListener("click", saveAll);
 
-  document.getElementById("q").addEventListener("input", renderPortal);
+    // Search inputs
+    document.getElementById("q").addEventListener("input", renderPortal);
+    document.getElementById("kq").addEventListener("input", renderKeyPortal);
 
-  document.getElementById("kq").addEventListener("input", renderKeyPortal);
+    // Admin: firms
+    document.getElementById("firmDisplayIn").addEventListener("input", onFirmDisplayInput);
+    document.getElementById("addFirmBtn").addEventListener("click", addFirm);
+    document.getElementById("updateFirmBtn").addEventListener("click", updateFirm);
+    document.getElementById("cancelFirmEditBtn").addEventListener("click", ()=>{ clearFirmForm(); setMsg("firmMsg","", ""); renderAdmin(); });
+    document.getElementById("addAliasBtn").addEventListener("click", addAliasForFirmInput);
 
-  // roles
-  document.getElementById("addRoleBtn").addEventListener("click", addRole);
-  document.getElementById("normalizeRolesBtn").addEventListener("click", normalizeRoles);
+    // Admin: roles
+    document.getElementById("addRoleBtn").addEventListener("click", addRole);
+    document.getElementById("normalizeRolesBtn").addEventListener("click", normalizeRoles);
 
-  // firm
-  document.getElementById("firmDisplayIn").addEventListener("input", onFirmDisplayInput);
-  document.getElementById("addFirmBtn").addEventListener("click", addFirm);
-  document.getElementById("updateFirmBtn").addEventListener("click", updateFirm);
-  document.getElementById("cancelFirmEditBtn").addEventListener("click", () => { clearFirmForm(); setMsg("firmMsg","Düzenleme iptal edildi.","info"); renderAdmin(); });
-  document.getElementById("addAliasBtn").addEventListener("click", addAliasForFirmInput);
+    // Admin: firm roles
+    document.getElementById("firmSelForRoles").addEventListener("change", renderAdmin);
+    document.getElementById("saveFirmRolesBtn").addEventListener("click", saveFirmRoles);
+    document.getElementById("clearFirmRolesBtn").addEventListener("click", clearFirmRoles);
 
-  // firm-role
-  document.getElementById("firmSelForRoles").addEventListener("change", loadFirmRoles);
-  document.getElementById("saveFirmRolesBtn").addEventListener("click", saveFirmRoles);
-  document.getElementById("clearFirmRolesBtn").addEventListener("click", clearFirmRoles);
+    // Admin: users
+    document.getElementById("addUserBtn").addEventListener("click", addUser);
+    document.getElementById("updateUserBtn").addEventListener("click", updateUser);
+    document.getElementById("resetUserPwdBtn").addEventListener("click", resetUserPassword);
+    document.getElementById("cancelUserEditBtn").addEventListener("click", ()=>{ clearUserForm(); setMsg("userMsg","", ""); renderAdmin(); });
 
-  // user
-  document.getElementById("addUserBtn").addEventListener("click", addUser);
-  document.getElementById("updateUserBtn").addEventListener("click", updateUser);
-  document.getElementById("resetUserPwdBtn").addEventListener("click", resetUserPassword);
-  document.getElementById("cancelUserEditBtn").addEventListener("click", () => { clearUserForm(); setMsg("userMsg","Düzenleme iptal edildi.","info"); renderAdmin(); });
+    // Admin: reports
+    document.getElementById("loadReportBtn").addEventListener("click", loadPickedReportIntoForm);
+    document.getElementById("deletePickedReportBtn").addEventListener("click", deletePickedReport);
+    document.getElementById("clearReportFormBtn").addEventListener("click", clearReportForm);
+    document.getElementById("upsertReportBtn").addEventListener("click", upsertReport);
 
-  // report CRUD
-  document.getElementById("loadReportBtn").addEventListener("click", loadPickedReportIntoForm);
-  document.getElementById("deletePickedReportBtn").addEventListener("click", deletePickedReport);
-  document.getElementById("clearReportFormBtn").addEventListener("click", clearReportForm);
-  document.getElementById("upsertReportBtn").addEventListener("click", upsertReport);
+    // Admin: mapping
+    document.getElementById("loadFirmRoleReportsBtn").addEventListener("click", loadFirmRoleReports);
+    document.getElementById("applyFirmRoleReportsBtn").addEventListener("click", applyFirmRoleReports);
+    document.getElementById("clearFirmRoleReportsBtn").addEventListener("click", clearRoleFromFirmReports);
 
-  // mapping
-  document.getElementById("loadFirmRoleReportsBtn").addEventListener("click", loadFirmRoleReports);
-  document.getElementById("applyFirmRoleReportsBtn").addEventListener("click", applyFirmRoleReports);
-  document.getElementById("clearFirmRoleReportsBtn").addEventListener("click", clearRoleFromFirmReports);
+    // Admin: flow
+    document.getElementById("goPortalBtn").addEventListener("click", goPortalFromAdmin);
+    document.getElementById("discardBtn").addEventListener("click", discardDraft);
 
-  // flow
-  document.getElementById("discardBtn").addEventListener("click", discardDraft);
-  document.getElementById("goPortalBtn").addEventListener("click", goPortalFromAdmin);
+    // Admin: key users
+    document.getElementById("addKeyUserBtn").addEventListener("click", addKeyUser);
+    document.getElementById("updateKeyUserBtn").addEventListener("click", updateKeyUser);
+    document.getElementById("resetKeyUserPwdBtn").addEventListener("click", resetKeyUserPassword);
+    document.getElementById("cancelKeyUserEditBtn").addEventListener("click", ()=>{ clearKeyUserForm(); setMsg("keyUserMsg","", ""); renderAdmin(); });
+  }
 
-  // key users
-  document.getElementById("addKeyUserBtn").addEventListener("click", addKeyUser);
-  document.getElementById("updateKeyUserBtn").addEventListener("click", updateKeyUser);
-  document.getElementById("resetKeyUserPwdBtn").addEventListener("click", resetKeyUserPassword);
-  document.getElementById("cancelKeyUserEditBtn").addEventListener("click", () => { clearKeyUserForm(); setMsg("keyUserMsg","Düzenleme iptal edildi.","info"); renderAdmin(); });
-
-  /********************************************************************
-   * Boot (Portal sayfası açılınca otomatik açılsın)
-   ********************************************************************/
-  (function boot(){
+  function boot(){
     ensureDB();
-    const session = getSession();
+    bindUI();
 
+    const session = getSession();
+    applyThemeFromSession(session);
+
+    // Portal sayfası otomatik açılsın:
+    // - session varsa ilgili ekran
+    // - yoksa login overlay
     if (!session){
-      showLogin(true);
       showPortal(false);
       showKey(false);
       showAdmin(false);
-      refreshTopbar();
       setPortalTitle(null);
+      refreshTopbar();
+      showLogin(true);
       return;
     }
 
@@ -2978,12 +3043,7 @@
       renderAdmin();
       return;
     }
-
     if (session.mode === "KEY"){
-      selectedFirmK = "ALL";
-      selectedCatK = "ALL";
-      showAdmin(false);
-      showPortal(false);
       showKey(true);
       buildKeyFirmChips();
       buildKeyCatChips();
@@ -2991,13 +3051,14 @@
       return;
     }
 
-    selectedCat = "ALL";
-    showAdmin(false);
-    showKey(false);
+    // PORTAL
     showPortal(true);
+    selectedCat = "ALL";
     buildCategoryChips();
     renderPortal();
-  })();
+  }
+
+  window.addEventListener("load", boot);
 </script>
 </body>
 </html>

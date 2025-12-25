@@ -3,2448 +3,912 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PSD-Portal</title>
-
+  <title>PSD Portal</title>
   <style>
     :root{
-      /* 👇 Kullanıcı teması buradan yönetilecek */
-      --bg:#0b1220;
-      --card:#111a2e;
-      --muted:#9aa7bd;
-      --text:#eaf0ff;
-      --border:rgba(255,255,255,.10);
-
-      /* Accent = “tema rengi” (buton/başlık vurgu rengi) */
-      --accent:#60a5fa;
-      --accent2:#22c55e;
-
-      --danger:#ef4444;
-      --ok:#22c55e;
-      --warn:#f59e0b;
-      --info:#60a5fa;
+      --bg:#0b1020; --card:#0f1730; --muted:#9aa7c7; --txt:#e9efff;
+      --line:rgba(255,255,255,.10); --good:#42d392; --bad:#ff5a6b; --warn:#ffcc00;
+      --btn:#3b82f6; --btn2:#22c55e; --btn3:#f59e0b; --btn4:#ef4444;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --r:16px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, -apple-system, system-ui, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
     }
     *{box-sizing:border-box}
-    html, body{ height:100%; }
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      background:
-        radial-gradient(1000px 600px at 20% 0%, rgba(255,255,255,.25), transparent 60%),
-        radial-gradient(1000px 600px at 80% 0%, rgba(255,255,255,.25), transparent 60%),
-        var(--bg);
-      color:var(--text);
-      min-height:100vh;
+    body{margin:0;font-family:var(--sans);background:radial-gradient(1200px 800px at 20% 10%, rgba(59,130,246,.25), transparent 60%),
+        radial-gradient(900px 700px at 90% 30%, rgba(34,197,94,.18), transparent 55%),
+        radial-gradient(900px 700px at 40% 110%, rgba(245,158,11,.18), transparent 55%),
+        var(--bg); color:var(--txt);}
+    a{color:#93c5fd;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .wrap{max-width:1200px;margin:0 auto;padding:22px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+    .brand{display:flex;align-items:center;gap:10px}
+    .logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#3b82f6,#22c55e);box-shadow:var(--shadow)}
+    .title{display:flex;flex-direction:column;line-height:1.1}
+    .title b{font-size:16px}
+    .title span{font-size:12px;color:var(--muted)}
+    .pill{padding:6px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:12px}
+    .row{display:flex;gap:14px;flex-wrap:wrap}
+    .card{background:rgba(15,23,48,.82);backdrop-filter: blur(6px);
+      border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+    .card .hd{padding:14px 14px 0 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+    .card .hd h2{margin:0;font-size:15px}
+    .card .hd p{margin:6px 0 0 0;color:var(--muted);font-size:12px}
+    .card .bd{padding:14px}
+    .grid{display:grid;gap:12px}
+    .grid-2{grid-template-columns:repeat(2, minmax(0,1fr))}
+    .grid-3{grid-template-columns:repeat(3, minmax(0,1fr))}
+    @media(max-width:900px){ .grid-2,.grid-3{grid-template-columns:1fr} }
+    .input, select, textarea{
+      width:100%; padding:10px 11px; border-radius:12px; border:1px solid var(--line);
+      background:rgba(8,12,25,.8); color:var(--txt); outline:none;
     }
-
-    /* FULLSCREEN PORTAL LAYOUT */
-    .portal-shell{
-      min-height:100vh;
-      display:flex;
-      flex-direction:column;
-    }
-
-    header{
-      padding:18px 18px 10px;
-      width:100%;
-      margin:0;
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-    }
-    h1{ margin:0 0 6px; font-size:22px; letter-spacing:.3px; }
-    .sub{ margin:0; color:var(--muted); font-size:13px; line-height:1.4; }
-
-    .topbar-right{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      text-align:right;
-    }
-
-    .who{
-      font-size:12px;
-      color:rgba(255,255,255,.80);
-      padding:8px 10px;
-      border:1px solid var(--border);
-      border-radius:12px;
-      background:rgba(255,255,255,.04);
-      white-space:nowrap;
-    }
-    .linkbtn{
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      padding:9px 12px;
-      border-radius:12px;
-      cursor:pointer;
-      font-size:12px;
-      transition: transform .06s ease, border-color .06s ease;
-      white-space:nowrap;
-    }
-    .linkbtn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.18); }
-    .linkbtn:active{ transform: translateY(0px); }
-    .linkbtn.primary{
-      border-color: color-mix(in srgb, var(--accent) 35%, rgba(255,255,255,.10));
-      background: color-mix(in srgb, var(--accent) 18%, rgba(255,255,255,.06));
-    }
-    .linkbtn.warn{ border-color: rgba(245,158,11,.25); background: rgba(245,158,11,.12); }
-
-    /* portal toolbar */
-    .toolbar{
-      width:100%;
-      margin:0;
-      padding:0 18px 10px;
-      display:flex;
-      flex-direction:column;
-      gap:20px;
-    }
-    .toolbar-row{
-      display:flex;
-      gap:16px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-    .input{
-      background: rgba(255,255,255,.06);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 9px 10px;
-      border-radius: 12px;
-      outline: none;
-      font-size: 13px;
-      width: 320px;
-      max-width: 100%;
-    }
-
-    .chips{
-      display:flex;
-      flex-wrap:wrap;
-      align-items:center;
-      column-gap:16px;
-      row-gap:24px;
-    }
-
-    .chipBtn{
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.04);
-      color:rgba(255,255,255,.85);
-      padding:8px 10px;
-      border-radius:999px;
-      cursor:pointer;
-      font-size:12px;
-      transition: transform .06s ease, border-color .06s ease, background .06s ease;
-      user-select:none;
-      white-space:nowrap;
-    }
-    .chipBtn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.18); }
-    .chipBtn.active{
-      background: rgba(255,255,255,.08);
-      border-color: rgba(255,255,255,.22);
-      color: rgba(255,255,255,.95);
-      box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 20%, transparent) inset;
-    }
-
-    .wrap{
-      width:100%;
-      margin:10px;
-      padding: 0 18px 28px;
-      flex:1;
-    }
-    .section{
-      margin:14px 0 18px;
-      padding:14px;
-      background: rgba(255,255,255,.03);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-    }
-    .section-title{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      margin:0 0 12px;
-      font-size:14px;
-      letter-spacing:.2px;
-      color: #dbe6ff;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap:16px;
-    }
-    @media (max-width: 880px){ .grid{grid-template-columns: repeat(2, minmax(0, 1fr));} }
-    @media (max-width: 560px){
-      header{flex-direction:column; align-items:flex-start;}
-      .topbar-right{justify-content:flex-start; text-align:left;}
-      .grid{grid-template-columns: 1fr;}
-      .input{ width: 100%; }
-    }
-
+    textarea{min-height:90px; resize:vertical}
+    .input:focus, select:focus, textarea:focus{border-color:rgba(147,197,253,.7); box-shadow:0 0 0 4px rgba(59,130,246,.15)}
+    label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
     .btn{
-      text-align:left;
-      width:100%;
-      border: 1px solid var(--border);
-      background: var(--card);
-      color: var(--text);
-      padding: 11px 12px 10px;
-      border-radius: 12px;
-      cursor:pointer;
-      transition: transform .06s ease, border-color .06s ease, opacity .06s ease;
-      position:relative;
-      overflow:hidden;
-      min-height:62px;
+      display:inline-flex;align-items:center;justify-content:center; gap:8px;
+      padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(59,130,246,.18); color:var(--txt); cursor:pointer; user-select:none;
     }
-    .btn:hover{
-      transform: translateY(-1px);
-      border-color: color-mix(in srgb, var(--accent) 30%, rgba(255,255,255,.18));
+    .btn:hover{filter:brightness(1.06)}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{background:rgba(59,130,246,.25); border-color:rgba(59,130,246,.45)}
+    .btn.success{background:rgba(34,197,94,.20); border-color:rgba(34,197,94,.45)}
+    .btn.warn{background:rgba(245,158,11,.20); border-color:rgba(245,158,11,.45)}
+    .btn.danger{background:rgba(239,68,68,.20); border-color:rgba(239,68,68,.45)}
+    .btn.ghost{background:transparent}
+    .btn.small{padding:7px 9px;border-radius:10px;font-size:12px}
+    .muted{color:var(--muted)}
+    .mono{font-family:var(--mono)}
+    .hr{height:1px;background:var(--line);margin:12px 0}
+    .status{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+    .dot{width:10px;height:10px;border-radius:50%}
+    .dot.good{background:var(--good)}
+    .dot.bad{background:var(--bad)}
+    .dot.warn{background:var(--warn)}
+    .hidden{display:none !important}
+    .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+    .tab{padding:8px 10px;border-radius:999px;border:1px solid var(--line);cursor:pointer;font-size:12px;color:var(--muted)}
+    .tab.active{color:var(--txt); border-color:rgba(147,197,253,.55); background:rgba(59,130,246,.12)}
+    table{width:100%;border-collapse:collapse}
+    th,td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;font-size:12px;vertical-align:top}
+    th{color:var(--muted);font-weight:600}
+    .kpi{display:flex;gap:10px;flex-wrap:wrap}
+    .kpi .box{padding:10px 12px;border:1px solid var(--line);border-radius:14px;min-width:160px;background:rgba(8,12,25,.6)}
+    .kpi .box b{display:block;font-size:16px}
+    .kpi .box span{font-size:12px;color:var(--muted)}
+    .badge{padding:4px 8px;border-radius:999px;border:1px solid var(--line);font-size:11px;color:var(--muted)}
+    .badge.good{border-color:rgba(34,197,94,.5); color:#bdf7d6}
+    .badge.bad{border-color:rgba(239,68,68,.5); color:#ffd0d6}
+    .badge.warn{border-color:rgba(245,158,11,.55); color:#ffe7b3}
+    .toast{
+      position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
+      background:rgba(10,14,28,.92); border:1px solid var(--line); border-radius:14px;
+      padding:10px 12px; box-shadow:var(--shadow); display:flex; align-items:center; gap:10px;
+      max-width:min(760px, calc(100% - 24px));
     }
-    .btn:active{ transform: translateY(0px); }
-
-    .pill{
-      position:absolute;
-      top:8px; right:8px;
-      font-size:10px;
-      padding:3px 7px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      color: rgba(255,255,255,.92);
-      background: rgba(255,255,255,.06);
+    .toast .msg{font-size:13px}
+    .toast .x{margin-left:auto}
+    .smallnote{font-size:12px;color:var(--muted);line-height:1.45}
+    .list{display:grid;gap:10px}
+    .report{
+      padding:12px;border:1px solid var(--line);border-radius:14px;background:rgba(8,12,25,.55);
+      display:flex;align-items:flex-start;justify-content:space-between;gap:12px
     }
-
-    .name{
-      font-weight:800;
-      font-size:12.5px;
-      margin:0 0 5px;
-      line-height:1.2;
-      padding-right:78px;
-    }
-    .desc{
-      margin:0;
-      font-size:11.5px;
-      color: var(--muted);
-      line-height:1.3;
-    }
-
-    .tag-sudesan{ outline: 1px solid rgba(59,130,246,.35); }
-    .tag-sudesan::before{
-      content:"";
-      position:absolute; inset:0;
-      background: linear-gradient(120deg, rgba(59,130,246,.18), transparent 55%);
-      pointer-events:none;
-    }
-    .tag-dupack{ outline: 1px solid rgba(34,197,94,.30); }
-    .tag-dupack::before{
-      content:"";
-      position:absolute; inset:0;
-      background: linear-gradient(120deg, rgba(34,197,94,.14), transparent 55%);
-      pointer-events:none;
-    }
-    .tag-other{ outline: 1px solid rgba(168,85,247,.26); }
-    .tag-other::before{
-      content:"";
-      position:absolute; inset:0;
-      background: linear-gradient(120deg, rgba(168,85,247,.14), transparent 55%);
-      pointer-events:none;
-    }
-
-    .disabled{
-      background: rgba(255,255,255,.04);
-      color: rgba(255,255,255,.55);
-      cursor:not-allowed;
-      opacity:.85;
-    }
-    .disabled:hover{ transform:none; border-color: var(--border); }
-
-    footer{
-      width:100%;
-      margin:0;
-      padding: 0 18px 26px;
-      color: rgba(255,255,255,.45);
-      font-size:12px;
-    }
-
-    /* LOGIN */
-    .overlay{
-      position:fixed;
-      inset:0;
-      background: radial-gradient(1000px 700px at 20% 0%, rgba(59,130,246,.25), transparent 55%),
-                  radial-gradient(900px 650px at 80% 0%, rgba(34,197,94,.20), transparent 55%),
-                  rgba(7,10,18,.78);
-      backdrop-filter: blur(6px);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:16px;
-      z-index:9999;
-    }
-    .overlay.show{ display:flex; }
-
-    .login-card{
-      width:min(980px, 100%);
-      border:1px solid var(--border);
-      border-radius:18px;
-      background: rgba(17,26,46,.92);
-      box-shadow: 0 20px 60px rgba(0,0,0,.45);
-      overflow:hidden;
-      display:grid;
-      grid-template-columns: 1.05fr .95fr;
-    }
-    @media (max-width: 860px){
-      .login-card{ grid-template-columns:1fr; }
-      .login-left{ display:none; }
-    }
-    .login-left{
-      padding:28px;
-      border-right:1px solid var(--border);
-      background:
-        linear-gradient(120deg, color-mix(in srgb, var(--accent) 28%, transparent), transparent 55%),
-        linear-gradient(210deg, color-mix(in srgb, var(--accent2) 22%, transparent), transparent 55%),
-        rgba(255,255,255,.03);
-      min-height:360px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      gap:14px;
-    }
-
-    .login-right{
-      padding:28px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      justify-content:center;
-      min-height:360px;
-    }
-    .login-title{ margin:0; font-size:18px; letter-spacing:.2px; }
-    .login-sub{ margin:0 0 6px; color: var(--muted); font-size:13px; line-height:1.4; }
-
-    .field{
-      width:100%;
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      margin-top:8px;
-    }
-    .label{
-      font-size:12px;
-      color:rgba(255,255,255,.78);
-      display:flex;
-      justify-content:space-between;
-      gap:8px;
-      align-items:center;
-    }
-    .hint{ font-size:11px; color:rgba(255,255,255,.45); }
-
-    .login-input, .select{
-      width:100%;
-      background: rgba(255,255,255,.06);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 12px 12px;
-      border-radius: 12px;
-      outline: none;
-      font-size: 13px;
-    }
-    .primary{
-      width:100%;
-      margin-top:10px;
-      padding:12px 12px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.14);
-      background: linear-gradient(120deg, color-mix(in srgb, var(--accent) 38%, transparent), color-mix(in srgb, var(--accent2) 24%, transparent));
-      color:var(--text);
-      cursor:pointer;
-      font-weight:700;
-      letter-spacing:.2px;
-    }
-
-    .msg{
-      margin-top:8px;
-      font-size:12px;
-      min-height:18px;
-      color:rgba(255,255,255,.78);
-    }
-    .msg.err{ color: rgba(239,68,68,.95); }
-    .msg.ok{ color: rgba(34,197,94,.95); }
-    .msg.warn{ color: rgba(245,158,11,.95); }
-    .msg.info{ color: rgba(96,165,250,.95); }
-
-    .tiny{
-      color: rgba(255,255,255,.45);
-      font-size:11px;
-      margin-top:10px;
-      line-height:1.4;
-    }
-
-    /* ADMIN */
-    .admin-wrap{ width:100%; margin:0; padding: 0 18px 28px; }
-    .admin-grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-    }
-    @media (max-width: 900px){ .admin-grid{ grid-template-columns: 1fr; } }
-
-    .panel{
-      background: rgba(255,255,255,.03);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding:14px;
-    }
-    .panel h3{
-      margin:0 0 10px;
-      font-size:14px;
-      color:#dbe6ff;
-      letter-spacing:.2px;
-    }
-
-    .row{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-    }
-    @media (max-width: 520px){ .row{ grid-template-columns: 1fr; } }
-
-    .btn2{
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
-      padding: 10px 12px;
-      border-radius: 12px;
-      cursor:pointer;
-      font-size: 12px;
-      font-weight: 650;
-      transition: transform .06s ease, border-color .06s ease;
-    }
-    .btn2:hover{ border-color: rgba(255,255,255,.18); transform: translateY(-1px); }
-    .btn2:active{ transform: translateY(0px); }
-    .btn2.ok{ border-color: rgba(34,197,94,.25); background: rgba(34,197,94,.10); }
-    .btn2.danger{ border-color: rgba(239,68,68,.25); background: rgba(239,68,68,.10); }
-    .btn2.warn{ border-color: rgba(245,158,11,.25); background: rgba(245,158,11,.10); }
-    .btn2.info{ border-color: rgba(96,165,250,.25); background: rgba(96,165,250,.10); }
-
-    .list{
-      margin-top:10px;
-      border-top:1px solid var(--border);
-      padding-top:10px;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      max-height: 280px;
-      overflow:auto;
-    }
-    .item{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:10px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.03);
-    }
-    .item .meta{
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-      min-width:0;
-    }
-    .item .meta b{
-      font-size:12.5px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .item .meta span{
-      font-size:11px;
-      color: rgba(255,255,255,.55);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .pills{
-      display:flex;
-      gap:6px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:flex-end;
-    }
-    .pill2{
-      font-size:10px;
-      padding:3px 7px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.9);
-      white-space:nowrap;
-    }
-    .pill2.off{ opacity:.55; text-decoration: line-through; }
-
-    .rolesBox{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:6px;
-      padding:10px;
-      border:1px solid var(--border);
-      border-radius:12px;
-      background: rgba(255,255,255,.03);
-    }
-    .chk{
-      display:flex;
-      gap:8px;
-      align-items:center;
-      font-size:12px;
-      color: rgba(255,255,255,.85);
-      user-select:none;
-    }
-    .chk input{ transform: translateY(1px); }
-
-    .smallNote{
-      font-size:11px;
-      color: rgba(255,255,255,.55);
-      line-height:1.4;
-      margin-top:8px;
-    }
-    .hr{
-      height:1px;
-      background: var(--border);
-      margin:12px 0;
-    }
-
-    /* =========================
-       👇 TEMA / BUTON RENK PANELİ
-       ========================= */
-    .theme-panel{
-      position:fixed;
-      top:88px;
-      right:16px;
-      width: 280px;
-      max-width: calc(100vw - 32px);
-      border:1px solid var(--border);
-      border-radius:16px;
-      background: rgba(17,26,46,.92);
-      box-shadow: 0 18px 55px rgba(0,0,0,.45);
-      padding:12px;
-      z-index:9000;
-      display:none;
-      backdrop-filter: blur(8px);
-    }
-    .theme-panel.show{ display:block; }
-    .theme-title{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      margin-bottom:8px;
-    }
-    .theme-title b{ font-size:12.5px; letter-spacing:.2px; }
-    .theme-close{
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
-      border-radius:10px;
-      padding:6px 8px;
-      cursor:pointer;
-      font-size:12px;
-    }
-    .theme-row{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:space-between;
-      padding:8px 0;
-      border-top:1px solid rgba(255,255,255,.08);
-    }
-    .theme-row:first-of-type{ border-top:none; }
-    .theme-row span{ font-size:12px; color:rgba(255,255,255,.78); }
-    .colorbox{
-      display:flex;
-      gap:8px;
-      align-items:center;
-    }
-    .colorbox input[type="color"]{
-      width:40px; height:30px;
-      border:none;
-      background:transparent;
-      padding:0;
-      cursor:pointer;
-    }
-    .colorbox input[type="text"]{
-      width:110px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 8px 10px;
-      border-radius: 12px;
-      outline: none;
-      font-size: 12px;
-    }
-    .theme-actions{
-      display:flex;
-      gap:10px;
-      margin-top:10px;
-    }
+    .report h3{margin:0 0 6px 0;font-size:14px}
+    .report p{margin:0;color:var(--muted);font-size:12px}
+    .report .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .right-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .footer{margin-top:16px;color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .keyline{padding:10px 12px;border:1px dashed rgba(147,197,253,.35);border-radius:14px;background:rgba(59,130,246,.08);font-size:12px;color:var(--muted)}
   </style>
 </head>
-
 <body>
-  <div class="portal-shell">
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo"></div>
+      <div class="title">
+        <b>PSD Portal</b>
+        <span>GitHub Pages UI · Google Apps Script API · Google Sheet DB</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
+      <span id="statusPill" class="pill">Bağlantı: kontrol ediliyor…</span>
+      <button class="btn ghost small" id="btnLogout" onclick="logout()" style="display:none;">Çıkış</button>
+    </div>
+  </div>
 
-    <header>
+  <!-- CONFIG CARD -->
+  <div class="card" id="cardConfig">
+    <div class="hd">
       <div>
-        <h1 id="portalTitle">PSD-Portal</h1>
-        <p class="sub" id="portalSub">Butonlara tıklayınca ilgili Google Sheet / Looker Studio ekranı yeni sekmede açılır. URL boş olanlar pasiftir.</p>
+        <h2>Kurulum</h2>
+        <p>Apps Script Web App URL’sini gir ve kaydet. (Tarayıcıda saklanır.)</p>
       </div>
-
-      <div class="topbar-right">
-        <!-- TOP LOGO (Portal sağ üst) -->
-        <div class="toplogo" id="topLogoBox" style="display:none;" title="">
-          <svg viewBox="0 0 320 70" xmlns="http://www.w3.org/2000/svg" aria-label="PSD Poseidon">
-            <defs>
-              <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stop-color="var(--accent)" stop-opacity="0.95"/>
-                <stop offset="1" stop-color="var(--accent2)" stop-opacity="0.85"/>
-              </linearGradient>
-            </defs>
-            <rect x="0" y="0" width="320" height="70" rx="14" fill="rgba(255,255,255,0.02)" />
-            <g transform="translate(14,12)">
-              <path d="M18 34c10-8 18-18 18-26 0-4-3-7-7-7-5 0-8 4-11 9-3-5-6-9-11-9-4 0-7 3-7 7 0 8 8 18 18 26z" fill="url(#g1)" opacity="0.95"/>
-              <circle cx="18" cy="34" r="13" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2"/>
-            </g>
-            <text x="64" y="30" font-family="ui-sans-serif,system-ui" font-size="18" fill="#eaf0ff" font-weight="800" letter-spacing="0.8">PSD</text>
-            <text x="64" y="52" font-family="ui-sans-serif,system-ui" font-size="14" fill="rgba(234,240,255,0.78)" font-weight="600" letter-spacing="0.4">Poseidon Portal</text>
-          </svg>
-        </div>
-
-        <div class="who" id="whoBox" style="display:none;"></div>
-
-        <!-- 👇 Tema panelini aç -->
-        <button class="linkbtn" id="themeBtn" style="display:none;" type="button">Tema</button>
-
-        <button class="linkbtn warn" id="adminBtn" style="display:none;" type="button">Admin</button>
-        <button class="linkbtn primary" id="saveBtn" style="display:none;" type="button">Kaydet</button>
-        <button class="linkbtn" id="logoutBtn" style="display:none;" type="button">Çıkış</button>
-      </div>
-    </header>
-
-    <!-- PORTAL TOOLBAR (Firma bazlı kullanıcılar) -->
-    <div class="toolbar" id="portalToolbar" style="display:none;">
-      <div class="toolbar-row">
-        <input id="q" class="input" placeholder="Ara (ad/açıklama)..." />
-        <div class="chips" id="chips"></div>
+      <div class="status">
+        <div id="apiDot" class="dot warn"></div>
+        <span id="apiText">API yok</span>
       </div>
     </div>
-
-    <!-- KEY USER TOOLBAR (Tüm firmalar) -->
-    <div class="toolbar" id="keyToolbar" style="display:none;">
-      <div class="toolbar-row">
-        <input id="kq" class="input" placeholder="Ara (firma/kategori/ad/açıklama)..." />
-        <div class="chips" id="kFirmChips"></div>
-      </div>
-      <div class="toolbar-row">
-        <div class="chips" id="kCatChips"></div>
-      </div>
-    </div>
-
-    <!-- PORTAL VIEW -->
-    <div class="wrap" id="portalApp" style="display:none;"></div>
-
-    <!-- KEY USER VIEW -->
-    <div class="wrap" id="keyApp" style="display:none;"></div>
-
-    <!-- ADMIN VIEW -->
-    <div class="admin-wrap" id="adminView" style="display:none;">
-      <div class="section">
-        <div class="section-title">
-          <span>Admin Paneli</span>
-          <span style="font-size:12px;color:rgba(255,255,255,.55)" id="pendingInfo"></span>
-        </div>
-        <div style="color:rgba(255,255,255,.70);font-size:12px;line-height:1.45">
-          Admin tarafında yapılan değişiklikler taslak olarak tutulur. Portal’a dönünce sağ üstte <b>Kaydet</b> görünür; kaydedince herkes için güncellenir.
+    <div class="bd grid grid-2">
+      <div>
+        <label>API URL (Apps Script Web App)</label>
+        <input class="input mono" id="apiUrl" placeholder="https://script.google.com/macros/s/.../exec" />
+        <div class="smallnote" style="margin-top:8px">
+          Deploy ayarları: <span class="mono">Execute as: Me</span> · <span class="mono">Who has access: Anyone</span> (en azından test için).
         </div>
       </div>
-
-      <!-- ORDERED ADMIN GRID (1..8) -->
-      <div class="admin-grid">
-        <!-- (Admin panelleri aynen bırakıldı) -->
-        <!-- 1) Firma Yönetimi -->
-        <div class="panel">
-          <h3>1) Firma Yönetimi (Firma Ekle + Düzenle + Sil)</h3>
-
-          <div class="row">
-            <div class="field">
-              <div class="label">Firma Adı <span class="hint">(örn: Sudesan / Kuzey Pet)</span></div>
-              <input id="firmDisplayIn" class="login-input" placeholder="Firma adı" />
-            </div>
-            <div class="field">
-              <div class="label">Firma Key (otomatik)</div>
-              <input id="firmKeyOut" class="login-input" placeholder="otomatik oluşur" disabled />
-            </div>
-          </div>
-
-          <input id="firmEditingKey" type="hidden" />
-
-          <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn2 ok" id="addFirmBtn" type="button">Firmayı Ekle</button>
-            <button class="btn2 info" id="updateFirmBtn" type="button" style="display:none;">Firmayı Güncelle</button>
-            <button class="btn2" id="cancelFirmEditBtn" type="button" style="display:none;">İptal</button>
-            <button class="btn2" id="addAliasBtn" type="button">Bu Yazımı Alias Olarak Ekle</button>
-          </div>
-
-          <div class="msg" id="firmMsg"></div>
-          <div class="list" id="firmList"></div>
+      <div class="grid">
+        <div>
+          <label>Portal Tema Rengi</label>
+          <select id="themeSel" class="input" onchange="setTheme(this.value)">
+            <option value="blue">Mavi</option>
+            <option value="green">Yeşil</option>
+            <option value="amber">Turuncu</option>
+            <option value="red">Kırmızı</option>
+          </select>
         </div>
-
-        <!-- 2) Rol Yönetimi -->
-        <div class="panel">
-          <h3>2) Rol Yönetimi (Ekle / Aktif-Pasif / Düzenle / Sil)</h3>
-
-          <div class="row">
-            <div class="field">
-              <div class="label">Yeni Rol Kodu <span class="hint">(örn: SUDESAN_VIEW)</span></div>
-              <input id="roleNewKey" class="login-input" placeholder="ROL_KODU" />
-            </div>
-            <div class="field">
-              <div class="label">Açıklama <span class="hint">(opsiyonel)</span></div>
-              <input id="roleNewDesc" class="login-input" placeholder="örn: Sudesan raporlarını görüntüleme" />
-            </div>
-          </div>
-
-          <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn2 ok" id="addRoleBtn" type="button">Rolü Ekle</button>
-            <button class="btn2" id="normalizeRolesBtn" type="button">Rol Kodlarını Normalize Et</button>
-          </div>
-
-          <div class="msg" id="roleMsg"></div>
-
-          <div class="smallNote">
-            Not: Rol “Pasif” yapılınca kullanıcıda rol dursa bile erişim sağlamaz.
-          </div>
-
-          <div class="list" id="roleList"></div>
-        </div>
-
-        <!-- 3) Firmaya Rol Tanımla -->
-        <div class="panel">
-          <h3>3) Firmaya Rol Tanımla (Ekle + Düzenle + Sil)</h3>
-
-          <div class="field">
-            <div class="label">Firma Seç <span class="hint">(giriş için gerekli roller)</span></div>
-            <select id="firmSelForRoles" class="select"></select>
-          </div>
-
-          <div class="label" style="margin-top:10px;">Bu firmaya giriş için gerekli roller</div>
-          <div class="rolesBox" id="firmRoleBox"></div>
-
-          <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn2 info" id="saveFirmRolesBtn" type="button">Firma Rollerini Güncelle</button>
-            <button class="btn2 danger" id="clearFirmRolesBtn" type="button">Firma Rollerini Temizle</button>
-          </div>
-
-          <div class="msg" id="firmRoleMsg"></div>
-
-          <div class="smallNote">
-            “Temizle” seçili firmanın giriş rol listesini boşaltır. (Login için otomatik fallback: <code>FIRMAKEY_VIEW</code>)
-          </div>
-        </div>
-
-        <!-- 4) Kullanıcı -->
-        <div class="panel">
-          <h3>4) Kullanıcı Ekle & Yetkilendir (Aktif-Pasif / Düzenle / Sil)</h3>
-
-          <input id="userEditingKey" type="hidden" />
-
-          <div class="row">
-            <div class="field">
-              <div class="label">Kullanıcı Adı</div>
-              <input id="newUserU" class="login-input" placeholder="örn: zeynep" />
-            </div>
-            <div class="field">
-              <div class="label">Şifre</div>
-              <input id="newUserP" class="login-input" placeholder="örn: 1234" />
-            </div>
-            <div class="field">
-              <div class="label">Görünen Ad</div>
-              <input id="newUserD" class="login-input" placeholder="örn: Zeynep" />
-            </div>
-            <div class="field">
-              <div class="label">E-posta</div>
-              <input id="newUserE" type="email" class="login-input" placeholder="örn: zeynep@firma.com" />
-            </div>
-            <div class="field">
-              <div class="label">Not</div>
-              <input class="login-input" value="Roller aşağıdan seçilir" disabled />
-            </div>
-          </div>
-
-          <div class="label" style="margin-top:10px;">Roller (sadece aktif roller)</div>
-          <div class="rolesBox" id="userRoleBox"></div>
-
-          <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn2 ok" id="addUserBtn" type="button">Kullanıcıyı Ekle</button>
-            <button class="btn2 info" id="updateUserBtn" type="button" style="display:none;">Kullanıcıyı Güncelle</button>
-            <button class="btn2 warn" id="resetUserPwdBtn" type="button" style="display:none;">Şifreyi Sıfırla</button>
-            <button class="btn2" id="cancelUserEditBtn" type="button" style="display:none;">İptal</button>
-          </div>
-
-          <div class="msg" id="userMsg"></div>
-          <div class="list" id="userList"></div>
-        </div>
-
-        <!-- 5) Rapor Yönetimi -->
-        <div class="panel">
-          <h3>5) Rapor Yönetimi (Ekle / Düzenle / Sil)</h3>
-
-          <div class="field">
-            <div class="label">Mevcut Raporlar</div>
-            <select id="repPickSel" class="select"></select>
-          </div>
-
-          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
-            <button class="btn2 info" id="loadReportBtn" type="button">Seçili Raporu Yükle (Düzenle)</button>
-            <button class="btn2 danger" id="deletePickedReportBtn" type="button">Seçili Raporu Sil</button>
-            <button class="btn2" id="clearReportFormBtn" type="button">Formu Temizle (Yeni)</button>
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="row">
-            <div class="field">
-              <div class="label">Firma</div>
-              <select id="repFirmSel" class="select"></select>
-            </div>
-            <div class="field">
-              <div class="label">Kategori</div>
-              <input id="repCat" class="login-input" placeholder="örn: DEPO / ÜRETİM / KPI" />
-            </div>
-            <div class="field">
-              <div class="label">Rapor Adı</div>
-              <input id="repName" class="login-input" placeholder="örn: Sudesan | Stok Analiz Raporu" />
-            </div>
-            <div class="field">
-              <div class="label">Açıklama</div>
-              <input id="repDesc" class="login-input" placeholder="örn: Google Sheet / stok analiz" />
-            </div>
-            <div class="field" style="grid-column:1/-1;">
-              <div class="label">URL</div>
-              <input id="repUrl" class="login-input" placeholder="https://..." />
-            </div>
-          </div>
-
-          <div class="label" style="margin-top:10px;">Bu raporu görebilecek roller (sadece aktif roller)</div>
-          <div class="rolesBox" id="repRoleBox"></div>
-
-          <input id="repEditingId" type="hidden" />
-
-          <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn2 ok" id="upsertReportBtn" type="button">Kaydet (Ekle / Güncelle)</button>
-          </div>
-
-          <div class="msg" id="repMsg"></div>
-          <div class="list" id="reportList"></div>
-        </div>
-
-        <!-- 6) Firmaya ve Role Rapor Tanımlama -->
-        <div class="panel">
-          <h3>6) Firmaya ve Role Rapor Tanımlama (Ekle + Düzenle + Sil)</h3>
-
-          <div class="smallNote">
-            Bu panel, raporların <b>Firma</b> ve <b>Rol</b> eşleşmelerini topluca yönetmek içindir.
-            (Rapor içindeki ACL allowRoles alanı güncellenir.)
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="row">
-            <div class="field">
-              <div class="label">Firma</div>
-              <select id="mapFirmSel" class="select"></select>
-            </div>
-            <div class="field">
-              <div class="label">Rol</div>
-              <select id="mapRoleSel" class="select"></select>
-            </div>
-          </div>
-
-          <div style="margin-top:10px; display:flex; gap:16px; flex-wrap:wrap;">
-            <button class="btn2 info" id="loadFirmRoleReportsBtn" type="button">Listele</button>
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="label">Bu Firma için Raporlar (Seçili Rol için Aç/Kapat)</div>
-          <div class="list" id="firmRoleReportList"></div>
-
-          <div style="margin-top:10px; display:flex; gap:16px; flex-wrap:wrap;">
-            <button class="btn2 ok" id="applyFirmRoleReportsBtn" type="button">Seçimleri Uygula (Taslak)</button>
-            <button class="btn2 danger" id="clearFirmRoleReportsBtn" type="button">Bu Rolü Firmadaki Tüm Raporlardan Kaldır</button>
-          </div>
-
-          <div class="msg" id="mapMsg"></div>
-        </div>
-
-        <!-- 7) Kaydet Akışı -->
-        <div class="panel">
-          <h3>7) Kaydet</h3>
-
-          <div style="color:rgba(255,255,255,.70);font-size:12px;line-height:1.45">
-            Admin panelinde eklediğin her şey “taslak” olarak bekler. Sağ üstte çıkan <b>Kaydet</b> butonuna basınca kalıcı olur.
-          </div>
-
-          <div class="hr"></div>
-
-          <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn2 warn" id="goPortalBtn" type="button">Portal’a Dön</button>
-            <button class="btn2" id="discardBtn" type="button">Taslak Değişiklikleri At</button>
-          </div>
-
-          <div class="msg" id="flowMsg"></div>
-        </div>
-
-        <!-- 8) KEY USER Yönetimi -->
-        <div class="panel">
-          <h3>8) Key User Yönetimi (Tüm firmalara erişir)</h3>
-
-          <input id="keyUserEditingKey" type="hidden" />
-
-          <div class="smallNote">
-            Key User’lar firma ayrımı olmaksızın tüm linkleri görür. Login ekranında <b>firma girmeden</b> de giriş yapabilir.
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="row">
-            <div class="field">
-              <div class="label">Kullanıcı Adı</div>
-              <input id="keyUserU" class="login-input" placeholder="örn: key_alper" />
-            </div>
-            <div class="field">
-              <div class="label">Şifre</div>
-              <input id="keyUserP" class="login-input" placeholder="örn: 1234" />
-            </div>
-            <div class="field">
-              <div class="label">Görünen Ad</div>
-              <input id="keyUserD" class="login-input" placeholder="örn: Alper (Key)" />
-            </div>
-            <div class="field">
-              <div class="label">E-posta</div>
-              <input id="keyUserE" type="email" class="login-input" placeholder="örn: alper@psd.com.tr" />
-            </div>
-          </div>
-
-          <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn2 ok" id="addKeyUserBtn" type="button">Key User Ekle</button>
-            <button class="btn2 info" id="updateKeyUserBtn" type="button" style="display:none;">Key User Güncelle</button>
-            <button class="btn2 warn" id="resetKeyUserPwdBtn" type="button" style="display:none;">Şifreyi Sıfırla</button>
-            <button class="btn2" id="cancelKeyUserEditBtn" type="button" style="display:none;">İptal</button>
-          </div>
-
-          <div class="msg" id="keyUserMsg"></div>
-          <div class="list" id="keyUserList"></div>
-        </div>
-      </div>
-    </div>
-
-    <footer id="footer" style="display:none;">
-      İpucu: Admin ile eklenenler kalıcı hale gelmesi için Portal ekranında <code>Kaydet</code> butonuna basılmalıdır.
-    </footer>
-
-  </div><!-- /portal-shell -->
-
-  <!-- 👇 SAĞ TARAFTA TEMA PANELİ -->
-  <aside class="theme-panel" id="themePanel" aria-label="Tema Ayarları">
-    <div class="theme-title">
-      <b>Tema / Buton Rengi</b>
-      <button class="theme-close" type="button" id="themeCloseBtn">Kapat</button>
-    </div>
-
-    <div class="theme-row">
-      <span>Tema (Accent 1)</span>
-      <div class="colorbox">
-        <input type="color" id="accentColor" />
-        <input type="text" id="accentHex" placeholder="#60a5fa" />
-      </div>
-    </div>
-
-    <div class="theme-row">
-      <span>Buton (Accent 2)</span>
-      <div class="colorbox">
-        <input type="color" id="accent2Color" />
-        <input type="text" id="accent2Hex" placeholder="#22c55e" />
-      </div>
-    </div>
-
-    <div class="theme-row">
-      <span>Arkaplan</span>
-      <div class="colorbox">
-        <input type="color" id="bgColor" />
-        <input type="text" id="bgHex" placeholder="#0b1220" />
-      </div>
-    </div>
-
-    <div class="theme-row">
-      <span>Kart</span>
-      <div class="colorbox">
-        <input type="color" id="cardColor" />
-        <input type="text" id="cardHex" placeholder="#111a2e" />
-      </div>
-    </div>
-
-    <div class="theme-actions">
-      <button class="btn2 ok" type="button" id="themeSaveBtn">Kaydet</button>
-      <button class="btn2" type="button" id="themeResetBtn">Sıfırla</button>
-    </div>
-
-    <div class="smallNote" style="margin-top:10px;">
-      Bu ayarlar <b>kullanıcı bazlı</b> kaydedilir (localStorage).
-    </div>
-    <div class="msg" id="themeMsg"></div>
-  </aside>
-
-  <!-- LOGIN OVERLAY -->
-  <div class="overlay" id="loginOverlay">
-    <div class="login-card">
-      <div class="login-left">
-        <!-- HERO LOGO (Login sol) -->
-        <div class="hero-logo">
-          <svg viewBox="0 0 360 90" xmlns="http://www.w3.org/2000/svg" aria-label="PSD Poseidon">
-            <defs>
-              <linearGradient id="hg" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stop-color="var(--accent)" stop-opacity="0.95"/>
-                <stop offset="1" stop-color="var(--accent2)" stop-opacity="0.9"/>
-              </linearGradient>
-            </defs>
-            <rect x="0" y="0" width="360" height="90" rx="18" fill="rgba(255,255,255,0.02)" />
-            <g transform="translate(18,18)">
-              <path d="M26 50c14-10 26-24 26-36 0-6-5-11-11-11-8 0-12 7-15 14-3-7-7-14-15-14-6 0-11 5-11 11 0 12 12 26 26 36z" fill="url(#hg)"/>
-              <circle cx="26" cy="50" r="18" fill="none" stroke="rgba(255,255,255,0.20)" stroke-width="2.5"/>
-            </g>
-            <text x="90" y="45" font-family="ui-sans-serif,system-ui" font-size="26" fill="#eaf0ff" font-weight="900" letter-spacing="1">PSD</text>
-            <text x="90" y="70" font-family="ui-sans-serif,system-ui" font-size="16" fill="rgba(234,240,255,0.78)" font-weight="650" letter-spacing="0.6">Poseidon</text>
-          </svg>
-        </div>
-
-        <h2>PSD-Portal</h2>
-        <p>Hoş geldiniz.</p>
-      </div>
-
-      <div class="login-right">
-        <h3 class="login-title">Giriş</h3>
-        <p class="login-sub">Kullanıcı adı, şifre ve firma ile giriş yapın. <span class="hint">(Key User ise firma opsiyonel)</span></p>
-
-        <div class="field">
-          <div class="label">Kullanıcı Adı</div>
-          <input id="u" class="login-input" autocomplete="username" placeholder="" />
-        </div>
-
-        <div class="field">
-          <div class="label">Şifre</div>
-          <input id="p" type="password" class="login-input" autocomplete="current-password" placeholder="••••••••" />
-        </div>
-
-        <div class="field">
-          <div class="label">Firma <span class="hint">(Key User değilse Boş Bırakılamaz)</span></div>
-          <input id="firmName" class="login-input" placeholder='' />
-        </div>
-
-        <button class="primary" id="loginBtn" type="button" onclick="window.__doLogin && window.__doLogin()">Giriş Yap</button>
-        <div class="msg" id="loginMsg"></div>
-
-        <div class="tiny">
-          * Not: Bu yapı frontend gating’dir. Linklerin gerçek güvenliği için Google paylaşım izinleri / Apps Script backend gerekir.
+        <div class="right-actions" style="align-items:end">
+          <button class="btn primary" onclick="saveConfig()">Kaydet</button>
+          <button class="btn warn" onclick="testApi()">API Test (ping)</button>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- LOGIN -->
+  <div class="row" id="rowLogin" style="margin-top:14px">
+    <div class="card" style="flex:1;min-width:320px">
+      <div class="hd">
+        <div>
+          <h2>Giriş</h2>
+          <p>Admin · Key User · Normal User</p>
+        </div>
+        <span class="badge" id="modeBadge">—</span>
+      </div>
+      <div class="bd grid grid-2">
+        <div>
+          <label>Kullanıcı Adı</label>
+          <input class="input" id="inUser" autocomplete="username" />
+        </div>
+        <div>
+          <label>Şifre</label>
+          <input class="input" id="inPass" type="password" autocomplete="current-password" />
+        </div>
+        <div style="grid-column:1/-1">
+          <label>Firma (Normal User için zorunlu · Admin/Key User için boş olabilir)</label>
+          <input class="input" id="inFirm" placeholder="Örn: Sudesan / Dupack / ..." />
+        </div>
+        <div style="grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+          <button class="btn primary" onclick="login()">Giriş Yap</button>
+          <button class="btn ghost" onclick="fillDemo()">Demo doldur</button>
+        </div>
+        <div class="keyline" style="grid-column:1/-1">
+          <b>Not:</b> Kullanıcılar ve firmalar <b>tarayıcıda değil</b>, Google Sheet’te tutulur.
+          Burada “silindi” gibi görünen durumlar genelde localStorage / cache / eski seed-data kaynaklıdır.
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="flex:1;min-width:320px">
+      <div class="hd">
+        <div>
+          <h2>Bilgi</h2>
+          <p>Bu tek dosya UI; tüm veri API’den okunur / (Admin) kaydedilir.</p>
+        </div>
+      </div>
+      <div class="bd">
+        <div class="kpi">
+          <div class="box"><b id="kpiFirms">—</b><span>Firms</span></div>
+          <div class="box"><b id="kpiUsers">—</b><span>Users</span></div>
+          <div class="box"><b id="kpiReports">—</b><span>Reports</span></div>
+        </div>
+        <div class="hr"></div>
+        <div class="smallnote">
+          <b>Güvenlik notu (pratik):</b> Apps Script tarafında token 12 saat geçerli.
+          Admin harici kullanıcılar save yapamaz. Normal user erişimi rol ile kontrol edilir.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="row hidden" id="rowMain" style="margin-top:14px">
+    <!-- LEFT: Portal view -->
+    <div class="card" style="flex:2;min-width:320px">
+      <div class="hd">
+        <div>
+          <h2 id="mainTitle">Portal</h2>
+          <p id="mainSub" class="muted">—</p>
+        </div>
+        <div class="right-actions">
+          <button class="btn small" onclick="refreshDB()">Yenile</button>
+          <button class="btn small warn hidden" id="btnAdminOpen" onclick="openAdmin()">Admin Paneli</button>
+        </div>
+      </div>
+      <div class="bd">
+        <div class="tabs" id="catTabs"></div>
+        <div id="reportsList" class="list"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Session -->
+    <div class="card" style="flex:1;min-width:320px">
+      <div class="hd">
+        <div>
+          <h2>Oturum</h2>
+          <p>Kimlik, roller, firma erişimi</p>
+        </div>
+        <span class="badge" id="sessBadge">—</span>
+      </div>
+      <div class="bd">
+        <div class="grid">
+          <div>
+            <div class="muted" style="font-size:12px">Kullanıcı</div>
+            <div id="sessUser" style="font-weight:700">—</div>
+          </div>
+          <div>
+            <div class="muted" style="font-size:12px">Mod</div>
+            <div id="sessMode">—</div>
+          </div>
+          <div>
+            <div class="muted" style="font-size:12px">Firma</div>
+            <div id="sessFirm">—</div>
+          </div>
+          <div>
+            <div class="muted" style="font-size:12px">Roller</div>
+            <div id="sessRoles" class="mono" style="font-size:12px;word-break:break-word">—</div>
+          </div>
+          <div class="hr"></div>
+          <div class="right-actions">
+            <button class="btn danger" onclick="logout()">Çıkış</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+  <div class="card hidden" id="cardAdmin" style="margin-top:14px">
+    <div class="hd">
+      <div>
+        <h2>Admin Panel</h2>
+        <p>DB düzenleme: Firms · Aliases · Roles · Users · KeyUsers · FirmAccessRoles · Reports</p>
+      </div>
+      <div class="right-actions">
+        <button class="btn small" onclick="closeAdmin()">Kapat</button>
+        <button class="btn small warn" onclick="exportJSON()">JSON Export</button>
+        <button class="btn small success" onclick="saveAdmin()">Kaydet (saveDB)</button>
+      </div>
+    </div>
+    <div class="bd">
+      <div class="tabs" id="adminTabs"></div>
+      <div id="adminArea"></div>
+      <div class="hr"></div>
+      <div class="smallnote">
+        <b>İpucu:</b> Kullanıcı şifresi için <span class="mono">passHash</span> alanı SHA-256 hex olmalı.
+        Apps Script tarafında <span class="mono">UTIL_hashPasswordForSheet()</span> ile sheet’te düz şifreleri hash’leyebilirsin.
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>© PSD Portal · Tek dosya UI</div>
+    <div class="mono">v1.0</div>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden">
+  <div id="toastDot" class="dot warn"></div>
+  <div id="toastMsg" class="msg">—</div>
+  <button class="btn small ghost x" onclick="hideToast()">Kapat</button>
+</div>
+
 <script>
-  /********************************************************************
-   * ADMIN CREDENTIALS
-   ********************************************************************/
-  const ADMIN_LOGIN = { username: "Poseidon", password: "psd123" };
+/** =========================
+ *  CONFIG
+ *  =========================
+ *  API_URL: localStorage('PSD_API_URL') ile tutulur.
+ */
+let API_URL = "";
+const LS = {
+  api: "PSD_API_URL",
+  theme: "PSD_THEME",
+  sess: "PSD_SESSION"
+};
 
-  /********************************************************************
-   * DB STORAGE
-   ********************************************************************/
-  const DB_KEY = "PSD_PORTAL_DB_V2";
-  const WORKING_KEY = "PSD_PORTAL_WORKING_V2";
-  const SESSION_KEY = "PSD_PORTAL_SESSION_V6";
+let session = null; // { token, mode, user: {..} }
+let DB = null;      // { firms, aliases, roles, users, keyUsers, firmAccessRoles, reports }
+let activeCat = "ALL";
+let adminActiveTab = "Firms";
 
-  /********************************************************************
-   * 👇 USER THEME PREFS (kullanıcı bazlı tema + buton rengi)
-   ********************************************************************/
-  const PREFS_KEY = "PSD_PORTAL_PREFS_V1";
-  const DEFAULT_THEME = {
-    bg: "#0b1220",
-    card: "#111a2e",
-    accent: "#60a5fa",
-    accent2: "#22c55e"
+const DB_KEYS = [
+  "firms","aliases","roles","users","keyUsers","firmAccessRoles","reports"
+];
+
+function init() {
+  // load config
+  API_URL = localStorage.getItem(LS.api) || "";
+  document.getElementById("apiUrl").value = API_URL;
+
+  const th = localStorage.getItem(LS.theme) || "blue";
+  document.getElementById("themeSel").value = th;
+  setTheme(th);
+
+  // load session
+  const s = localStorage.getItem(LS.sess);
+  if (s) {
+    try {
+      session = JSON.parse(s);
+    } catch(_) {}
+  }
+
+  // reflect
+  updateConnPill("warn","Bağlantı: ayarlanmadı");
+  if (API_URL) testApi(true);
+
+  if (session && session.token) {
+    // try silent refresh DB and show main
+    refreshDB(true).catch(() => {
+      // session invalid -> logout
+      logout(true);
+    });
+  }
+}
+window.addEventListener("DOMContentLoaded", init);
+
+function setTheme(theme) {
+  localStorage.setItem(LS.theme, theme);
+  const root = document.documentElement.style;
+  // adjust button accent subtly
+  if (theme === "blue") { root.setProperty("--btn", "#3b82f6"); }
+  if (theme === "green"){ root.setProperty("--btn", "#22c55e"); }
+  if (theme === "amber"){ root.setProperty("--btn", "#f59e0b"); }
+  if (theme === "red"){ root.setProperty("--btn", "#ef4444"); }
+}
+
+function saveConfig() {
+  API_URL = (document.getElementById("apiUrl").value || "").trim();
+  localStorage.setItem(LS.api, API_URL);
+  toast("good","Kaydedildi. API Test önerilir.");
+  testApi();
+}
+
+async function testApi(silent=false) {
+  if (!API_URL) {
+    setApiStatus(false, "API URL yok");
+    updateConnPill("warn","Bağlantı: API URL yok");
+    if (!silent) toast("warn","API URL girilmemiş.");
+    return;
+  }
+  try {
+    const res = await apiCall({ action:"ping" });
+    if (res && res.ok) {
+      setApiStatus(true, "API hazır");
+      updateConnPill("good","Bağlantı: OK");
+      if (!silent) toast("good","API ping başarılı.");
+    } else {
+      setApiStatus(false, "API cevap hatası");
+      updateConnPill("bad","Bağlantı: HATA");
+      if (!silent) toast("bad","API ping başarısız: " + (res?.error || "unknown"));
+    }
+  } catch (e) {
+    setApiStatus(false, "API erişilemiyor");
+    updateConnPill("bad","Bağlantı: HATA");
+    if (!silent) toast("bad","API erişilemiyor: " + e.message);
+  }
+}
+
+function setApiStatus(ok, text) {
+  const dot = document.getElementById("apiDot");
+  const t = document.getElementById("apiText");
+  dot.className = "dot " + (ok ? "good" : "bad");
+  t.textContent = text;
+}
+
+function updateConnPill(level, text) {
+  const pill = document.getElementById("statusPill");
+  pill.textContent = text;
+  // just visual via dot style in config card
+}
+
+/** =========================
+ *  API CALL
+ *  ========================= */
+async function apiCall(payload) {
+  if (!API_URL) throw new Error("API URL yok");
+  const resp = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type":"text/plain;charset=utf-8" },
+    body: JSON.stringify(payload)
+  });
+  const txt = await resp.text();
+  try { return JSON.parse(txt); }
+  catch(e){ throw new Error("JSON parse error: " + txt.slice(0,200)); }
+}
+
+/** =========================
+ *  LOGIN / SESSION
+ *  ========================= */
+function fillDemo() {
+  document.getElementById("inUser").value = "Poseidon";
+  document.getElementById("inPass").value = "psd123";
+  document.getElementById("inFirm").value = "";
+}
+
+async function login() {
+  const username = (document.getElementById("inUser").value || "").trim();
+  const password = (document.getElementById("inPass").value || "");
+  const firmName = (document.getElementById("inFirm").value || "").trim();
+
+  if (!API_URL) return toast("warn","Önce API URL kaydet.");
+  if (!username || !password) return toast("warn","Kullanıcı/şifre gir.");
+
+  try {
+    const res = await apiCall({ action:"login", username, password, firmName });
+    if (!res.ok) return toast("bad", res.error || "Giriş başarısız");
+
+    session = { token: res.token, mode: res.mode, user: res.user };
+    localStorage.setItem(LS.sess, JSON.stringify(session));
+
+    document.getElementById("modeBadge").textContent = res.mode;
+    toast("good","Giriş başarılı: " + res.mode);
+
+    await refreshDB(false);
+    showMain();
+  } catch (e) {
+    toast("bad","Login hata: " + e.message);
+  }
+}
+
+function logout(silent=false) {
+  session = null;
+  DB = null;
+  localStorage.removeItem(LS.sess);
+
+  document.getElementById("rowMain").classList.add("hidden");
+  document.getElementById("cardAdmin").classList.add("hidden");
+  document.getElementById("rowLogin").classList.remove("hidden");
+  document.getElementById("btnLogout").style.display = "none";
+
+  document.getElementById("kpiFirms").textContent = "—";
+  document.getElementById("kpiUsers").textContent = "—";
+  document.getElementById("kpiReports").textContent = "—";
+
+  if (!silent) toast("warn","Çıkış yapıldı.");
+}
+
+/** =========================
+ *  DB LOAD / RENDER
+ *  ========================= */
+async function refreshDB(silent=false) {
+  if (!session?.token) throw new Error("No session");
+  const res = await apiCall({ action:"getDB", token: session.token });
+
+  if (!res.ok) {
+    if (!silent) toast("bad", res.error || "getDB error");
+    throw new Error(res.error || "Unauthorized");
+  }
+  DB = res.db;
+
+  // KPIs
+  const firmsN = (DB?.firms || []).length;
+  const usersN = (DB?.users || []).length + (DB?.keyUsers || []).length;
+  const repsN  = (DB?.reports || []).length;
+
+  document.getElementById("kpiFirms").textContent = firmsN;
+  document.getElementById("kpiUsers").textContent = usersN;
+  document.getElementById("kpiReports").textContent = repsN;
+
+  if (!silent) toast("good","DB yenilendi.");
+
+  // Re-render main if visible
+  if (!document.getElementById("rowMain").classList.contains("hidden")) {
+    renderMain();
+  }
+}
+
+function showMain() {
+  document.getElementById("rowLogin").classList.add("hidden");
+  document.getElementById("rowMain").classList.remove("hidden");
+  document.getElementById("btnLogout").style.display = "inline-flex";
+
+  // admin button
+  const isAdmin = (session?.mode === "ADMIN");
+  document.getElementById("btnAdminOpen").classList.toggle("hidden", !isAdmin);
+
+  renderSessionCard();
+  renderMain();
+}
+
+function renderSessionCard() {
+  const u = session?.user || {};
+  document.getElementById("sessBadge").textContent = session?.mode || "—";
+  document.getElementById("sessUser").textContent = (u.display || u.username || "—");
+  document.getElementById("sessMode").textContent = (session?.mode || "—");
+
+  if (session?.mode === "PORTAL") {
+    document.getElementById("sessFirm").textContent = (u.firmDisplay || u.firmKey || "—");
+    document.getElementById("sessRoles").textContent = (u.roles || []).join(", ") || "—";
+  } else {
+    document.getElementById("sessFirm").textContent = "—";
+    document.getElementById("sessRoles").textContent = (u.roles || []).join(", ") || "—";
+  }
+}
+
+function renderMain() {
+  const u = session?.user || {};
+  const mode = session?.mode;
+
+  if (mode === "ADMIN") {
+    document.getElementById("mainTitle").textContent = "Admin Görünümü";
+    document.getElementById("mainSub").textContent = "Tüm raporlar listelenir. Düzenleme için Admin Paneli'ni aç.";
+  } else if (mode === "KEY") {
+    document.getElementById("mainTitle").textContent = "Key User Görünümü";
+    document.getElementById("mainSub").textContent = "Firma seçmeden; izinli raporlar listelenir (role/user bazlı).";
+  } else {
+    document.getElementById("mainTitle").textContent = "Portal";
+    document.getElementById("mainSub").textContent = (u.firmDisplay ? ("Firma: " + u.firmDisplay) : "—");
+  }
+
+  // category tabs
+  const cats = collectCategories();
+  renderCategoryTabs(cats);
+
+  // list reports
+  renderReports();
+}
+
+function collectCategories() {
+  const reports = DB?.reports || [];
+  const allowed = reports.filter(r => canSeeReport(r));
+  const set = new Set(["ALL"]);
+  allowed.forEach(r => set.add(String(r.cat || "Genel")));
+  return Array.from(set);
+}
+
+function renderCategoryTabs(cats) {
+  const tabs = document.getElementById("catTabs");
+  tabs.innerHTML = "";
+  cats.forEach(cat => {
+    const el = document.createElement("div");
+    el.className = "tab" + (activeCat === cat ? " active" : "");
+    el.textContent = cat;
+    el.onclick = () => { activeCat = cat; renderCategoryTabs(cats); renderReports(); };
+    tabs.appendChild(el);
+  });
+}
+
+function renderReports() {
+  const list = document.getElementById("reportsList");
+  list.innerHTML = "";
+
+  const reports = (DB?.reports || []).filter(r => String(r.active).toLowerCase() !== "false");
+
+  const allowed = reports
+    .filter(r => canSeeReport(r))
+    .filter(r => activeCat === "ALL" ? true : String(r.cat || "Genel") === activeCat);
+
+  if (!allowed.length) {
+    const empty = document.createElement("div");
+    empty.className = "smallnote";
+    empty.textContent = "Görüntülenecek rapor bulunamadı (kategori/rol yetkisi kontrol).";
+    list.appendChild(empty);
+    return;
+  }
+
+  // sort by cat then name
+  allowed.sort((a,b) => {
+    const ca = String(a.cat||""); const cb = String(b.cat||"");
+    if (ca !== cb) return ca.localeCompare(cb, "tr");
+    return String(a.name||"").localeCompare(String(b.name||""), "tr");
+  });
+
+  allowed.forEach(r => {
+    const firmKey = String(r.firmKey || "").trim();
+    const firmLabel = firmKey ? firmDisplayByKey(firmKey) : "—";
+    const allowRoles = csvToArr(r.allowRolesCsv);
+    const allowUsers = csvToArr(r.allowUsersCsv);
+
+    const card = document.createElement("div");
+    card.className = "report";
+
+    const left = document.createElement("div");
+    left.style.flex = "1";
+
+    const h = document.createElement("h3");
+    h.textContent = String(r.name || "Unnamed report");
+    left.appendChild(h);
+
+    const p = document.createElement("p");
+    p.textContent = String(r.desc || "");
+    left.appendChild(p);
+
+    const meta = document.createElement("div");
+    meta.className = "meta";
+    meta.appendChild(badge("Kategori", String(r.cat || "Genel")));
+    if (firmKey) meta.appendChild(badge("Firma", firmLabel));
+    if (allowRoles.length) meta.appendChild(badge("Roles", allowRoles.join(", ")));
+    if (allowUsers.length) meta.appendChild(badge("Users", allowUsers.join(", ")));
+    left.appendChild(meta);
+
+    const right = document.createElement("div");
+    right.className = "right-actions";
+
+    const btnOpen = document.createElement("button");
+    btnOpen.className = "btn small primary";
+    btnOpen.textContent = "Aç";
+    btnOpen.onclick = () => {
+      const url = String(r.url || "").trim();
+      if (!url) return toast("warn","URL boş: " + (r.name || ""));
+      window.open(url, "_blank", "noopener,noreferrer");
+    };
+
+    right.appendChild(btnOpen);
+
+    card.appendChild(left);
+    card.appendChild(right);
+    list.appendChild(card);
+  });
+}
+
+function badge(k,v){
+  const s = document.createElement("span");
+  s.className = "badge";
+  s.textContent = `${k}: ${v}`;
+  return s;
+}
+
+function csvToArr(csv){
+  return String(csv||"").split(",").map(x=>x.trim()).filter(Boolean);
+}
+
+function firmDisplayByKey(firmKey){
+  const firms = DB?.firms || [];
+  const f = firms.find(x => String(x.firmKey||"").trim() === firmKey);
+  return f ? (String(f.display||"").trim() || firmKey) : firmKey;
+}
+
+function canSeeReport(r) {
+  const mode = session?.mode;
+  const u = session?.user || {};
+
+  // Admin sees all
+  if (mode === "ADMIN") return true;
+
+  // Active check
+  if (String(r.active).toLowerCase() === "false") return false;
+
+  const firmKey = String(r.firmKey || "").trim();
+
+  // Normal user firm filter: if report has firmKey, must match
+  if (mode === "PORTAL") {
+    const myFirm = String(u.firmKey || "").trim();
+    if (firmKey && myFirm && firmKey !== myFirm) return false;
+    if (firmKey && !myFirm) return false;
+  }
+
+  // Key user: firmKey if set -> allow all firms (no firm selection) OR you can enforce firmKey? We'll not enforce.
+  // Role/user allow lists
+  const allowRoles = csvToArr(r.allowRolesCsv);
+  const allowUsers = csvToArr(r.allowUsersCsv).map(x=>x.toLowerCase());
+
+  // If both empty => public for that mode/firm
+  if (!allowRoles.length && !allowUsers.length) return true;
+
+  const uname = String(u.username || "").toLowerCase();
+
+  // allowUsers has priority
+  if (allowUsers.includes(uname)) return true;
+
+  // roles
+  const myRoles = (u.roles || []);
+  return allowRoles.some(rr => myRoles.includes(rr));
+}
+
+/** =========================
+ *  ADMIN PANEL
+ *  ========================= */
+function openAdmin() {
+  if (session?.mode !== "ADMIN") return toast("bad","Admin gerekli");
+  document.getElementById("cardAdmin").classList.remove("hidden");
+  renderAdminTabs();
+  renderAdminTable();
+  toast("good","Admin panel açıldı.");
+}
+
+function closeAdmin() {
+  document.getElementById("cardAdmin").classList.add("hidden");
+}
+
+function renderAdminTabs() {
+  const tabs = document.getElementById("adminTabs");
+  tabs.innerHTML = "";
+  const labels = {
+    Firms:"Firms", Aliases:"Aliases", Roles:"Roles", Users:"Users",
+    KeyUsers:"KeyUsers", FirmAccessRoles:"FirmAccessRoles", Reports:"Reports"
   };
+  Object.keys(labels).forEach(k => {
+    const el = document.createElement("div");
+    el.className = "tab" + (adminActiveTab === k ? " active" : "");
+    el.textContent = labels[k];
+    el.onclick = () => { adminActiveTab = k; renderAdminTabs(); renderAdminTable(); };
+    tabs.appendChild(el);
+  });
+}
 
-  const deepClone = (x) => JSON.parse(JSON.stringify(x));
-  const norm = (s="") => String(s).toLowerCase().trim();
-  const trim = (s="") => String(s).trim();
+function getTabKeyToDBKey(tab){
+  if (tab === "FirmAccessRoles") return "firmAccessRoles";
+  if (tab === "KeyUsers") return "keyUsers";
+  return tab.toLowerCase(); // Firms->firms, Reports->reports
+}
 
-  function getLocalJSON(key){
-    try{
-      const s = localStorage.getItem(key);
-      if (!s) return null;
-      return JSON.parse(s);
-    }catch(e){ return null; }
-  }
-  function setLocalJSON(key, obj){
-    localStorage.setItem(key, JSON.stringify(obj));
-  }
+function renderAdminTable() {
+  const area = document.getElementById("adminArea");
+  area.innerHTML = "";
 
-  function setMsg(id, text, type){
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.className = "msg" + (type ? (" " + type) : "");
-    el.textContent = text || "";
-  }
+  const dbKey = getTabKeyToDBKey(adminActiveTab);
+  const rows = (DB && DB[dbKey]) ? DB[dbKey] : [];
+  const cols = inferColumns(adminActiveTab);
 
-  function escapeHtml(s){
-    return String(s||"").replace(/[&<>"']/g, (c)=>({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-    }[c]));
-  }
+  const info = document.createElement("div");
+  info.className = "smallnote";
+  info.innerHTML = `<b>Tab:</b> <span class="mono">${adminActiveTab}</span> · <b>Row:</b> ${rows.length}`;
+  area.appendChild(info);
 
-  function isHexColor(s){
-    return /^#([0-9a-fA-F]{6})$/.test(String(s||"").trim());
-  }
-
-  function applyThemeVars(t){
-    const theme = Object.assign({}, DEFAULT_THEME, t || {});
-    const root = document.documentElement;
-    root.style.setProperty("--bg", theme.bg);
-    root.style.setProperty("--card", theme.card);
-    root.style.setProperty("--accent", theme.accent);
-    root.style.setProperty("--accent2", theme.accent2);
-  }
-
-  function getAllPrefs(){
-    return getLocalJSON(PREFS_KEY) || {};
-  }
-  function getUserTheme(username){
-    const all = getAllPrefs();
-    return all && all[username] ? all[username] : null;
-  }
-  function setUserTheme(username, theme){
-    const all = getAllPrefs();
-    all[username] = theme;
-    setLocalJSON(PREFS_KEY, all);
-  }
-  function clearUserTheme(username){
-    const all = getAllPrefs();
-    if (all && all[username]) delete all[username];
-    setLocalJSON(PREFS_KEY, all);
-  }
-
-  function syncThemePanelFromCurrent(){
-    const cs = getComputedStyle(document.documentElement);
-    const bg = cs.getPropertyValue("--bg").trim() || DEFAULT_THEME.bg;
-    const card = cs.getPropertyValue("--card").trim() || DEFAULT_THEME.card;
-    const accent = cs.getPropertyValue("--accent").trim() || DEFAULT_THEME.accent;
-    const accent2 = cs.getPropertyValue("--accent2").trim() || DEFAULT_THEME.accent2;
-
-    const setBoth = (colorId, hexId, val) => {
-      const c = document.getElementById(colorId);
-      const h = document.getElementById(hexId);
-      if (c) c.value = val;
-      if (h) h.value = val;
-    };
-
-    setBoth("bgColor", "bgHex", bg);
-    setBoth("cardColor", "cardHex", card);
-    setBoth("accentColor", "accentHex", accent);
-    setBoth("accent2Color", "accent2Hex", accent2);
-  }
-
-  function showThemePanel(show){
-    const panel = document.getElementById("themePanel");
-    if (!panel) return;
-    panel.classList.toggle("show", !!show);
-    if (show) syncThemePanelFromCurrent();
-  }
-
-  function wireThemePanel(){
-    const bindPair = (colorId, hexId, onValue) => {
-      const c = document.getElementById(colorId);
-      const h = document.getElementById(hexId);
-      if (c){
-        c.addEventListener("input", () => {
-          if (h) h.value = c.value;
-          onValue(c.value);
-        });
-      }
-      if (h){
-        h.addEventListener("input", () => {
-          const v = h.value.trim();
-          if (isHexColor(v)){
-            if (c) c.value = v;
-            onValue(v);
-          }
-        });
-      }
-    };
-
-    // Canlı önizleme (anlık uygula)
-    bindPair("accentColor","accentHex",(v)=>document.documentElement.style.setProperty("--accent", v));
-    bindPair("accent2Color","accent2Hex",(v)=>document.documentElement.style.setProperty("--accent2", v));
-    bindPair("bgColor","bgHex",(v)=>document.documentElement.style.setProperty("--bg", v));
-    bindPair("cardColor","cardHex",(v)=>document.documentElement.style.setProperty("--card", v));
-
-    const saveBtn = document.getElementById("themeSaveBtn");
-    const resetBtn = document.getElementById("themeResetBtn");
-    const closeBtn = document.getElementById("themeCloseBtn");
-    const topThemeBtn = document.getElementById("themeBtn");
-
-    if (closeBtn) closeBtn.onclick = () => showThemePanel(false);
-    if (topThemeBtn) topThemeBtn.onclick = () => showThemePanel(true);
-
-    if (saveBtn){
-      saveBtn.onclick = () => {
-        const session = getSession();
-        if (!session){
-          setMsg("themeMsg","Önce giriş yapılmalı.","err");
-          return;
-        }
-        const theme = {
-          bg: document.getElementById("bgHex").value.trim(),
-          card: document.getElementById("cardHex").value.trim(),
-          accent: document.getElementById("accentHex").value.trim(),
-          accent2: document.getElementById("accent2Hex").value.trim()
-        };
-        // doğrulama
-        for (const k of ["bg","card","accent","accent2"]){
-          if (!isHexColor(theme[k])){
-            setMsg("themeMsg","Renk formatı hatalı. Örn: #60a5fa","err");
-            return;
-          }
-        }
-        setUserTheme(session.username, theme);
-        setMsg("themeMsg","Tema kaydedildi.","ok");
-      };
-    }
-
-    if (resetBtn){
-      resetBtn.onclick = () => {
-        const session = getSession();
-        if (!session){
-          applyThemeVars(DEFAULT_THEME);
-          syncThemePanelFromCurrent();
-          setMsg("themeMsg","Tema sıfırlandı.","info");
-          return;
-        }
-        clearUserTheme(session.username);
-        applyThemeVars(DEFAULT_THEME);
-        syncThemePanelFromCurrent();
-        setMsg("themeMsg","Tema sıfırlandı (kullanıcı kaydı temizlendi).","info");
-      };
-    }
-  }
-
-  /********************************************************************
-   * Firm normalize
-   ********************************************************************/
-  function normalizeFirmNameForAlias(s){
-    const t = norm(s)
-      .replace(/[.,]/g, " ")
-      .replace(/\s+/g, " ")
-      .replace(/\b(as|aş|a\.ş|a\.s|ltd|limited|inc|corp|co|san|tic|sti|şti|ve|veya)\b/g, "")
-      .replace(/\s+/g, " ")
-      .trim();
-    return t;
-  }
-  function firmKeyAuto(displayName){
-    const raw = trim(displayName);
-    if (!raw) return "";
-    return raw
-      .toUpperCase()
-      .replace(/\s+/g, "_")
-      .replace(/[^\wĞÜŞİÖÇ_]/g, "");
-  }
-
-  function firmKeyFromInput(displayName, db){
-    const raw = trim(displayName);
-    if (!raw) return "";
-    const aliasKey = normalizeFirmNameForAlias(raw);
-    const aliases = (db && db.aliases) ? db.aliases : {};
-    if (aliases[aliasKey]) return aliases[aliasKey];
-    return firmKeyAuto(raw);
-  }
-
-  /********************************************************************
-   * Roles: active/pasif + normalize
-   ********************************************************************/
-  function normalizeRoleKey(k){
-    return trim(k).toUpperCase().replace(/\s+/g, "_").replace(/[^\wĞÜŞİÖÇ_]/g, "");
-  }
-  function activeRoles(db){
-    return (db.roles || []).filter(r => r && r.active !== false).map(r => r.key);
-  }
-  function roleMetaMap(db){
-    const m = {};
-    (db.roles||[]).forEach(r => { if (r && r.key) m[r.key] = r; });
-    return m;
-  }
-
-  /********************************************************************
-   * Seed DB (V2) + Key Users
-   ********************************************************************/
-  const SEED_DB = {
-    firms: [
-      { key:"SUDESAN", display:"Sudesan", active:true },
-      { key:"DUPACK",  display:"Dupack",  active:true }
-    ],
-    aliases: { "sudesan":"SUDESAN", "dupack":"DUPACK" },
-
-    roles: [
-      { key:"SUDESAN_VIEW",    desc:"Sudesan raporlarını görüntüleme", active:true },
-      { key:"DUPACK_VIEW",     desc:"Dupack raporlarını görüntüleme", active:true },
-      { key:"OPERATIONS_VIEW", desc:"Operasyon raporları", active:true },
-      { key:"FINANCE_VIEW",    desc:"Finans raporları", active:true },
-      { key:"KPI_VIEW",        desc:"KPI raporları", active:true },
-      { key:"DASHBOARD_VIEW",  desc:"Dashboard raporları", active:true }
-    ],
-
-    firmAccessRoles: {
-      "SUDESAN":["SUDESAN_VIEW"],
-      "DUPACK":["DUPACK_VIEW"]
-    },
-
-    users: [
-      { username:"alper",  password:"1234", display:"Alper",  email:"", roles:["SUDESAN_VIEW","FINANCE_VIEW","KPI_VIEW","DASHBOARD_VIEW"], active:true },
-      { username:"zeynep", password:"1234", display:"Zeynep", email:"", roles:["SUDESAN_VIEW","DASHBOARD_VIEW"], active:true },
-      { username:"dupack", password:"1234", display:"Dupack", email:"", roles:["DUPACK_VIEW","DASHBOARD_VIEW"], active:true }
-    ],
-
-    keyUsers: [],
-
-    reports: [
-      { id:"r1", firm:"SUDESAN", cat:"DEPO", name:"Sudesan | Stok Analiz Raporu", url:"", desc:"Google Sheet / stok analiz", acl:{allowRoles:["SUDESAN_VIEW","OPERATIONS_VIEW"]} },
-      { id:"r2", firm:"SUDESAN", cat:"DASHBOARD", name:"Sudesan | Looker Dashboard", url:"", desc:"Looker Studio dashboard", acl:{allowRoles:["DASHBOARD_VIEW","SUDESAN_VIEW"]} },
-      { id:"r3", firm:"DUPACK",  cat:"DASHBOARD", name:"Dupack | Üretim Verimlilik ve Duruş Dashboard", url:"", desc:"Looker Studio dashboard", acl:{allowRoles:["DASHBOARD_VIEW","DUPACK_VIEW"]} }
-    ]
+  const tools = document.createElement("div");
+  tools.className = "right-actions";
+  tools.style.margin = "10px 0 8px";
+  const addBtn = document.createElement("button");
+  addBtn.className = "btn small success";
+  addBtn.textContent = "Satır Ekle";
+  addBtn.onclick = () => {
+    if (!DB) return;
+    const blank = {};
+    cols.forEach(c => blank[c] = "");
+    DB[dbKey] = (DB[dbKey] || []).concat([blank]);
+    renderAdminTable();
   };
+  const delBtn = document.createElement("button");
+  delBtn.className = "btn small danger";
+  delBtn.textContent = "Seçili Satırları Sil";
+  delBtn.onclick = () => deleteSelectedRows();
+  tools.appendChild(addBtn);
+  tools.appendChild(delBtn);
+  area.appendChild(tools);
 
-  function ensureDB(){
-    const existing = getLocalJSON(DB_KEY);
-    if (existing) return;
-    setLocalJSON(DB_KEY, SEED_DB);
-  }
+  const table = document.createElement("table");
+  const thead = document.createElement("thead");
+  const trh = document.createElement("tr");
 
-  function loadCommittedDB(){
-    ensureDB();
-    const db = getLocalJSON(DB_KEY);
+  // select column
+  const thSel = document.createElement("th");
+  thSel.style.width = "34px";
+  thSel.innerHTML = `<input type="checkbox" id="selAll" />`;
+  trh.appendChild(thSel);
 
-    if (!db.firmAccessRoles) db.firmAccessRoles = {};
-    if (!db.keyUsers) db.keyUsers = [];
+  cols.forEach(c => {
+    const th = document.createElement("th");
+    th.textContent = c;
+    trh.appendChild(th);
+  });
+  thead.appendChild(trh);
+  table.appendChild(thead);
 
-    let dirty = false;
-    (db.firms || []).forEach(f => { if (typeof f.active === "undefined") { f.active = true; dirty = true; } });
-    (db.users || []).forEach(u => { if (typeof u.active === "undefined") { u.active = true; dirty = true; } });
-    (db.keyUsers || []).forEach(u => { if (typeof u.active === "undefined") { u.active = true; dirty = true; } });
+  const tbody = document.createElement("tbody");
 
-    if (dirty) setLocalJSON(DB_KEY, db);
-    return db;
-  }
+  rows.forEach((r, idx) => {
+    const tr = document.createElement("tr");
+    tr.dataset.idx = idx;
 
-  function loadWorkingDB(){
-    const w = getLocalJSON(WORKING_KEY);
-    if (w) return w;
-    return deepClone(loadCommittedDB());
-  }
-  function setWorkingDB(db){ setLocalJSON(WORKING_KEY, db); }
-  function discardWorking(){ localStorage.removeItem(WORKING_KEY); }
+    const tdSel = document.createElement("td");
+    tdSel.innerHTML = `<input type="checkbox" class="rowSel" data-idx="${idx}">`;
+    tr.appendChild(tdSel);
 
-  function hasPendingChanges(){
-    const w = getLocalJSON(WORKING_KEY);
-    if (!w) return false;
-    const c = loadCommittedDB();
-    return JSON.stringify(w) !== JSON.stringify(c);
-  }
-
-  function commitWorkingToDB(){
-    const w = getLocalJSON(WORKING_KEY);
-    if (!w) return false;
-    setLocalJSON(DB_KEY, w);
-    discardWorking();
-    return true;
-  }
-
-  /********************************************************************
-   * Session
-   ********************************************************************/
-  function setSession(session){ setLocalJSON(SESSION_KEY, session); }
-  function getSession(){ return getLocalJSON(SESSION_KEY); }
-  function clearSession(){ localStorage.removeItem(SESSION_KEY); }
-
-  function isKeyUserSession(session){
-    return !!(session && session.isKeyUser === true && session.mode === "KEY");
-  }
-
-  function hasRole(session, role, db){
-    if (!session) return false;
-    if (Array.isArray(session.roles) && session.roles.includes("ADMIN")) return true;
-    if (isKeyUserSession(session)) return true;
-
-    const meta = roleMetaMap(db || loadCommittedDB());
-    if (role && meta[role] && meta[role].active === false) return false;
-
-    return Array.isArray(session.roles) && session.roles.includes(role);
-  }
-
-  function firmAccessAllowed(session, firmKey, db){
-    if (!session) return false;
-    if (Array.isArray(session.roles) && session.roles.includes("ADMIN")) return true;
-    if (isKeyUserSession(session)) return true;
-
-    const far = (db.firmAccessRoles && db.firmAccessRoles[firmKey]) ? db.firmAccessRoles[firmKey] : null;
-    const required = (Array.isArray(far) && far.length) ? far : [`${firmKey}_VIEW`];
-    return required.some(r => hasRole(session, r, db));
-  }
-
-  function isAllowed(item, session, db){
-    if (!session) return false;
-    if (Array.isArray(session.roles) && session.roles.includes("ADMIN")) return true;
-    if (isKeyUserSession(session)) return true;
-
-    if (item && item.firm && !firmAccessAllowed(session, item.firm, db)) return false;
-
-    const acl = item.acl || {};
-    const allowUsers = Array.isArray(acl.allowUsers) ? acl.allowUsers : [];
-    const allowRoles = Array.isArray(acl.allowRoles) ? acl.allowRoles : [];
-    if (allowUsers.includes(session.username)) return true;
-
-    return allowRoles.some(r => hasRole(session, r, db));
-  }
-
-  /********************************************************************
-   * UI: title + topbar + view switch
-   ********************************************************************/
-  function setPortalTitle(session){
-    const h = document.getElementById("portalTitle");
-    const sub = document.getElementById("portalSub");
-    if (!h || !sub) return;
-
-    if (!session){
-      h.textContent = "PSD-Portal";
-      document.title = "PSD-Portal";
-      sub.textContent = "Butonlara tıklayınca ilgili Google Sheet / Looker Studio ekranı yeni sekmede açılır. URL boş olanlar pasiftir.";
-      return;
-    }
-
-    if (session.mode === "ADMIN"){
-      h.textContent = "PSD-Portal (Admin)";
-      document.title = "PSD-Portal (Admin)";
-      sub.textContent = "Admin: Firma/Rol/Kullanıcı/Rapor/Key User yönetimi. Değişiklikleri Kaydet ile kalıcı yap.";
-      return;
-    }
-
-    if (session.mode === "KEY"){
-      h.textContent = "PSD-Portal (Key User)";
-      document.title = "PSD-Portal (Key User)";
-      sub.textContent = "Key User: Tüm firmalardaki linkler görünür. Filtrelemek için firma/kategori chiplerini kullan.";
-      return;
-    }
-
-    const title = `${session.firmDisplay}-Portal`;
-    h.textContent = title;
-    document.title = title;
-    sub.textContent = "Butonlara tıklayınca ilgili Google Sheet / Looker Studio ekranı yeni sekmede açılır. URL boş olanlar pasiftir.";
-  }
-
-  function refreshTopbar(){
-    const session = getSession();
-    const whoBox = document.getElementById("whoBox");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const adminBtn = document.getElementById("adminBtn");
-    const saveBtn = document.getElementById("saveBtn");
-    const topLogoBox = document.getElementById("topLogoBox");
-    const themeBtn = document.getElementById("themeBtn");
-
-    if (!session){
-      whoBox.style.display = "none";
-      logoutBtn.style.display = "none";
-      adminBtn.style.display = "none";
-      saveBtn.style.display = "none";
-      topLogoBox.style.display = "none";
-      themeBtn.style.display = "none";
-      showThemePanel(false);
-      return;
-    }
-
-    whoBox.style.display = "block";
-    logoutBtn.style.display = "inline-block";
-    themeBtn.style.display = "inline-block";   // 👈 giriş yapan herkes tema açabilir
-    topLogoBox.style.display = (session.mode === "PORTAL" || session.mode === "KEY") ? "flex" : "none";
-
-    if (session.mode === "ADMIN"){
-      whoBox.textContent = `${session.display} • Admin`;
-      adminBtn.style.display = "inline-block";
-      saveBtn.style.display = hasPendingChanges() ? "inline-block" : "none";
-      topLogoBox.style.display = "none";
-    } else if (session.mode === "KEY"){
-      whoBox.textContent = `${session.display} • Key User`;
-      adminBtn.style.display = "none";
-      saveBtn.style.display = "none";
-    } else {
-      whoBox.textContent = `${session.display} • ${session.firmDisplay}`;
-      adminBtn.style.display = "none";
-      saveBtn.style.display = "none";
-    }
-  }
-
-  function showLogin(show){
-    const ov = document.getElementById("loginOverlay");
-    if (show) ov.classList.add("show");
-    else ov.classList.remove("show");
-  }
-  function showPortal(show){
-    document.getElementById("portalToolbar").style.display = show ? "block" : "none";
-    document.getElementById("portalApp").style.display = show ? "block" : "none";
-    document.getElementById("footer").style.display = show ? "block" : "none";
-    if (show) {
-      document.getElementById("keyToolbar").style.display = "none";
-      document.getElementById("keyApp").style.display = "none";
-    }
-  }
-  function showKey(show){
-    document.getElementById("keyToolbar").style.display = show ? "block" : "none";
-    document.getElementById("keyApp").style.display = show ? "block" : "none";
-    document.getElementById("footer").style.display = show ? "block" : "none";
-    if (show) {
-      document.getElementById("portalToolbar").style.display = "none";
-      document.getElementById("portalApp").style.display = "none";
-    }
-  }
-  function showAdmin(show){
-    document.getElementById("adminView").style.display = show ? "block" : "none";
-    if (show){
-      showPortal(false);
-      showKey(false);
-    }
-  }
-
-  /********************************************************************
-   * Portal rendering (Firma bazlı)
-   ********************************************************************/
-  let selectedCat = "ALL";
-
-  function tagOf(name){
-    const n = norm(name);
-    if (n.includes("sudesan")) return "SUDESAN";
-    if (n.includes("dupack")) return "DUPACK";
-    return "OTHER";
-  }
-  function groupByCat(list){
-    const m = {};
-    list.forEach(x => (m[x.cat] = m[x.cat] || []).push(x));
-    return Object.keys(m).sort().map(k => ({cat:k, items:m[k]}));
-  }
-
-  function uniqueCatsForFirmKey(db, firmKey){
-    const set = new Set((db.reports || []).filter(x => x.firm === firmKey).map(x => x.cat).filter(Boolean));
-    return Array.from(set).sort();
-  }
-
-  function buildCategoryChips(){
-    const session = getSession();
-    const chips = document.getElementById("chips");
-    chips.innerHTML = "";
-
-    if (!session || session.mode !== "PORTAL") return;
-
-    const db = loadCommittedDB();
-    const cats = uniqueCatsForFirmKey(db, session.firmKey);
-    const all = ["ALL", ...cats];
-
-    all.forEach(c => {
-      const b = document.createElement("button");
-      b.className = "chipBtn" + (c === selectedCat ? " active" : "");
-      b.textContent = (c === "ALL") ? "Tümü" : c;
-      b.type = "button";
-      b.onclick = () => {
-        selectedCat = c;
-        buildCategoryChips();
-        renderPortal();
+    cols.forEach(c => {
+      const td = document.createElement("td");
+      const inp = document.createElement(c === "desc" ? "textarea" : "input");
+      inp.className = "input";
+      if (inp.tagName.toLowerCase() === "textarea") inp.style.minHeight = "42px";
+      inp.value = (r && r[c] !== undefined) ? String(r[c]) : "";
+      inp.oninput = (e) => {
+        DB[dbKey][idx][c] = e.target.value;
       };
-      chips.appendChild(b);
-    });
-  }
-
-  function renderPortal(){
-    const session = getSession();
-    if (!session){
-      showLogin(true);
-      setPortalTitle(null);
-      return;
-    }
-    if (session.mode === "ADMIN"){
-      showAdmin(true);
-      return;
-    }
-    if (session.mode === "KEY"){
-      showKey(true);
-      renderKeyPortal();
-      return;
-    }
-
-    showAdmin(false);
-    showKey(false);
-    showPortal(true);
-    setPortalTitle(session);
-
-    const db = loadCommittedDB();
-
-    if (!firmAccessAllowed(session, session.firmKey, db)){
-      const app = document.getElementById("portalApp");
-      app.innerHTML = `
-        <div class="section">
-          <div class="section-title">Erişim Yok</div>
-          <div style="color:var(--muted);font-size:13px;line-height:1.5">
-            Bu firmaya erişim için gerekli rol(ler) kullanıcıda bulunmuyor.<br/>
-            Firma: <b>${escapeHtml(session.firmDisplay)}</b> • Key: <b>${escapeHtml(session.firmKey)}</b>
-          </div>
-        </div>`;
-      return;
-    }
-
-    const firmObj2 = (db.firms || []).find(f => f.key === session.firmKey);
-    if (!firmObj2 || firmObj2.active === false){
-      const app = document.getElementById("portalApp");
-      app.innerHTML = `
-        <div class="section">
-          <div class="section-title">Firma Pasif</div>
-          <div style="color:var(--muted);font-size:13px;line-height:1.5">
-            Bu firma pasif olduğu için portal içeriği görüntülenemez.
-          </div>
-        </div>`;
-      return;
-    }
-
-    const q = norm(document.getElementById("q").value);
-
-    const firmList = (db.reports || []).filter(x => x.firm === session.firmKey);
-    const allowedList = firmList.filter(x => isAllowed(x, session, db));
-    const catList = allowedList.filter(x => selectedCat === "ALL" ? true : x.cat === selectedCat);
-
-    const filtered = catList.filter(x => {
-      if (!q) return true;
-      const hay = norm(x.name + " " + (x.desc||"") + " " + (x.cat||""));
-      return hay.includes(q);
+      td.appendChild(inp);
+      tr.appendChild(td);
     });
 
-    const sections = groupByCat(filtered);
-    const app = document.getElementById("portalApp");
-    app.innerHTML = "";
+    tbody.appendChild(tr);
+  });
 
-    if (!filtered.length){
-      app.innerHTML = `
-        <div class="section">
-          <div class="section-title">Sonuç yok</div>
-          <div style="color:var(--muted);font-size:13px;">
-            Bu firma/filtre için rapor bulunamadı.
-          </div>
-        </div>`;
-      return;
-    }
+  table.appendChild(tbody);
+  area.appendChild(table);
 
-    sections.forEach(sec => {
-      const box = document.createElement("div");
-      box.className = "section";
-
-      const title = document.createElement("div");
-      title.className = "section-title";
-      title.textContent = sec.cat;
-
-      const grid = document.createElement("div");
-      grid.className = "grid";
-
-      sec.items.forEach(x => {
-        const tag = tagOf(x.name);
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "btn " + (tag==="SUDESAN" ? "tag-sudesan" : tag==="DUPACK" ? "tag-dupack" : "tag-other");
-
-        const pill = document.createElement("div");
-        pill.className = "pill";
-        pill.textContent = tag;
-
-        const nm = document.createElement("div");
-        nm.className = "name";
-        nm.textContent = x.name;
-
-        const ds = document.createElement("div");
-        ds.className = "desc";
-        ds.textContent = x.desc || "";
-
-        btn.appendChild(pill);
-        btn.appendChild(nm);
-        btn.appendChild(ds);
-
-        if (!x.url){
-          btn.classList.add("disabled");
-          btn.onclick = () => {};
-        } else {
-          btn.onclick = () => window.open(x.url, "_blank", "noopener,noreferrer");
-        }
-
-        grid.appendChild(btn);
-      });
-
-      box.appendChild(title);
-      box.appendChild(grid);
-      app.appendChild(box);
-    });
-  }
-
-  /********************************************************************
-   * KEY USER Portal (Tüm firmalar)
-   ********************************************************************/
-  let selectedFirmK = "ALL";
-  let selectedCatK = "ALL";
-
-  function firmDisplayByKey(db, key){
-    const f = (db.firms||[]).find(x => x.key === key);
-    return f ? f.display : key;
-  }
-
-  function uniqueFirmKeys(db){
-    return (db.firms||[])
-      .filter(f => f && f.active !== false)
-      .map(f => f.key)
-      .sort((a,b)=> firmDisplayByKey(db,a).localeCompare(firmDisplayByKey(db,b)));
-  }
-
-  function uniqueCatsAll(db, firmKeyOrAll){
-    const set = new Set(
-      (db.reports||[])
-        .filter(r => (firmKeyOrAll === "ALL" ? true : r.firm === firmKeyOrAll))
-        .map(r => r.cat)
-        .filter(Boolean)
-    );
-    return Array.from(set).sort();
-  }
-
-  function buildKeyFirmChips(){
-    const session = getSession();
-    const chips = document.getElementById("kFirmChips");
-    chips.innerHTML = "";
-    if (!session || session.mode !== "KEY") return;
-
-    const db = loadCommittedDB();
-    const firms = uniqueFirmKeys(db);
-    const all = ["ALL", ...firms];
-
-    all.forEach(fk => {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.className = "chipBtn" + (fk === selectedFirmK ? " active" : "");
-      b.textContent = (fk === "ALL") ? "Tüm Firmalar" : firmDisplayByKey(db, fk);
-      b.onclick = () => {
-        selectedFirmK = fk;
-        selectedCatK = "ALL";
-        buildKeyFirmChips();
-        buildKeyCatChips();
-        renderKeyPortal();
+  // hook select all
+  setTimeout(() => {
+    const selAll = document.getElementById("selAll");
+    if (selAll) {
+      selAll.onchange = () => {
+        document.querySelectorAll(".rowSel").forEach(cb => cb.checked = selAll.checked);
       };
-      chips.appendChild(b);
-    });
-  }
-
-  function buildKeyCatChips(){
-    const session = getSession();
-    const chips = document.getElementById("kCatChips");
-    chips.innerHTML = "";
-    if (!session || session.mode !== "KEY") return;
-
-    const db = loadCommittedDB();
-    const cats = uniqueCatsAll(db, selectedFirmK);
-    const all = ["ALL", ...cats];
-
-    all.forEach(c => {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.className = "chipBtn" + (c === selectedCatK ? " active" : "");
-      b.textContent = (c === "ALL") ? "Tümü" : c;
-      b.onclick = () => {
-        selectedCatK = c;
-        buildKeyCatChips();
-        renderKeyPortal();
-      };
-      chips.appendChild(b);
-    });
-  }
-
-  function groupByFirmThenCat(list){
-    const m = {};
-    list.forEach(r => {
-      if (!m[r.firm]) m[r.firm] = {};
-      if (!m[r.firm][r.cat]) m[r.firm][r.cat] = [];
-      m[r.firm][r.cat].push(r);
-    });
-
-    const firmKeys = Object.keys(m).sort((a,b)=> a.localeCompare(b));
-    const out = [];
-    firmKeys.forEach(fk => {
-      const cats = Object.keys(m[fk]).sort();
-      cats.forEach(cat => out.push({ firm: fk, cat, items: m[fk][cat] }));
-    });
-    return out;
-  }
-
-  function renderKeyPortal(){
-    const session = getSession();
-    if (!session || session.mode !== "KEY") return;
-
-    showAdmin(false);
-    showPortal(false);
-    showKey(true);
-    setPortalTitle(session);
-
-    const db = loadCommittedDB();
-    const q = norm(document.getElementById("kq").value);
-
-    const activeFirmSet = new Set((db.firms||[]).filter(f=>f.active!==false).map(f=>f.key));
-    let list = (db.reports || []).slice();
-    list = list.filter(r => activeFirmSet.has(r.firm));
-
-    if (selectedFirmK !== "ALL") list = list.filter(r => r.firm === selectedFirmK);
-    if (selectedCatK !== "ALL") list = list.filter(r => r.cat === selectedCatK);
-
-    list = list.filter(r => {
-      if (!q) return true;
-      const hay = norm(
-        firmDisplayByKey(db, r.firm) + " " +
-        (r.firm||"") + " " +
-        (r.cat||"") + " " +
-        (r.name||"") + " " +
-        (r.desc||"")
-      );
-      return hay.includes(q);
-    });
-
-    const app = document.getElementById("keyApp");
-    app.innerHTML = "";
-
-    if (!list.length){
-      app.innerHTML = `
-        <div class="section">
-          <div class="section-title">Sonuç yok</div>
-          <div style="color:var(--muted);font-size:13px;">
-            Bu filtre için rapor bulunamadı.
-          </div>
-        </div>`;
-      return;
     }
+  }, 0);
+}
 
-    const sections = groupByFirmThenCat(list);
-    sections.forEach(sec => {
-      const box = document.createElement("div");
-      box.className = "section";
+function inferColumns(tab) {
+  // match Apps Script writeTable_ columns (same order recommended)
+  if (tab === "Firms") return ["firmKey","display","active"];
+  if (tab === "Aliases") return ["alias","firmKey"];
+  if (tab === "Roles") return ["roleKey","desc","active"];
+  if (tab === "Users") return ["username","passHash","display","email","rolesCsv","active"];
+  if (tab === "KeyUsers") return ["username","passHash","display","email","active"];
+  if (tab === "FirmAccessRoles") return ["firmKey","requiredRolesCsv"];
+  if (tab === "Reports") return ["id","firmKey","cat","name","url","desc","allowRolesCsv","allowUsersCsv","active"];
+  return [];
+}
 
-      const title = document.createElement("div");
-      title.className = "section-title";
-      title.textContent = `${firmDisplayByKey(db, sec.firm)} • ${sec.cat}`;
+function deleteSelectedRows() {
+  const dbKey = getTabKeyToDBKey(adminActiveTab);
+  const rows = DB?.[dbKey] || [];
+  const selected = Array.from(document.querySelectorAll(".rowSel"))
+    .filter(cb => cb.checked)
+    .map(cb => Number(cb.dataset.idx))
+    .sort((a,b)=>b-a);
+  if (!selected.length) return toast("warn","Seçili satır yok");
 
-      const grid = document.createElement("div");
-      grid.className = "grid";
+  selected.forEach(i => rows.splice(i,1));
+  DB[dbKey] = rows;
+  toast("good","Silindi: " + selected.length);
+  renderAdminTable();
+}
 
-      sec.items.forEach(x => {
-        const tag = tagOf(x.name);
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "btn " + (tag==="SUDESAN" ? "tag-sudesan" : tag==="DUPACK" ? "tag-dupack" : "tag-other");
+async function saveAdmin() {
+  if (session?.mode !== "ADMIN") return toast("bad","Admin gerekli");
+  if (!DB) return toast("bad","DB yok");
 
-        const pill = document.createElement("div");
-        pill.className = "pill";
-        pill.textContent = x.firm;
-
-        const nm = document.createElement("div");
-        nm.className = "name";
-        nm.textContent = x.name;
-
-        const ds = document.createElement("div");
-        ds.className = "desc";
-        ds.textContent = x.desc || "";
-
-        btn.appendChild(pill);
-        btn.appendChild(nm);
-        btn.appendChild(ds);
-
-        if (!x.url){
-          btn.classList.add("disabled");
-          btn.onclick = () => {};
-        } else {
-          btn.onclick = () => window.open(x.url, "_blank", "noopener,noreferrer");
-        }
-
-        grid.appendChild(btn);
-      });
-
-      box.appendChild(title);
-      box.appendChild(grid);
-      app.appendChild(box);
-    });
+  // basic sanitize: ensure all keys exist
+  const payloadDB = {};
+  DB_KEYS.forEach(k => payloadDB[k] = Array.isArray(DB[k]) ? DB[k] : []);
+  try {
+    const res = await apiCall({ action:"saveDB", token: session.token, db: payloadDB });
+    if (!res.ok) return toast("bad", res.error || "saveDB failed");
+    toast("good","Kaydedildi (saveDB). Yenileme yapılıyor…");
+    await refreshDB(true);
+    renderAdminTable();
+    renderMain();
+  } catch (e) {
+    toast("bad","saveAdmin hata: " + e.message);
   }
-
-  /********************************************************************
-   * Login / Logout
-   ********************************************************************/
-  function doLogin(){
-    const u = trim(document.getElementById("u").value);
-    const p = document.getElementById("p").value || "";
-    const firmDisplay = document.getElementById("firmName").value || "";
-    const msg = document.getElementById("loginMsg");
-    msg.className = "msg";
-    msg.textContent = "";
-
-    // Admin login
-    if (norm(u) === norm(ADMIN_LOGIN.username) && p === ADMIN_LOGIN.password){
-      setSession({ username: "Poseidon", display: "Poseidon", roles: ["ADMIN"], mode: "ADMIN" });
-
-      // 👇 tema uygula (admin için de kullanıcı bazlı)
-      applyThemeVars(getUserTheme("Poseidon") || DEFAULT_THEME);
-
-      msg.className = "msg ok";
-      msg.textContent = "Admin girişi başarılı.";
-      showLogin(false);
-      showAdmin(true);
-      refreshTopbar();
-      setPortalTitle(getSession());
-      renderAdmin();
-      return;
-    }
-
-    const db = loadCommittedDB();
-
-    // Key User login (firma opsiyonel)
-    const ku = (db.keyUsers || []).find(x => norm(x.username) === norm(u) && x.password === p);
-    if (ku){
-      if (ku.active === false){
-        msg.className = "msg err";
-        msg.textContent = "Bu Key User pasif durumdadır.";
-        return;
-      }
-
-      setSession({
-        username: ku.username,
-        display: ku.display || ku.username,
-        roles: ["KEYUSER"],
-        mode: "KEY",
-        isKeyUser: true
-      });
-
-      // 👇 tema uygula
-      applyThemeVars(getUserTheme(ku.username) || DEFAULT_THEME);
-
-      msg.className = "msg ok";
-      msg.textContent = "Key User girişi başarılı.";
-      selectedFirmK = "ALL";
-      selectedCatK = "ALL";
-      showLogin(false);
-      showAdmin(false);
-      showPortal(false);
-      showKey(true);
-      refreshTopbar();
-      setPortalTitle(getSession());
-      buildKeyFirmChips();
-      buildKeyCatChips();
-      renderKeyPortal();
-      return;
-    }
-
-    // Normal user login
-    const user = (db.users || []).find(x => norm(x.username) === norm(u) && x.password === p);
-    if (!user){
-      msg.className = "msg err";
-      msg.textContent = "Hatalı kullanıcı adı veya şifre.";
-      return;
-    }
-    if (user.active === false){
-      msg.className = "msg err";
-      msg.textContent = "Bu kullanıcı pasif durumdadır.";
-      return;
-    }
-
-    const fd = trim(firmDisplay);
-    if (!fd){
-      msg.className = "msg err";
-      msg.textContent = "Lütfen firma adını yazın.";
-      return;
-    }
-
-    const firmKey = firmKeyFromInput(fd, db);
-    const firmObj = (db.firms || []).find(f => f.key === firmKey);
-    if (!firmObj || firmObj.active === false){
-      msg.className = "msg err";
-      msg.textContent = "Bu firma pasif veya tanımsız.";
-      return;
-    }
-
-    const session = {
-      username: user.username,
-      display: user.display || user.username,
-      roles: user.roles || [],
-      firmDisplay: fd,
-      firmKey: firmKey,
-      mode: "PORTAL"
-    };
-
-    if (!firmAccessAllowed(session, firmKey, db)){
-      msg.className = "msg err";
-      msg.textContent = "Bu firmaya erişim için gerekli rol(ler) kullanıcıda yok.";
-      return;
-    }
-
-    setSession(session);
-
-    // 👇 tema uygula
-    applyThemeVars(getUserTheme(session.username) || DEFAULT_THEME);
-
-    msg.className = "msg ok";
-    msg.textContent = "Giriş başarılı.";
-    selectedCat = "ALL";
-    showLogin(false);
-    showAdmin(false);
-    showKey(false);
-    showPortal(true);
-    refreshTopbar();
-    setPortalTitle(getSession());
-    buildCategoryChips();
-    renderPortal();
-  }
-  window.__doLogin = doLogin;
-
-  function doLogout(){
-    // tema panelini kapat
-    showThemePanel(false);
-
-    clearSession();
-    selectedCat = "ALL";
-    selectedFirmK = "ALL";
-    selectedCatK = "ALL";
-
-    document.getElementById("q").value = "";
-    document.getElementById("chips").innerHTML = "";
-    document.getElementById("portalApp").innerHTML = "";
-
-    document.getElementById("kq").value = "";
-    document.getElementById("kFirmChips").innerHTML = "";
-    document.getElementById("kCatChips").innerHTML = "";
-    document.getElementById("keyApp").innerHTML = "";
-
-    // logout sonrası default tema
-    applyThemeVars(DEFAULT_THEME);
-
-    showPortal(false);
-    showKey(false);
-    showAdmin(false);
-    refreshTopbar();
-    setPortalTitle(null);
-    showLogin(true);
-  }
-
-  /********************************************************************
-   * Admin helpers
-   ********************************************************************/
-  function genId(){
-    return "r" + Math.random().toString(16).slice(2,10) + Date.now().toString(16).slice(-4);
-  }
-
-  function buildRoleCheckboxes(containerId, roles, prechecked){
-    const box = document.getElementById(containerId);
-    box.innerHTML = "";
-    const checkedSet = new Set(prechecked || []);
-    roles.forEach(r => {
-      const lbl = document.createElement("label");
-      lbl.className = "chk";
-      const inp = document.createElement("input");
-      inp.type = "checkbox";
-      inp.value = r;
-      inp.checked = checkedSet.has(r);
-      lbl.appendChild(inp);
-      const span = document.createElement("span");
-      span.textContent = r;
-      lbl.appendChild(span);
-      box.appendChild(lbl);
-    });
-  }
-
-  function getCheckedRoles(containerId){
-    return Array.from(document.querySelectorAll(`#${containerId} input[type="checkbox"]`))
-      .filter(x => x.checked)
-      .map(x => x.value);
-  }
-
-  /********************************************************************
-   * Admin render (minimum gerekli - mevcut fonksiyonların hepsi korunuyor)
-   ********************************************************************/
-  function renderAdmin(){
-    const session = getSession();
-    if (!session || session.mode !== "ADMIN") return;
-
-    const wdb = loadWorkingDB();
-    setWorkingDB(wdb);
-
-    document.getElementById("pendingInfo").textContent =
-      hasPendingChanges() ? "Taslak değişiklik var (Kaydet bekliyor)" : "Taslak değişiklik yok";
-
-    const editingFirmKey = document.getElementById("firmEditingKey").value || "";
-    if (!editingFirmKey){
-      const fd = document.getElementById("firmDisplayIn").value || "";
-      document.getElementById("firmKeyOut").value = firmKeyFromInput(fd, wdb) || "";
-    }
-
-    fillFirmSelects(wdb);
-    fillReportPick(wdb);
-    fillMappingSelects(wdb);
-
-    const actRoles = activeRoles(wdb).sort();
-
-    const editingUserKey = document.getElementById("userEditingKey").value || "";
-    if (!editingUserKey){
-      buildRoleCheckboxes("userRoleBox", actRoles, []);
-    } else {
-      const wu = (wdb.users||[]).find(x => norm(x.username) === norm(editingUserKey));
-      buildRoleCheckboxes("userRoleBox", actRoles, (wu && wu.roles) ? wu.roles : []);
-    }
-
-    if (!document.getElementById("repEditingId").value){
-      buildRoleCheckboxes("repRoleBox", actRoles, []);
-    }
-
-    const firmKey = document.getElementById("firmSelForRoles").value || (wdb.firms[0] ? wdb.firms[0].key : "");
-    const currentFirmRoles = (wdb.firmAccessRoles && wdb.firmAccessRoles[firmKey]) ? wdb.firmAccessRoles[firmKey] : [];
-    buildRoleCheckboxes("firmRoleBox", actRoles, currentFirmRoles);
-
-    renderRoleList(wdb);
-    renderFirmList(wdb);
-    renderUserList(wdb);
-    renderReportList(wdb);
-    renderKeyUserList(wdb);
-
-    refreshTopbar();
-  }
-
-  function fillFirmSelects(db){
-    const firms = (db.firms || []).slice().sort((a,b)=>a.display.localeCompare(b.display));
-    const repFirmSel = document.getElementById("repFirmSel");
-    const firmSelForRoles = document.getElementById("firmSelForRoles");
-
-    repFirmSel.innerHTML = "";
-    firmSelForRoles.innerHTML = "";
-
-    firms.forEach(f => {
-      const o1 = document.createElement("option");
-      o1.value = f.key;
-      o1.textContent = `${f.display} (${f.key})`;
-      repFirmSel.appendChild(o1);
-
-      const o2 = document.createElement("option");
-      o2.value = f.key;
-      o2.textContent = `${f.display} (${f.key})`;
-      firmSelForRoles.appendChild(o2);
-    });
-  }
-
-  function fillReportPick(db){
-    const sel = document.getElementById("repPickSel");
-    sel.innerHTML = "";
-    (db.reports || []).slice().sort((a,b)=>a.name.localeCompare(b.name)).forEach(r => {
-      const opt = document.createElement("option");
-      opt.value = r.id;
-      opt.textContent = `${r.name} (${r.firm}/${r.cat})`;
-      sel.appendChild(opt);
-    });
-  }
-
-  function fillMappingSelects(db){
-    const firmSel = document.getElementById("mapFirmSel");
-    const roleSel = document.getElementById("mapRoleSel");
-    if (!firmSel || !roleSel) return;
-
-    firmSel.innerHTML = "";
-    roleSel.innerHTML = "";
-
-    (db.firms || []).slice().sort((a,b)=>a.display.localeCompare(b.display)).forEach(f => {
-      const o = document.createElement("option");
-      o.value = f.key;
-      o.textContent = `${f.display} (${f.key})`;
-      firmSel.appendChild(o);
-    });
-
-    activeRoles(db).slice().sort().forEach(r => {
-      const o = document.createElement("option");
-      o.value = r;
-      o.textContent = r;
-      roleSel.appendChild(o);
-    });
-  }
-
-  /* ======= (list render fonksiyonları + admin action fonksiyonları) =======
-     Aşağıdaki fonksiyonlar senin mevcut kodunla birebir aynı mantıkta.
-     (Burada yer tasarrufu için “değişmeyen” kısımları kısaltmadım; çalışması için
-      gereken event bağlarını altta yaptım.)
-  */
-
-  /* ——— Buradan sonrası: Senin kodundaki action fonksiyonların ——— */
-  /* (Bu örnekte: daha önce paylaştığın haliyle aynı kalacak şekilde
-     sadece event bağları ve “tema” ile ilgili olanlar eklendi.
-     Eğer senin dosyada bu fonksiyonlar zaten tam ise, aynen bırakabilirsin.) */
-
-  /* NOT: Bu mesajda admin action fonksiyonlarının hepsini tekrar yazmadım,
-     çünkü senin dosyanda zaten var ve tema değişikliği onları etkilemiyor.
-     Senin dosyanda “updateKeyUser()” sonrası kalan kısım eksikse,
-     önceki tam dosyadaki devamını aynen yapıştır. */
-
-  /********************************************************************
-   * Minimal Key User admin actions (tamamlayıcı)
-   ********************************************************************/
-  function clearKeyUserForm(){
-    document.getElementById("keyUserEditingKey").value = "";
-    document.getElementById("keyUserU").value = "";
-    document.getElementById("keyUserP").value = "";
-    document.getElementById("keyUserD").value = "";
-    document.getElementById("keyUserE").value = "";
-
-    document.getElementById("keyUserU").disabled = false;
-    document.getElementById("addKeyUserBtn").style.display = "inline-block";
-    document.getElementById("updateKeyUserBtn").style.display = "none";
-    document.getElementById("resetKeyUserPwdBtn").style.display = "none";
-    document.getElementById("cancelKeyUserEditBtn").style.display = "none";
-  }
-
-  function renderKeyUserList(db){
-    const list = document.getElementById("keyUserList");
-    if (!list) return;
-    list.innerHTML = "";
-
-    (db.keyUsers || []).slice().sort((a,b)=>a.username.localeCompare(b.username)).forEach(u => {
-      const active = u.active !== false;
-      const pillClass = active ? "pill2" : "pill2 off";
-
-      const row = document.createElement("div");
-      row.className = "item";
-      row.innerHTML = `
-        <div class="meta">
-          <b>${escapeHtml(u.username)} • ${escapeHtml(u.display || "")}</b>
-          <span>${escapeHtml(u.email || "")}</span>
-        </div>
-        <div class="pills">
-          <span class="pill2">KEY USER</span>
-          <span class="${pillClass}">${active ? "AKTİF" : "PASİF"}</span>
-          <button class="btn2 info" type="button" data-kedit="${escapeHtml(u.username)}">Düzenle</button>
-          <button class="btn2 ${active ? "warn" : "ok"}" type="button" data-kact="${escapeHtml(u.username)}">${active ? "Pasif Yap" : "Aktif Yap"}</button>
-          <button class="btn2 danger" type="button" data-kdel="${escapeHtml(u.username)}">Sil</button>
-        </div>
-      `;
-      list.appendChild(row);
-    });
-
-    list.querySelectorAll("[data-kedit]").forEach(b => b.onclick = () => startEditKeyUser(b.getAttribute("data-kedit")));
-    list.querySelectorAll("[data-kact]").forEach(b => b.onclick = () => toggleKeyUserActive(b.getAttribute("data-kact")));
-    list.querySelectorAll("[data-kdel]").forEach(b => b.onclick = () => deleteKeyUser(b.getAttribute("data-kdel")));
-  }
-
-  function addKeyUser(){
-    const wdb = loadWorkingDB();
-    wdb.keyUsers = wdb.keyUsers || [];
-
-    const username = trim(document.getElementById("keyUserU").value);
-    const password = document.getElementById("keyUserP").value || "";
-    const display  = trim(document.getElementById("keyUserD").value);
-    const email    = trim(document.getElementById("keyUserE").value);
-
-    if (!username || !password){ setMsg("keyUserMsg","Kullanıcı adı ve şifre zorunlu.","err"); return; }
-    if (norm(username) === norm(ADMIN_LOGIN.username)){ setMsg("keyUserMsg","Bu kullanıcı adı Admin için ayrılmış.","err"); return; }
-    if ((wdb.users||[]).some(u => norm(u.username) === norm(username))){ setMsg("keyUserMsg","Bu kullanıcı adı normal kullanıcı olarak zaten var.","err"); return; }
-    if (wdb.keyUsers.some(u => norm(u.username) === norm(username))){ setMsg("keyUserMsg","Bu Key User zaten var.","warn"); return; }
-
-    wdb.keyUsers.push({ username, password, display, email, active:true });
-    setWorkingDB(wdb);
-    setMsg("keyUserMsg",`Key User eklendi: ${username}`,"ok");
-    clearKeyUserForm();
-    renderAdmin();
-  }
-
-  function startEditKeyUser(username){
-    const wdb = loadWorkingDB();
-    const u = (wdb.keyUsers||[]).find(x => norm(x.username) === norm(username));
-    if (!u){ setMsg("keyUserMsg","Key User bulunamadı.","err"); return; }
-
-    document.getElementById("keyUserEditingKey").value = u.username;
-    document.getElementById("keyUserU").value = u.username;
-    document.getElementById("keyUserP").value = "";
-    document.getElementById("keyUserD").value = u.display || "";
-    document.getElementById("keyUserE").value = u.email || "";
-
-    document.getElementById("keyUserU").disabled = true;
-    document.getElementById("addKeyUserBtn").style.display = "none";
-    document.getElementById("updateKeyUserBtn").style.display = "inline-block";
-    document.getElementById("resetKeyUserPwdBtn").style.display = "inline-block";
-    document.getElementById("cancelKeyUserEditBtn").style.display = "inline-block";
-
-    setMsg("keyUserMsg",`Düzenleme modu: ${u.username}`,"info");
-  }
-
-  function updateKeyUser(){
-    const wdb = loadWorkingDB();
-    const editing = document.getElementById("keyUserEditingKey").value || "";
-    if (!editing){ setMsg("keyUserMsg","Güncellenecek Key User seçilmedi.","err"); return; }
-
-    const u = (wdb.keyUsers||[]).find(x => norm(x.username) === norm(editing));
-    if (!u){ setMsg("keyUserMsg","Key User bulunamadı.","err"); return; }
-
-    u.display = trim(document.getElementById("keyUserD").value);
-    u.email = trim(document.getElementById("keyUserE").value);
-
-    setWorkingDB(wdb);
-    setMsg("keyUserMsg",`Key User güncellendi: ${u.username}`,"ok");
-    clearKeyUserForm();
-    renderAdmin();
-  }
-
-  function resetKeyUserPassword(){
-    const wdb = loadWorkingDB();
-    const editing = document.getElementById("keyUserEditingKey").value || "";
-    if (!editing){ setMsg("keyUserMsg","Şifre sıfırlamak için Key User seç.","err"); return; }
-
-    const u = (wdb.keyUsers||[]).find(x => norm(x.username) === norm(editing));
-    if (!u){ setMsg("keyUserMsg","Key User bulunamadı.","err"); return; }
-
-    const newPwd = document.getElementById("keyUserP").value || "";
-    if (!newPwd){ setMsg("keyUserMsg","Yeni şifre alanını doldur.","err"); return; }
-
-    u.password = newPwd;
-    setWorkingDB(wdb);
-    setMsg("keyUserMsg","Şifre güncellendi (taslak).","ok");
-    document.getElementById("keyUserP").value = "";
-    renderAdmin();
-  }
-
-  function toggleKeyUserActive(username){
-    const wdb = loadWorkingDB();
-    const u = (wdb.keyUsers||[]).find(x => norm(x.username) === norm(username));
-    if (!u){ setMsg("keyUserMsg","Key User bulunamadı.","err"); return; }
-    u.active = (u.active === false) ? true : false;
-    setWorkingDB(wdb);
-    setMsg("keyUserMsg",`${u.username} => ${u.active ? "AKTİF" : "PASİF"}`,"info");
-    renderAdmin();
-  }
-
-  function deleteKeyUser(username){
-    const wdb = loadWorkingDB();
-    const u = (wdb.keyUsers||[]).find(x => norm(x.username) === norm(username));
-    if (!u){ setMsg("keyUserMsg","Key User bulunamadı.","err"); return; }
-    const ok = confirm(`Key User silinsin mi?\n\n${u.username} • ${u.display || ""}`);
-    if (!ok) return;
-
-    wdb.keyUsers = (wdb.keyUsers||[]).filter(x => norm(x.username) !== norm(username));
-    setWorkingDB(wdb);
-    setMsg("keyUserMsg",`Key User silindi: ${username}`,"ok");
-    clearKeyUserForm();
-    renderAdmin();
-  }
-
-  /********************************************************************
-   * Global event bindings + init
-   ********************************************************************/
-  function boot(){
-    ensureDB();
-    wireThemePanel();
-
-    // search events
-    const q = document.getElementById("q");
-    if (q) q.addEventListener("input", () => renderPortal());
-
-    const kq = document.getElementById("kq");
-    if (kq) kq.addEventListener("input", () => renderKeyPortal());
-
-    // header buttons
-    document.getElementById("logoutBtn").onclick = doLogout;
-
-    document.getElementById("adminBtn").onclick = () => {
-      const s = getSession();
-      if (!s || s.mode !== "ADMIN") return;
-      showAdmin(true);
-      showPortal(false);
-      showKey(false);
-      renderAdmin();
-    };
-
-    document.getElementById("saveBtn").onclick = () => {
-      const ok = commitWorkingToDB();
-      setMsg("flowMsg", ok ? "Kaydedildi. (kalıcı)" : "Kaydedilecek taslak yok.", ok ? "ok" : "warn");
-      renderAdmin();
-      refreshTopbar();
-    };
-
-    // admin flow buttons
-    const goPortalBtn = document.getElementById("goPortalBtn");
-    if (goPortalBtn) goPortalBtn.onclick = () => {
-      const s = getSession();
-      if (!s || s.mode !== "ADMIN") return;
-      showAdmin(false);
-      setMsg("flowMsg", "", "");
-    };
-    const discardBtn = document.getElementById("discardBtn");
-    if (discardBtn) discardBtn.onclick = () => {
-      discardWorking();
-      setMsg("flowMsg","Taslak değişiklikler atıldı.","info");
-      renderAdmin();
-      refreshTopbar();
-    };
-
-    // admin key user panel
-    const addKeyUserBtn = document.getElementById("addKeyUserBtn");
-    if (addKeyUserBtn) addKeyUserBtn.onclick = addKeyUser;
-    const updateKeyUserBtn = document.getElementById("updateKeyUserBtn");
-    if (updateKeyUserBtn) updateKeyUserBtn.onclick = updateKeyUser;
-    const resetKeyUserPwdBtn = document.getElementById("resetKeyUserPwdBtn");
-    if (resetKeyUserPwdBtn) resetKeyUserPwdBtn.onclick = resetKeyUserPassword;
-    const cancelKeyUserEditBtn = document.getElementById("cancelKeyUserEditBtn");
-    if (cancelKeyUserEditBtn) cancelKeyUserEditBtn.onclick = () => { clearKeyUserForm(); renderAdmin(); };
-
-    // İlk açılış: session varsa direkt portal aç (otomatik)
-    const s = getSession();
-    if (s){
-      // tema uygula
-      applyThemeVars(getUserTheme(s.username) || DEFAULT_THEME);
-
-      showLogin(false);
-      refreshTopbar();
-      setPortalTitle(s);
-
-      if (s.mode === "ADMIN"){
-        showAdmin(true);
-        renderAdmin();
-      } else if (s.mode === "KEY"){
-        showKey(true);
-        buildKeyFirmChips();
-        buildKeyCatChips();
-        renderKeyPortal();
-      } else {
-        showPortal(true); 
-        buildCategoryChips();
-        renderPortal();
-      }
-    } else {
-      applyThemeVars(DEFAULT_THEME);
-      showLogin(true);
-      refreshTopbar();
-      setPortalTitle(null);
-    }
-  }
-
-  window.addEventListener("DOMContentLoaded", boot);
+}
+
+function exportJSON() {
+  if (!DB) return toast("warn","DB yok");
+  const blob = new Blob([JSON.stringify(DB, null, 2)], { type:"application/json" });
+  const url = URL.createObjectURL(blob);
+  window.open(url, "_blank");
+  toast("good","JSON export açıldı.");
+}
+
+/** =========================
+ *  TOAST
+ *  ========================= */
+function toast(level, msg) {
+  const t = document.getElementById("toast");
+  const dot = document.getElementById("toastDot");
+  const m = document.getElementById("toastMsg");
+  dot.className = "dot " + (level === "good" ? "good" : level === "bad" ? "bad" : "warn");
+  m.textContent = msg;
+  t.classList.remove("hidden");
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(hideToast, 4200);
+}
+function hideToast() {
+  const t = document.getElementById("toast");
+  t.classList.add("hidden");
+}
 </script>
 </body>
 </html>

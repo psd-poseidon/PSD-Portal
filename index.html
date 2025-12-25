@@ -91,41 +91,10 @@
       cursor:pointer;font-size:12px;color:var(--muted);display:inline-flex;gap:8px;align-items:center
     }
     .tab.active{color:var(--txt); border-color:var(--accentLine); background:var(--accentSoft)}
-    .chip{
-      padding:3px 8px;border-radius:999px;border:1px solid var(--line);
-      font-size:11px;color:var(--muted);background:rgba(8,12,25,.55)
-    }
     .badge{padding:4px 8px;border-radius:999px;border:1px solid var(--line);font-size:11px;color:var(--muted)}
     .badge.good{border-color:rgba(34,197,94,.5); color:#bdf7d6}
     .badge.bad{border-color:rgba(239,68,68,.5); color:#ffd0d6}
     .badge.warn{border-color:rgba(245,158,11,.55); color:#ffe7b3}
-    .kpi{display:flex;gap:10px;flex-wrap:wrap}
-    .kpi .box{
-      padding:10px 12px;border:1px solid var(--line);border-radius:16px;
-      min-width:170px;background:rgba(8,12,25,.60)
-    }
-    .kpi .box b{display:block;font-size:16px}
-    .kpi .box span{font-size:12px;color:var(--muted)}
-    .keyline{
-      padding:10px 12px;border:1px dashed rgba(147,197,253,.35);
-      border-radius:16px;background:rgba(59,130,246,.08);
-      font-size:12px;color:var(--muted)
-    }
-    .smallnote{font-size:12px;color:var(--muted);line-height:1.45}
-    .list{display:grid;gap:10px}
-    .report{
-      padding:12px;border:1px solid var(--line);border-radius:16px;
-      background:linear-gradient(180deg, rgba(8,12,25,.60), rgba(8,12,25,.42));
-      display:flex;align-items:flex-start;justify-content:space-between;gap:12px
-    }
-    .report h3{margin:0 0 6px 0;font-size:14px}
-    .report p{margin:0;color:var(--muted);font-size:12px}
-    .report .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-    .right-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-    .footer{margin-top:16px;color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-    table{width:100%;border-collapse:collapse}
-    th,td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;font-size:12px;vertical-align:top}
-    th{color:var(--muted);font-weight:600}
     .toast{
       position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
       background:rgba(10,14,28,.92); border:1px solid var(--line); border-radius:16px;
@@ -136,15 +105,28 @@
     }
     .toast .msg{font-size:13px}
     .toast .x{margin-left:auto}
-    .splitline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .sep{width:1px;height:24px;background:var(--line)}
+    .loginModes{display:grid;gap:10px;grid-template-columns:repeat(3,minmax(0,1fr))}
+    @media(max-width:980px){ .loginModes{grid-template-columns:1fr} }
+    .modeCard{
+      padding:12px;border:1px solid var(--line);border-radius:16px;
+      background:linear-gradient(180deg, rgba(8,12,25,.62), rgba(8,12,25,.42));
+      cursor:pointer; user-select:none;
+    }
+    .modeCard.active{
+      border-color:var(--accentLine);
+      background:linear-gradient(180deg, rgba(59,130,246,.18), rgba(8,12,25,.42));
+    }
+    .modeCard b{display:block}
+    .modeCard span{font-size:12px;color:var(--muted)}
+    table{width:100%;border-collapse:collapse}
+    th,td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;font-size:12px;vertical-align:top}
+    th{color:var(--muted);font-weight:600}
     .icon{
       width:18px;height:18px;border-radius:6px;border:1px solid var(--line);
       display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted);
       background:rgba(8,12,25,.55)
     }
-    .dangerText{color:#ffb4be}
-    .goodText{color:#bdf7d6}
+    .right-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
   </style>
 </head>
 
@@ -181,20 +163,11 @@
       <div>
         <label>API URL (Apps Script Web App)</label>
         <input class="input mono" id="apiUrl" placeholder="https://script.google.com/macros/s/.../exec" />
-        <div class="smallnote" style="margin-top:8px">
+        <div class="muted" style="font-size:12px;margin-top:8px">
           Deploy: <span class="mono">Execute as: Me</span> · <span class="mono">Who has access: Anyone</span> (test için).
         </div>
       </div>
       <div class="grid">
-        <div>
-          <label>Portal Tema</label>
-          <select id="themeSel" class="input" onchange="setTheme(this.value)">
-            <option value="blue">Mavi</option>
-            <option value="green">Yeşil</option>
-            <option value="amber">Turuncu</option>
-            <option value="red">Kırmızı</option>
-          </select>
-        </div>
         <div class="right-actions" style="align-items:end">
           <button class="btn primary" onclick="saveConfig()">Kaydet</button>
           <button class="btn warn" onclick="testApi()">API Test (ping)</button>
@@ -209,31 +182,64 @@
       <div class="hd">
         <div>
           <h2>Giriş</h2>
-          <p>Admin · Key User · Normal User</p>
+          <p>Normal Kullanıcı · Super User · Admin</p>
         </div>
-        <span class="badge" id="modeBadge">—</span>
+        <span class="badge" id="modeBadge">NORMAL</span>
       </div>
-      <div class="bd grid grid-2">
-        <div>
-          <label>Kullanıcı Adı</label>
-          <input class="input" id="inUser" autocomplete="username" />
+
+      <div class="bd grid" style="gap:12px">
+
+        <!-- MODE SELECT -->
+        <div class="loginModes">
+          <div class="modeCard active" id="mode_NORMAL" onclick="setLoginMode('NORMAL')">
+            <b>Normal Kullanıcı</b>
+            <span>Firma zorunlu · Firma içi raporlar</span>
+          </div>
+          <div class="modeCard" id="mode_KEY" onclick="setLoginMode('KEY')">
+            <b>Super User</b>
+            <span>Tüm firmalar / Firma seçimi opsiyonel</span>
+          </div>
+          <div class="modeCard" id="mode_ADMIN" onclick="setLoginMode('ADMIN')">
+            <b>Admin</b>
+            <span>DB yönetimi · Yetki ve rapor yönetimi</span>
+          </div>
         </div>
-        <div>
-          <label>Şifre</label>
-          <input class="input" id="inPass" type="password" autocomplete="current-password" />
+
+        <div class="grid grid-2">
+          <div>
+            <label>Kullanıcı Adı</label>
+            <input class="input" id="inUser" autocomplete="username" />
+          </div>
+          <div>
+            <label>Şifre</label>
+            <input class="input" id="inPass" type="password" autocomplete="current-password" />
+          </div>
         </div>
-        <div style="grid-column:1/-1">
-          <label>Firma (Normal User için zorunlu · Admin/Key User için boş olabilir)</label>
-          <input class="input" id="inFirm" placeholder="Örn: Sudesan / Dupack / ..." />
+
+        <!-- FIRM INPUT / SELECT -->
+        <div id="firmNormalWrap">
+          <label>Firma (Normal Kullanıcı için zorunlu)</label>
+          <input class="input" id="inFirm" placeholder="Örn: Sudesan / Elida / ..." />
+          <div class="muted" style="font-size:12px;margin-top:6px">
+            Not: Firma adı alias tablosu ile firmKey’e eşleştirilir.
+          </div>
         </div>
-        <div style="grid-column:1/-1" class="right-actions">
+
+        <div id="firmKeyWrap" class="hidden">
+          <label>Firma Görünümü (Super User için opsiyonel)</label>
+          <select class="input" id="keyFirmSel">
+            <option value="">— Tüm firmalar —</option>
+          </select>
+        </div>
+
+        <div class="right-actions">
           <button class="btn primary" onclick="login()">Giriş Yap</button>
           <button class="btn ghost" onclick="fillDemo()">Demo doldur</button>
         </div>
 
-        <div class="keyline" style="grid-column:1/-1">
-          <b>Not:</b> “Kullanıcılar/firma silinmiş görünüyor” genelde eski sürümde <b>seed overwrite</b> ve <b>saveDB’nin yanlışlıkla boş DB ile çağrılması</b> nedeniyle olur.
-          Bu sürümde Admin panelde <b>Seed</b> ve <b>Local Yedek</b> ile geri dönüş çok hızlı.
+        <div class="muted" style="font-size:12px;line-height:1.45">
+          <b>Not:</b> “Kullanıcılar / firmalar silindi” hissi genelde yanlışlıkla boş DB ile <span class="mono">saveDB</span> çalıştırılınca olur.
+          Admin panelde <b>Backup / Restore / Seed</b> ile tek tık geri dönüş var.
         </div>
       </div>
     </div>
@@ -246,14 +252,14 @@
         </div>
       </div>
       <div class="bd">
-        <div class="kpi">
-          <div class="box"><b id="kpiFirms">—</b><span>Firms</span></div>
-          <div class="box"><b id="kpiUsers">—</b><span>Users</span></div>
-          <div class="box"><b id="kpiReports">—</b><span>Reports</span></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <div class="badge" id="kpiFirms">Firms: —</div>
+          <div class="badge" id="kpiUsers">Users: —</div>
+          <div class="badge" id="kpiReports">Reports: —</div>
         </div>
         <div class="hr"></div>
-        <div class="smallnote">
-          <b>İyileştirme:</b> Admin panelde “Seed / Backup / Restore” eklendi. Veri bozulsa bile tek tık geri dönebilirsin.
+        <div class="muted" style="font-size:12px">
+          Admin giriş yaptıktan sonra DB modülleri: Firms, Users, Super Users, Roles, Firm Access, Reports, Backup/Restore/Seed, Audit.
         </div>
       </div>
     </div>
@@ -275,42 +281,27 @@
       </div>
 
       <div class="bd grid" style="gap:10px">
-        <!-- Executive controls -->
-        <div class="card" style="background:rgba(8,12,25,.40)">
-          <div class="bd grid grid-3" style="padding:12px">
-            <div>
-              <label>Arama (rapor adı / açıklama / kategori)</label>
-              <input class="input" id="qSearch" placeholder="Örn: WMS, KPI, S&OP, ... " oninput="renderReports()" />
-            </div>
-            <div id="keyFirmWrap" class="hidden">
-              <label>Firma Görünümü (Key User)</label>
-              <select class="input" id="keyFirmSel" onchange="setKeyFirmView(this.value)">
-                <option value="">— Firma seç (opsiyonel) —</option>
-              </select>
-            </div>
-            <div>
-              <label>Sıralama</label>
-              <select class="input" id="sortSel" onchange="renderReports()">
-                <option value="cat_name">Kategori + İsim</option>
-                <option value="name">İsim</option>
-                <option value="fav">Favoriler önce</option>
-              </select>
-            </div>
+        <div class="grid grid-3">
+          <div>
+            <label>Arama</label>
+            <input class="input" id="qSearch" placeholder="Örn: KPI, WMS, S&OP..." oninput="renderReports()" />
           </div>
-          <div class="bd" style="padding:0 12px 12px 12px">
-            <div class="splitline">
-              <span class="chip" id="chipVisible">Görünen: —</span>
-              <span class="chip" id="chipTotal">Toplam: —</span>
-              <span class="chip" id="chipFav">Favori: —</span>
-              <span class="sep"></span>
-              <button class="btn small ghost" onclick="toggleShowOnlyFav()"><span class="icon">★</span> Sadece Favoriler</button>
-              <button class="btn small ghost" onclick="clearFilters()"><span class="icon">⟲</span> Filtreyi Sıfırla</button>
-            </div>
+          <div>
+            <label>Kategori</label>
+            <select class="input" id="catSel" onchange="renderReports()">
+              <option value="ALL">Tümü</option>
+            </select>
+          </div>
+          <div>
+            <label>Sıralama</label>
+            <select class="input" id="sortSel" onchange="renderReports()">
+              <option value="cat_name">Kategori + İsim</option>
+              <option value="name">İsim</option>
+            </select>
           </div>
         </div>
 
-        <div class="tabs" id="catTabs"></div>
-        <div id="reportsList" class="list"></div>
+        <div id="reportsList" class="grid" style="gap:10px"></div>
       </div>
     </div>
 
@@ -319,7 +310,7 @@
       <div class="hd">
         <div>
           <h2>Oturum</h2>
-          <p>Kimlik, roller, firma erişimi</p>
+          <p>Kimlik ve mod</p>
         </div>
         <span class="badge" id="sessBadge">—</span>
       </div>
@@ -342,22 +333,6 @@
           <div class="muted" style="font-size:12px">Roller</div>
           <div id="sessRoles" class="mono" style="font-size:12px;word-break:break-word">—</div>
         </div>
-
-        <div class="hr"></div>
-
-        <!-- Data Health (Admin only) -->
-        <div id="healthWrap" class="hidden">
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
-            <div>
-              <div style="font-weight:700">Data Health</div>
-              <div class="muted" style="font-size:12px">Bozuk kayıtları hızlı yakala</div>
-            </div>
-            <button class="btn small ghost" onclick="renderHealth()"><span class="icon">✓</span> Tara</button>
-          </div>
-          <div class="hr" style="margin:10px 0"></div>
-          <div id="healthBox" class="smallnote">—</div>
-        </div>
-
         <div class="right-actions">
           <button class="btn danger" onclick="logout()">Çıkış</button>
         </div>
@@ -370,18 +345,14 @@
     <div class="hd">
       <div>
         <h2>Admin Panel</h2>
-        <p>DB düzenleme: Firms · Aliases · Roles · Users · KeyUsers · FirmAccessRoles · Reports</p>
+        <p>DB modülleri (yönetim)</p>
       </div>
       <div class="right-actions">
-        <!-- NEW: Backup / Restore / Seed -->
-        <button class="btn small" onclick="adminBackupLocal()"><span class="icon">⧉</span> Yedek Al (Local)</button>
-        <button class="btn small warn" onclick="adminRestoreLocal()"><span class="icon">↩</span> Yedeği Geri Yükle (Local)</button>
-        <button class="btn small danger" onclick="adminSeedDefaults()"><span class="icon">⚡</span> Seed (Varsayılan DB)</button>
-
-        <span class="sep"></span>
-
+        <button class="btn small" onclick="adminBackupLocal()"><span class="icon">⧉</span> Backup</button>
+        <button class="btn small warn" onclick="adminRestoreLocal()"><span class="icon">↩</span> Restore</button>
+        <button class="btn small danger" onclick="adminSeedDefaults()"><span class="icon">⚡</span> Seed</button>
+        <span style="width:1px;height:24px;background:var(--line)"></span>
         <button class="btn small" onclick="closeAdmin()">Kapat</button>
-        <button class="btn small warn" onclick="exportJSON()">JSON Export</button>
         <button class="btn small success" onclick="saveAdmin()">Kaydet (saveDB)</button>
       </div>
     </div>
@@ -389,19 +360,10 @@
       <div class="tabs" id="adminTabs"></div>
       <div id="adminArea"></div>
       <div class="hr"></div>
-      <div class="smallnote">
-        <b>Not:</b> Kullanıcı şifresi için <span class="mono">passHash</span> alanı SHA-256 hex olmalı.
-        Seed butonu şifreleri otomatik hash’ler.
-      </div>
-      <div class="hr"></div>
-      <div class="smallnote mono" id="backupInfo">Local backup: —</div>
+      <div class="muted mono" style="font-size:12px" id="backupInfo">Local backup: —</div>
     </div>
   </div>
 
-  <div class="footer">
-    <div>© PSD Portal · Single-file UI</div>
-    <div class="mono">v1.2-seed-restore</div>
-  </div>
 </div>
 
 <div id="toast" class="toast hidden">
@@ -412,61 +374,90 @@
 
 <script>
 /** =========================
- *  STATE / LOCAL STORAGE KEYS
+ *  STATE / LOCAL STORAGE
  *  ========================= */
 let API_URL = "";
 const LS = {
   api: "PSD_API_URL",
-  theme: "PSD_THEME",
   sess: "PSD_SESSION",
-  fav: "PSD_FAVS_V1",
+  loginMode: "PSD_LOGIN_MODE", // NEW
   keyFirmView: "PSD_KEY_FIRM_VIEW",
-  onlyFav: "PSD_ONLY_FAV",
-  backup: "PSD_DB_BACKUP_V1",          // NEW
-  backupMeta: "PSD_DB_BACKUP_META_V1"  // NEW
+  backup: "PSD_DB_BACKUP_V1",
+  backupMeta: "PSD_DB_BACKUP_META_V1"
 };
 
-let session = null; // { token, mode, user }
-let DB = null;      // { firms, aliases, roles, users, keyUsers, firmAccessRoles, reports }
-let activeCat = "ALL";
+let loginMode = localStorage.getItem(LS.loginMode) || "NORMAL"; // NORMAL | KEY | ADMIN
+let session = null;
+let DB = null;
 let adminActiveTab = "Firms";
-let showOnlyFav = (localStorage.getItem(LS.onlyFav) === "1");
 
-/** =========================
- *  INIT
- *  ========================= */
 function init() {
   API_URL = localStorage.getItem(LS.api) || "";
   document.getElementById("apiUrl").value = API_URL;
 
-  const th = localStorage.getItem(LS.theme) || "blue";
-  document.getElementById("themeSel").value = th;
-  setTheme(th);
-
   const s = localStorage.getItem(LS.sess);
   if (s) { try { session = JSON.parse(s); } catch(_) {} }
+
+  setLoginMode(loginMode, true);
 
   updateConnPill("warn","Bağlantı: ayarlanmadı");
   if (API_URL) testApi(true);
 
+  // Eğer session varsa auto-open
   if (session && session.token) {
-    refreshDB(true).then(() => {
-      showMain();
-    }).catch(() => logout(true));
+    refreshDB(true).then(() => showMain()).catch(() => logout(true));
   }
-  refreshFavChips();
 }
 window.addEventListener("DOMContentLoaded", init);
 
-function setTheme(theme) {
-  localStorage.setItem(LS.theme, theme);
-  const root = document.documentElement.style;
-  if (theme === "blue")  { root.setProperty("--accent","#3b82f6"); root.setProperty("--accentLine","rgba(147,197,253,.55)"); root.setProperty("--accentSoft","rgba(59,130,246,.14)"); }
-  if (theme === "green") { root.setProperty("--accent","#22c55e"); root.setProperty("--accentLine","rgba(167,243,208,.55)"); root.setProperty("--accentSoft","rgba(34,197,94,.12)"); }
-  if (theme === "amber") { root.setProperty("--accent","#f59e0b"); root.setProperty("--accentLine","rgba(253,230,138,.60)"); root.setProperty("--accentSoft","rgba(245,158,11,.12)"); }
-  if (theme === "red")   { root.setProperty("--accent","#ef4444"); root.setProperty("--accentLine","rgba(254,202,202,.60)"); root.setProperty("--accentSoft","rgba(239,68,68,.12)"); }
+/** =========================
+ *  LOGIN MODE UI
+ *  ========================= */
+function setLoginMode(mode, silent=false) {
+  loginMode = mode;
+  localStorage.setItem(LS.loginMode, mode);
+  document.getElementById("modeBadge").textContent = mode;
+
+  // active cards
+  ["NORMAL","KEY","ADMIN"].forEach(m => {
+    document.getElementById("mode_"+m).classList.toggle("active", m === mode);
+  });
+
+  // firm fields
+  const firmNormalWrap = document.getElementById("firmNormalWrap");
+  const firmKeyWrap = document.getElementById("firmKeyWrap");
+
+  if (mode === "NORMAL") {
+    firmNormalWrap.classList.remove("hidden");
+    firmKeyWrap.classList.add("hidden");
+  } else if (mode === "KEY") {
+    firmNormalWrap.classList.add("hidden");
+    firmKeyWrap.classList.remove("hidden");
+    hydrateKeyFirmSelect(); // DB varsa doldur
+  } else { // ADMIN
+    firmNormalWrap.classList.add("hidden");
+    firmKeyWrap.classList.add("hidden");
+  }
+
+  if (!silent) toast("good","Giriş modu: " + mode);
 }
 
+function hydrateKeyFirmSelect() {
+  const sel = document.getElementById("keyFirmSel");
+  if (!sel) return;
+  const firms = (DB?.firms || []).filter(f => String(f.active).toLowerCase() !== "false");
+  const current = localStorage.getItem(LS.keyFirmView) || "";
+  sel.innerHTML = `<option value="">— Tüm firmalar —</option>` + firms
+    .sort((a,b)=> String(a.display||a.firmKey||"").localeCompare(String(b.display||b.firmKey||""), "tr"))
+    .map(f => `<option value="${escapeHtml(String(f.firmKey||"").trim())}">${escapeHtml(String(f.display||f.firmKey||"").trim())}</option>`)
+    .join("");
+  sel.value = current;
+  sel.onchange = () => localStorage.setItem(LS.keyFirmView, sel.value || "");
+}
+
+/** =========================
+ *  CONFIG / API
+ *  ========================= */
 function saveConfig() {
   API_URL = (document.getElementById("apiUrl").value || "").trim();
   localStorage.setItem(LS.api, API_URL);
@@ -474,9 +465,6 @@ function saveConfig() {
   testApi();
 }
 
-/** =========================
- *  API CALL
- *  ========================= */
 async function apiCall(payload) {
   if (!API_URL) throw new Error("API URL yok");
   const resp = await fetch(API_URL, {
@@ -523,29 +511,51 @@ function updateConnPill(level, text) {
 }
 
 /** =========================
- *  LOGIN / SESSION
+ *  LOGIN
  *  ========================= */
 function fillDemo() {
-  document.getElementById("inUser").value = "Poseidon";
-  document.getElementById("inPass").value = "psd123";
-  document.getElementById("inFirm").value = "";
+  if (loginMode === "NORMAL") {
+    document.getElementById("inUser").value = "sud_user";
+    document.getElementById("inPass").value = "sud123";
+    document.getElementById("inFirm").value = "Sudesan";
+  } else if (loginMode === "KEY") {
+    document.getElementById("inUser").value = "keyuser";
+    document.getElementById("inPass").value = "key123";
+  } else {
+    document.getElementById("inUser").value = "admin";
+    document.getElementById("inPass").value = "admin123";
+  }
 }
 
 async function login() {
   const username = (document.getElementById("inUser").value || "").trim();
   const password = (document.getElementById("inPass").value || "");
-  const firmName = (document.getElementById("inFirm").value || "").trim();
 
   if (!API_URL) return toast("warn","Önce API URL kaydet.");
   if (!username || !password) return toast("warn","Kullanıcı/şifre gir.");
 
+  // Mode-specific fields
+  let firmName = "";
+  let keyFirm = "";
+
+  if (loginMode === "NORMAL") {
+    firmName = (document.getElementById("inFirm").value || "").trim();
+    if (!firmName) return toast("warn","Normal kullanıcı için firma zorunlu.");
+  }
+  if (loginMode === "KEY") {
+    keyFirm = (document.getElementById("keyFirmSel").value || "").trim(); // opsiyonel
+    localStorage.setItem(LS.keyFirmView, keyFirm);
+  }
+
   try {
-    const res = await apiCall({ action:"login", username, password, firmName });
+    // API action: login
+    // mode bilgisini UI gönderiyor; API bunu doğrulayıp doğru mode döndürmeli.
+    const res = await apiCall({ action:"login", username, password, firmName, desiredMode: loginMode });
     if (!res.ok) return toast("bad", res.error || "Giriş başarısız");
 
+    // session
     session = { token: res.token, mode: res.mode, user: res.user };
     localStorage.setItem(LS.sess, JSON.stringify(session));
-    document.getElementById("modeBadge").textContent = res.mode;
 
     toast("good","Giriş başarılı: " + res.mode);
     await refreshDB(true);
@@ -555,6 +565,9 @@ async function login() {
   }
 }
 
+/** =========================
+ *  SESSION / DB
+ *  ========================= */
 function logout(silent=false) {
   session = null; DB = null;
   localStorage.removeItem(LS.sess);
@@ -564,9 +577,9 @@ function logout(silent=false) {
   document.getElementById("rowLogin").classList.remove("hidden");
   document.getElementById("btnLogout").style.display = "none";
 
-  document.getElementById("kpiFirms").textContent = "—";
-  document.getElementById("kpiUsers").textContent = "—";
-  document.getElementById("kpiReports").textContent = "—";
+  document.getElementById("kpiFirms").textContent = "Firms: —";
+  document.getElementById("kpiUsers").textContent = "Users: —";
+  document.getElementById("kpiReports").textContent = "Reports: —";
 
   if (!silent) toast("warn","Çıkış yapıldı.");
 }
@@ -574,335 +587,75 @@ function logout(silent=false) {
 async function refreshDB(silent=false) {
   if (!session?.token) throw new Error("No session");
   const res = await apiCall({ action:"getDB", token: session.token });
-  if (!res.ok) {
-    if (!silent) toast("bad", res.error || "getDB error");
-    throw new Error(res.error || "Unauthorized");
-  }
-  DB = res.db;
+  if (!res.ok) throw new Error(res.error || "getDB error");
 
-  // KPIs
+  DB = res.db || {};
   const firmsN = (DB?.firms || []).length;
   const usersN = (DB?.users || []).length + (DB?.keyUsers || []).length;
   const repsN  = (DB?.reports || []).length;
 
-  document.getElementById("kpiFirms").textContent = firmsN;
-  document.getElementById("kpiUsers").textContent = usersN;
-  document.getElementById("kpiReports").textContent = repsN;
+  document.getElementById("kpiFirms").textContent = "Firms: " + firmsN;
+  document.getElementById("kpiUsers").textContent = "Users: " + usersN;
+  document.getElementById("kpiReports").textContent = "Reports: " + repsN;
 
+  // Key select hydrate
+  if (loginMode === "KEY") hydrateKeyFirmSelect();
   if (!silent) toast("good","DB yenilendi.");
 }
 
 /** =========================
- *  MAIN RENDER
+ *  MAIN UI
  *  ========================= */
 function showMain() {
   document.getElementById("rowLogin").classList.add("hidden");
   document.getElementById("rowMain").classList.remove("hidden");
   document.getElementById("btnLogout").style.display = "inline-flex";
 
-  const isAdmin = (session?.mode === "ADMIN");
-  document.getElementById("btnAdminOpen").classList.toggle("hidden", !isAdmin);
-  document.getElementById("healthWrap").classList.toggle("hidden", !isAdmin);
+  document.getElementById("btnAdminOpen").classList.toggle("hidden", session?.mode !== "ADMIN");
 
-  renderSessionCard();
-  renderExecutiveControls();
-  renderMain();
-}
-
-function renderSessionCard() {
   const u = session?.user || {};
   document.getElementById("sessBadge").textContent = session?.mode || "—";
-  document.getElementById("sessUser").textContent = (u.display || u.username || "—");
-  document.getElementById("sessMode").textContent = (session?.mode || "—");
+  document.getElementById("sessUser").textContent = u.display || u.username || "—";
+  document.getElementById("sessMode").textContent = session?.mode || "—";
+  document.getElementById("sessFirm").textContent = u.firmDisplay || u.firmKey || "—";
+  document.getElementById("sessRoles").textContent = (u.roles || []).join(", ") || "—";
 
-  if (session?.mode === "PORTAL") {
-    document.getElementById("sessFirm").textContent = (u.firmDisplay || u.firmKey || "—");
-    document.getElementById("sessRoles").textContent = (u.roles || []).join(", ") || "—";
-  } else {
-    document.getElementById("sessFirm").textContent = "—";
-    document.getElementById("sessRoles").textContent = (u.roles || []).join(", ") || "—";
-  }
-}
-
-function renderExecutiveControls() {
-  const isKey = (session?.mode === "KEY");
-  const wrap = document.getElementById("keyFirmWrap");
-  wrap.classList.toggle("hidden", !isKey);
-
-  if (isKey) {
-    const sel = document.getElementById("keyFirmSel");
-    const firms = (DB?.firms || []).filter(f => String(f.active).toLowerCase() !== "false");
-    const current = localStorage.getItem(LS.keyFirmView) || "";
-
-    sel.innerHTML = `<option value="">— Firma seç (opsiyonel) —</option>` + firms
-      .sort((a,b)=> String(a.display||a.firmKey||"").localeCompare(String(b.display||b.firmKey||""), "tr"))
-      .map(f => {
-        const k = String(f.firmKey||"").trim();
-        const d = String(f.display||k).trim();
-        return `<option value="${escapeHtml(k)}">${escapeHtml(d)} (${escapeHtml(k)})</option>`;
-      }).join("");
-    sel.value = current;
-  }
-}
-
-function setKeyFirmView(firmKey) {
-  localStorage.setItem(LS.keyFirmView, firmKey || "");
-  toast("good", firmKey ? ("Key User görünümü: " + firmDisplayByKey(firmKey)) : "Key User görünümü: tüm firmalar");
-  activeCat = "ALL";
-  renderMain();
-}
-
-function clearFilters() {
-  document.getElementById("qSearch").value = "";
-  document.getElementById("sortSel").value = "cat_name";
-  activeCat = "ALL";
-  showOnlyFav = false;
-  localStorage.setItem(LS.onlyFav, "0");
-  toast("good","Filtreler sıfırlandı.");
-  renderMain();
-}
-
-function toggleShowOnlyFav() {
-  showOnlyFav = !showOnlyFav;
-  localStorage.setItem(LS.onlyFav, showOnlyFav ? "1" : "0");
-  toast("warn", showOnlyFav ? "Sadece favoriler açık" : "Sadece favoriler kapalı");
-  renderReports();
-}
-
-function renderMain() {
-  const u = session?.user || {};
-  const mode = session?.mode;
-
-  if (mode === "ADMIN") {
-    document.getElementById("mainTitle").textContent = "Admin Görünümü";
-    document.getElementById("mainSub").textContent = "Tüm raporlar listelenir. Admin panelde Seed/Backup/Restore var.";
-  } else if (mode === "KEY") {
-    const keyFirm = localStorage.getItem(LS.keyFirmView) || "";
-    document.getElementById("mainTitle").textContent = "Key User Görünümü";
-    document.getElementById("mainSub").textContent =
-      keyFirm ? ("Firma görünümü: " + firmDisplayByKey(keyFirm)) : "Firma görünümü: Tüm firmalar (opsiyonel filtre)";
+  if (session?.mode === "ADMIN") {
+    document.getElementById("mainTitle").textContent = "Admin";
+    document.getElementById("mainSub").textContent = "Tüm raporlar + DB yönetimi";
+  } else if (session?.mode === "KEY") {
+    const k = localStorage.getItem(LS.keyFirmView) || "";
+    document.getElementById("mainTitle").textContent = "Super User";
+    document.getElementById("mainSub").textContent = k ? ("Firma görünümü: " + k) : "Firma görünümü: Tüm firmalar";
   } else {
     document.getElementById("mainTitle").textContent = "Portal";
-    document.getElementById("mainSub").textContent = (u.firmDisplay ? ("Firma: " + u.firmDisplay) : "—");
+    document.getElementById("mainSub").textContent = u.firmDisplay ? ("Firma: " + u.firmDisplay) : "—";
   }
 
-  const cats = collectCategoriesWithCounts();
-  renderCategoryTabs(cats);
+  hydrateCategories();
   renderReports();
-  refreshFavChips();
-  if (mode === "ADMIN") renderHealth(true);
 }
 
-/** =========================
- *  CATEGORIES + COUNTS
- *  ========================= */
-function collectCategoriesWithCounts() {
-  const reports = (DB?.reports || []).filter(r => String(r.active).toLowerCase() !== "false");
-  const allowed = reports.filter(r => canSeeReport(r));
+function hydrateCategories() {
+  const sel = document.getElementById("catSel");
+  const reports = (DB?.reports || []).filter(r => String(r.active).toLowerCase() !== "false").filter(canSeeReport);
+  const cats = Array.from(new Set(reports.map(r => String(r.cat||"Genel"))))
+    .sort((a,b)=>a.localeCompare(b,"tr"));
 
-  const map = new Map();
-  map.set("ALL", allowed.length);
-
-  allowed.forEach(r => {
-    const c = String(r.cat || "Genel");
-    map.set(c, (map.get(c) || 0) + 1);
-  });
-
-  const out = Array.from(map.entries()).map(([cat,count]) => ({cat,count}));
-  out.sort((a,b) => {
-    if (a.cat === "ALL") return -1;
-    if (b.cat === "ALL") return 1;
-    return a.cat.localeCompare(b.cat, "tr");
-  });
-  return out;
+  const current = sel.value || "ALL";
+  sel.innerHTML = `<option value="ALL">Tümü</option>` + cats.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
+  sel.value = cats.includes(current) ? current : "ALL";
 }
 
-function renderCategoryTabs(cats) {
-  const tabs = document.getElementById("catTabs");
-  tabs.innerHTML = "";
-  cats.forEach(({cat,count}) => {
-    const el = document.createElement("div");
-    el.className = "tab" + (activeCat === cat ? " active" : "");
-    el.innerHTML = `<span>${escapeHtml(cat)}</span><span class="chip">${count}</span>`;
-    el.onclick = () => { activeCat = cat; renderCategoryTabs(cats); renderReports(); };
-    tabs.appendChild(el);
-  });
-}
-
-/** =========================
- *  FAVORITES
- *  ========================= */
-function favKey() {
-  const uname = String(session?.user?.username || "anon");
-  return `${LS.fav}:${uname}`;
-}
-function getFavs() {
-  try { return JSON.parse(localStorage.getItem(favKey()) || "[]"); } catch(_) { return []; }
-}
-function setFavs(ids) {
-  localStorage.setItem(favKey(), JSON.stringify(ids || []));
-}
-function isFav(id) {
-  const favs = getFavs();
-  return favs.includes(String(id||""));
-}
-function toggleFav(id) {
-  id = String(id||"");
-  const favs = getFavs();
-  const i = favs.indexOf(id);
-  if (i >= 0) favs.splice(i,1); else favs.push(id);
-  setFavs(favs);
-  toast("good", i>=0 ? "Favoriden çıkarıldı" : "Favoriye eklendi");
-  renderReports();
-  refreshFavChips();
-}
-function refreshFavChips() {
-  const favs = getFavs();
-  const totalAllowed = ((DB?.reports||[]).filter(r => String(r.active).toLowerCase() !== "false").filter(canSeeReport)).length;
-  document.getElementById("chipFav").textContent = `Favori: ${favs.length}`;
-  document.getElementById("chipTotal").textContent = `Toplam: ${totalAllowed || 0}`;
-}
-
-/** =========================
- *  REPORTS LIST
- *  ========================= */
-function renderReports() {
-  const list = document.getElementById("reportsList");
-  list.innerHTML = "";
-
-  const q = (document.getElementById("qSearch").value || "").trim().toLowerCase();
-  const sortMode = document.getElementById("sortSel").value || "cat_name";
-  const favs = getFavs();
-
-  let reports = (DB?.reports || [])
-    .filter(r => String(r.active).toLowerCase() !== "false")
-    .filter(r => canSeeReport(r));
-
-  reports = reports.filter(r => activeCat === "ALL" ? true : String(r.cat || "Genel") === activeCat);
-
-  if (q) {
-    reports = reports.filter(r => {
-      const s = `${r.name||""} ${r.desc||""} ${r.cat||""}`.toLowerCase();
-      return s.includes(q);
-    });
-  }
-
-  if (showOnlyFav) {
-    reports = reports.filter(r => favs.includes(String(r.id||r.name||"")));
-  }
-
-  reports.sort((a,b) => {
-    const aId = String(a.id||a.name||"");
-    const bId = String(b.id||b.name||"");
-    const aFav = favs.includes(aId) ? 1 : 0;
-    const bFav = favs.includes(bId) ? 1 : 0;
-
-    if (sortMode === "fav") {
-      if (aFav !== bFav) return bFav - aFav;
-    }
-    if (sortMode === "name") {
-      return String(a.name||"").localeCompare(String(b.name||""), "tr");
-    }
-    const ca = String(a.cat||""); const cb = String(b.cat||"");
-    if (ca !== cb) return ca.localeCompare(cb, "tr");
-    return String(a.name||"").localeCompare(String(b.name||""), "tr");
-  });
-
-  document.getElementById("chipVisible").textContent = `Görünen: ${reports.length}`;
-
-  if (!reports.length) {
-    const empty = document.createElement("div");
-    empty.className = "smallnote";
-    empty.textContent = "Görüntülenecek rapor bulunamadı (kategori/rol/arama/favori filtresi).";
-    list.appendChild(empty);
-    return;
-  }
-
-  reports.forEach(r => {
-    const firmKey = String(r.firmKey || "").trim();
-    const firmLabel = firmKey ? firmDisplayByKey(firmKey) : "";
-    const allowRoles = csvToArr(r.allowRolesCsv);
-    const allowUsers = csvToArr(r.allowUsersCsv);
-
-    const id = String(r.id || r.name || "");
-    const fav = isFav(id);
-
-    const card = document.createElement("div");
-    card.className = "report";
-
-    const left = document.createElement("div");
-    left.style.flex = "1";
-
-    const h = document.createElement("h3");
-    h.textContent = String(r.name || "Unnamed report");
-    left.appendChild(h);
-
-    const p = document.createElement("p");
-    p.textContent = String(r.desc || "");
-    left.appendChild(p);
-
-    const meta = document.createElement("div");
-    meta.className = "meta";
-    meta.appendChild(spanBadge("Kategori", String(r.cat || "Genel")));
-    if (firmKey) meta.appendChild(spanBadge("Firma", firmLabel));
-    if (allowRoles.length) meta.appendChild(spanBadge("Roles", allowRoles.join(", ")));
-    if (allowUsers.length) meta.appendChild(spanBadge("Users", allowUsers.join(", ")));
-    if (!String(r.url||"").trim()) meta.appendChild(badgeState("URL boş", "bad"));
-    left.appendChild(meta);
-
-    const right = document.createElement("div");
-    right.className = "right-actions";
-
-    const btnFav = document.createElement("button");
-    btnFav.className = "btn small ghost";
-    btnFav.title = "Favori";
-    btnFav.innerHTML = `<span class="icon">${fav ? "★" : "☆"}</span>`;
-    btnFav.onclick = () => toggleFav(id);
-
-    const btnCopy = document.createElement("button");
-    btnCopy.className = "btn small ghost";
-    btnCopy.title = "Link kopyala";
-    btnCopy.innerHTML = `<span class="icon">⧉</span>`;
-    btnCopy.onclick = async () => {
-      const url = String(r.url||"").trim();
-      if (!url) return toast("warn","URL boş.");
-      try { await navigator.clipboard.writeText(url); toast("good","Link kopyalandı."); }
-      catch(_) { toast("warn","Kopyalanamadı (tarayıcı izni)."); }
-    };
-
-    const btnOpen = document.createElement("button");
-    btnOpen.className = "btn small primary";
-    btnOpen.textContent = "Aç";
-    btnOpen.onclick = () => {
-      const url = String(r.url || "").trim();
-      if (!url) return toast("warn","URL boş: " + (r.name || ""));
-      window.open(url, "_blank", "noopener,noreferrer");
-    };
-
-    right.appendChild(btnFav);
-    right.appendChild(btnCopy);
-    right.appendChild(btnOpen);
-
-    card.appendChild(left);
-    card.appendChild(right);
-    list.appendChild(card);
-  });
-}
-
-/** =========================
- *  VISIBILITY RULES
- *  ========================= */
 function canSeeReport(r) {
   const mode = session?.mode;
   const u = session?.user || {};
+  const firmKey = String(r.firmKey||"").trim();
 
   if (mode === "ADMIN") return true;
-  if (String(r.active).toLowerCase() === "false") return false;
-
-  const firmKey = String(r.firmKey || "").trim();
 
   if (mode === "PORTAL") {
-    const myFirm = String(u.firmKey || "").trim();
+    const myFirm = String(u.firmKey||"").trim();
     if (firmKey && myFirm && firmKey !== myFirm) return false;
     if (firmKey && !myFirm) return false;
   }
@@ -912,20 +665,112 @@ function canSeeReport(r) {
     if (viewFirm && firmKey && firmKey !== viewFirm) return false;
   }
 
+  // allowRolesCsv / allowUsersCsv
   const allowRoles = csvToArr(r.allowRolesCsv);
   const allowUsers = csvToArr(r.allowUsersCsv).map(x=>x.toLowerCase());
 
   if (!allowRoles.length && !allowUsers.length) return true;
 
-  const uname = String(u.username || "").toLowerCase();
+  const uname = String(u.username||"").toLowerCase();
   if (allowUsers.includes(uname)) return true;
 
-  const myRoles = (u.roles || []);
+  const myRoles = u.roles || [];
   return allowRoles.some(rr => myRoles.includes(rr));
 }
 
+function renderReports() {
+  const list = document.getElementById("reportsList");
+  list.innerHTML = "";
+
+  const q = (document.getElementById("qSearch").value || "").trim().toLowerCase();
+  const cat = (document.getElementById("catSel").value || "ALL");
+  const sortMode = (document.getElementById("sortSel").value || "cat_name");
+
+  let reports = (DB?.reports || [])
+    .filter(r => String(r.active).toLowerCase() !== "false")
+    .filter(canSeeReport);
+
+  if (cat !== "ALL") reports = reports.filter(r => String(r.cat||"Genel") === cat);
+
+  if (q) {
+    reports = reports.filter(r => (`${r.name||""} ${r.desc||""} ${r.cat||""}`).toLowerCase().includes(q));
+  }
+
+  reports.sort((a,b)=>{
+    if (sortMode === "name") return String(a.name||"").localeCompare(String(b.name||""), "tr");
+    const ca = String(a.cat||""); const cb = String(b.cat||"");
+    if (ca !== cb) return ca.localeCompare(cb, "tr");
+    return String(a.name||"").localeCompare(String(b.name||""), "tr");
+  });
+
+  if (!reports.length) {
+    const d = document.createElement("div");
+    d.className = "muted";
+    d.style.fontSize = "12px";
+    d.textContent = "Görüntülenecek rapor bulunamadı.";
+    list.appendChild(d);
+    return;
+  }
+
+  reports.forEach(r=>{
+    const box = document.createElement("div");
+    box.className = "card";
+    box.style.background = "rgba(8,12,25,.52)";
+    const bd = document.createElement("div");
+    bd.className = "bd";
+
+    const h = document.createElement("div");
+    h.style.display = "flex";
+    h.style.justifyContent = "space-between";
+    h.style.gap = "10px";
+    h.style.alignItems = "flex-start";
+
+    const left = document.createElement("div");
+    const title = document.createElement("div");
+    title.style.fontWeight = "800";
+    title.textContent = r.name || "Unnamed report";
+    const sub = document.createElement("div");
+    sub.className = "muted";
+    sub.style.fontSize = "12px";
+    sub.style.marginTop = "4px";
+    sub.textContent = (r.desc || "");
+    left.appendChild(title);
+    left.appendChild(sub);
+
+    const right = document.createElement("div");
+    right.className = "right-actions";
+    const open = document.createElement("button");
+    open.className = "btn small primary";
+    open.textContent = "Aç";
+    open.onclick = () => {
+      const url = String(r.url||"").trim();
+      if (!url) return toast("warn","URL boş.");
+      window.open(url, "_blank", "noopener,noreferrer");
+    };
+    right.appendChild(open);
+
+    h.appendChild(left);
+    h.appendChild(right);
+
+    const meta = document.createElement("div");
+    meta.style.marginTop = "10px";
+    meta.style.display = "flex";
+    meta.style.gap = "8px";
+    meta.style.flexWrap = "wrap";
+    meta.innerHTML = `
+      <span class="badge">Kategori: ${escapeHtml(String(r.cat||"Genel"))}</span>
+      ${r.firmKey ? `<span class="badge">Firma: ${escapeHtml(String(r.firmKey))}</span>` : ``}
+    `;
+
+    bd.appendChild(h);
+    bd.appendChild(meta);
+    box.appendChild(bd);
+    list.appendChild(box);
+  });
+}
+
 /** =========================
- *  ADMIN PANEL
+ *  ADMIN PANEL (Modüller)
  *  ========================= */
 function openAdmin() {
   if (session?.mode !== "ADMIN") return toast("bad","Admin gerekli");
@@ -933,30 +778,41 @@ function openAdmin() {
   renderAdminTabs();
   renderAdminTable();
   refreshBackupInfo();
-  toast("good","Admin panel açıldı.");
 }
 function closeAdmin() { document.getElementById("cardAdmin").classList.add("hidden"); }
 
 function renderAdminTabs() {
   const tabs = document.getElementById("adminTabs");
   tabs.innerHTML = "";
-  const labels = {
-    Firms:"Firms", Aliases:"Aliases", Roles:"Roles", Users:"Users",
-    KeyUsers:"KeyUsers", FirmAccessRoles:"FirmAccessRoles", Reports:"Reports"
-  };
-  Object.keys(labels).forEach(k => {
+
+  // Admin ekranında “olması gerekenler” (sen listeyi yazınca aynen revize edeceğim)
+  const tabList = [
+    { key:"Firms", label:"Firms" },
+    { key:"Aliases", label:"Aliases" },
+    { key:"Roles", label:"Roles" },
+    { key:"Users", label:"Users" },
+    { key:"KeyUsers", label:"Super Users" },
+    { key:"FirmAccessRoles", label:"Firm Access" },
+    { key:"Reports", label:"Reports" },
+    { key:"Audit", label:"Audit (log)" }
+  ];
+
+  tabList.forEach(t=>{
     const el = document.createElement("div");
-    el.className = "tab" + (adminActiveTab === k ? " active" : "");
-    el.textContent = labels[k];
-    el.onclick = () => { adminActiveTab = k; renderAdminTabs(); renderAdminTable(); };
+    el.className = "tab" + (adminActiveTab === t.key ? " active" : "");
+    el.textContent = t.label;
+    el.onclick = () => { adminActiveTab = t.key; renderAdminTabs(); renderAdminTable(); };
     tabs.appendChild(el);
   });
 }
+
 function getTabKeyToDBKey(tab){
   if (tab === "FirmAccessRoles") return "firmAccessRoles";
   if (tab === "KeyUsers") return "keyUsers";
+  if (tab === "Audit") return "audit";
   return tab.toLowerCase();
 }
+
 function inferColumns(tab) {
   if (tab === "Firms") return ["firmKey","display","active"];
   if (tab === "Aliases") return ["alias","firmKey"];
@@ -965,30 +821,29 @@ function inferColumns(tab) {
   if (tab === "KeyUsers") return ["username","passHash","display","email","active"];
   if (tab === "FirmAccessRoles") return ["firmKey","requiredRolesCsv"];
   if (tab === "Reports") return ["id","firmKey","cat","name","url","desc","allowRolesCsv","allowUsersCsv","active"];
+  if (tab === "Audit") return ["at","actor","action","entity","before","after"];
   return [];
 }
+
 function renderAdminTable() {
   const area = document.getElementById("adminArea");
   area.innerHTML = "";
 
   const dbKey = getTabKeyToDBKey(adminActiveTab);
-  const rows = (DB && DB[dbKey]) ? DB[dbKey] : [];
+
+  // Audit DB yoksa boş göster
+  if (!DB[dbKey]) DB[dbKey] = (dbKey === "audit") ? [] : (DB[dbKey] || []);
+  const rows = DB[dbKey] || [];
   const cols = inferColumns(adminActiveTab);
 
-  const info = document.createElement("div");
-  info.className = "smallnote";
-  info.innerHTML = `<b>Tab:</b> <span class="mono">${escapeHtml(adminActiveTab)}</span> · <b>Row:</b> ${rows.length}`;
-  area.appendChild(info);
-
-  const tools = document.createElement("div");
-  tools.className = "right-actions";
-  tools.style.margin = "10px 0 8px";
+  const top = document.createElement("div");
+  top.className = "right-actions";
+  top.style.marginBottom = "10px";
 
   const addBtn = document.createElement("button");
   addBtn.className = "btn small success";
-  addBtn.textContent = "Satır Ekle";
+  addBtn.innerHTML = `<span class="icon">＋</span> Satır Ekle`;
   addBtn.onclick = () => {
-    if (!DB) return;
     const blank = {};
     cols.forEach(c => blank[c] = "");
     DB[dbKey] = (DB[dbKey] || []).concat([blank]);
@@ -997,12 +852,22 @@ function renderAdminTable() {
 
   const delBtn = document.createElement("button");
   delBtn.className = "btn small danger";
-  delBtn.textContent = "Seçili Satırları Sil";
+  delBtn.innerHTML = `<span class="icon">🗑</span> Seçili Sil`;
   delBtn.onclick = () => deleteSelectedRows();
 
-  tools.appendChild(addBtn);
-  tools.appendChild(delBtn);
-  area.appendChild(tools);
+  // Audit tabında ekleme/silme kapalı (örnek)
+  if (adminActiveTab !== "Audit") {
+    top.appendChild(addBtn);
+    top.appendChild(delBtn);
+  } else {
+    const info = document.createElement("div");
+    info.className = "muted";
+    info.style.fontSize = "12px";
+    info.textContent = "Audit log salt okunur (örnek).";
+    area.appendChild(info);
+  }
+
+  if (adminActiveTab !== "Audit") area.appendChild(top);
 
   const table = document.createElement("table");
   const thead = document.createElement("thead");
@@ -1033,11 +898,15 @@ function renderAdminTable() {
 
     cols.forEach(c => {
       const td = document.createElement("td");
-      const inp = document.createElement(c === "desc" ? "textarea" : "input");
+      const isLong = ["desc","before","after"].includes(c);
+      const inp = document.createElement(isLong ? "textarea" : "input");
       inp.className = "input";
-      if (inp.tagName.toLowerCase() === "textarea") inp.style.minHeight = "42px";
+      if (isLong) inp.style.minHeight = "42px";
       inp.value = (r && r[c] !== undefined) ? String(r[c]) : "";
+
       inp.oninput = (e) => { DB[dbKey][idx][c] = e.target.value; };
+      if (adminActiveTab === "Audit") inp.disabled = true;
+
       td.appendChild(inp);
       tr.appendChild(td);
     });
@@ -1057,6 +926,7 @@ function renderAdminTable() {
     }
   }, 0);
 }
+
 function deleteSelectedRows() {
   const dbKey = getTabKeyToDBKey(adminActiveTab);
   const rows = DB?.[dbKey] || [];
@@ -1072,61 +942,57 @@ function deleteSelectedRows() {
 }
 
 /** =========================
- *  NEW: LOCAL BACKUP / RESTORE / SEED
+ *  BACKUP / RESTORE / SEED
  *  ========================= */
 function sanitizeDB(db) {
   const out = {};
-  ["firms","aliases","roles","users","keyUsers","firmAccessRoles","reports"].forEach(k => out[k] = Array.isArray(db?.[k]) ? db[k] : []);
+  ["firms","aliases","roles","users","keyUsers","firmAccessRoles","reports","audit"].forEach(k => out[k] = Array.isArray(db?.[k]) ? db[k] : []);
   return out;
 }
+
 function refreshBackupInfo() {
   const metaRaw = localStorage.getItem(LS.backupMeta);
   let msg = "Local backup: yok";
   if (metaRaw) {
     try {
       const meta = JSON.parse(metaRaw);
-      msg = `Local backup: ${meta.at} · rows: firms=${meta.counts?.firms||0}, users=${meta.counts?.users||0}, keyUsers=${meta.counts?.keyUsers||0}, reports=${meta.counts?.reports||0}`;
+      msg = `Local backup: ${meta.at} · firms=${meta.counts?.firms||0}, users=${meta.counts?.users||0}, keyUsers=${meta.counts?.keyUsers||0}, reports=${meta.counts?.reports||0}`;
     } catch(_) {}
   }
-  const el = document.getElementById("backupInfo");
-  if (el) el.textContent = msg;
+  document.getElementById("backupInfo").textContent = msg;
 }
+
 function adminBackupLocal() {
   if (session?.mode !== "ADMIN") return toast("bad","Admin gerekli");
-  if (!DB) return toast("warn","DB yok. Önce Yenile / getDB.");
+  if (!DB) return toast("warn","DB yok");
 
   const snap = sanitizeDB(DB);
-  const counts = {
-    firms: snap.firms.length,
-    users: snap.users.length,
-    keyUsers: snap.keyUsers.length,
-    reports: snap.reports.length
-  };
+  const counts = { firms:snap.firms.length, users:snap.users.length, keyUsers:snap.keyUsers.length, reports:snap.reports.length };
   localStorage.setItem(LS.backup, JSON.stringify(snap));
   localStorage.setItem(LS.backupMeta, JSON.stringify({ at: new Date().toISOString(), counts }));
-  toast("good","Local backup alındı.");
+  toast("good","Backup alındı.");
   refreshBackupInfo();
 }
+
 function adminRestoreLocal() {
   if (session?.mode !== "ADMIN") return toast("bad","Admin gerekli");
   const raw = localStorage.getItem(LS.backup);
-  if (!raw) return toast("warn","Local backup yok.");
-
-  const ok = confirm("Local yedeği geri yüklemek DB'yi (UI tarafında) değiştirecek. Devam?");
-  if (!ok) return;
+  if (!raw) return toast("warn","Backup yok.");
+  if (!confirm("Local yedeği geri yükle? (UI DB değişir)")) return;
 
   try {
     const snap = JSON.parse(raw);
     DB = sanitizeDB(snap);
-    toast("good","Local backup geri yüklendi. (Kaydet(saveDB) ile server’a basabilirsin.)");
+    toast("good","Restore tamam. (Kaydet(saveDB) ile server’a bas)");
     renderAdminTable();
-    renderMain();
+    hydrateCategories();
+    renderReports();
+    refreshBackupInfo();
   } catch(e) {
-    toast("bad","Backup parse hata: " + e.message);
+    toast("bad","Restore hata: " + e.message);
   }
 }
 
-/** Seed template (şifreler plaintext; seed sırasında SHA-256 hash yapılır) */
 function seedTemplatePlain() {
   return {
     firms: [
@@ -1149,15 +1015,11 @@ function seedTemplatePlain() {
       { roleKey:"FIN", desc:"Finance reports", active:"true" }
     ],
     users_plain: [
-      // username, password(plain), display, email, rolesCsv, active
       { username:"admin",  password:"admin123", display:"Admin", email:"", rolesCsv:"MANAGER", active:"true" },
-      { username:"poseidon", password:"psd123", display:"Poseidon", email:"", rolesCsv:"MANAGER,PLANNER,FIN", active:"true" },
-
-      { username:"sud_user", password:"sud123", display:"Sudesan User", email:"", rolesCsv:"VIEWER,PLANNER", active:"true", firmKey:"SUD" },
-      { username:"eli_user", password:"eli123", display:"Elida User",   email:"", rolesCsv:"VIEWER,MANAGER", active:"true", firmKey:"ELI" }
+      { username:"sud_user", password:"sud123", display:"Sudesan User", email:"", rolesCsv:"VIEWER,PLANNER", active:"true" }
     ],
     keyUsers_plain: [
-      { username:"keyuser", password:"key123", display:"Key User", email:"", active:"true" }
+      { username:"keyuser", password:"key123", display:"Super User", email:"", active:"true" }
     ],
     firmAccessRoles: [
       { firmKey:"SUD", requiredRolesCsv:"VIEWER,PLANNER,MANAGER,FIN" },
@@ -1166,185 +1028,90 @@ function seedTemplatePlain() {
     ],
     reports: [
       { id:"R-SUD-001", firmKey:"SUD", cat:"KPI", name:"Sudesan KPI Dashboard", url:"https://lookerstudio.google.com/", desc:"KPI overview", allowRolesCsv:"VIEWER,MANAGER", allowUsersCsv:"", active:"true" },
-      { id:"R-SUD-002", firmKey:"SUD", cat:"Planlama", name:"S&OP Pack", url:"https://docs.google.com/", desc:"S&OP materials", allowRolesCsv:"PLANNER,MANAGER", allowUsersCsv:"", active:"true" },
-      { id:"R-ELI-001", firmKey:"ELI", cat:"KPI", name:"Elida Executive Pack", url:"https://lookerstudio.google.com/", desc:"Executive deck & dashboards", allowRolesCsv:"MANAGER,FIN", allowUsersCsv:"", active:"true" },
-      { id:"R-GEN-001", firmKey:"",    cat:"Genel", name:"Portal Kullanım Rehberi", url:"https://github.com/psd-poseidon/PSD-Portal", desc:"Readme / How-to", allowRolesCsv:"", allowUsersCsv:"", active:"true" }
-    ]
+      { id:"R-GEN-001", firmKey:"", cat:"Genel", name:"Portal Kullanım Rehberi", url:"https://github.com/psd-poseidon/PSD-Portal", desc:"Readme", allowRolesCsv:"", allowUsersCsv:"", active:"true" }
+    ],
+    audit: []
   };
 }
 
 async function adminSeedDefaults() {
   if (session?.mode !== "ADMIN") return toast("bad","Admin gerekli");
+  if (!confirm("Seed yapılacak. Önce backup alınacak. Devam?")) return;
 
-  const ok = confirm(
-    "SEED çalıştırılacak.\n\n" +
-    "1) Önce mevcut DB local yedek alınacak\n" +
-    "2) DB varsayılan kayıtlarla değiştirilecek (UI)\n" +
-    "3) İstersen Kaydet(saveDB) ile server’a basarsın.\n\n" +
-    "Devam?"
-  );
-  if (!ok) return;
-
-  // Always backup current DB first (if any)
   if (DB) adminBackupLocal();
 
+  toast("warn","Seed hazırlanıyor (hash)...");
   const tpl = seedTemplatePlain();
-  toast("warn","Seed hazırlanıyor (şifre hash)...");
   const seeded = await buildSeedDBWithHashes(tpl);
-
   DB = sanitizeDB(seeded);
+
   adminActiveTab = "Firms";
   renderAdminTabs();
   renderAdminTable();
-  renderMain();
+  hydrateCategories();
+  renderReports();
   refreshBackupInfo();
-  toast("good","Seed DB UI’ya yüklendi. Kaydet(saveDB) ile server’a basabilirsin.");
+  toast("good","Seed UI’ya yüklendi. Kaydet(saveDB) ile server’a bas.");
 }
 
-/** Build seeded DB: users/keyUsers plaintext -> passHash */
 async function buildSeedDBWithHashes(tpl) {
   const users = [];
   for (const u of (tpl.users_plain || [])) {
-    const passHash = await sha256Hex(u.password || "");
     users.push({
       username: String(u.username||"").trim(),
-      passHash,
+      passHash: await sha256Hex(u.password||""),
       display: u.display || "",
       email: u.email || "",
       rolesCsv: u.rolesCsv || "",
       active: u.active ?? "true"
     });
   }
-
   const keyUsers = [];
   for (const ku of (tpl.keyUsers_plain || [])) {
-    const passHash = await sha256Hex(ku.password || "");
     keyUsers.push({
       username: String(ku.username||"").trim(),
-      passHash,
+      passHash: await sha256Hex(ku.password||""),
       display: ku.display || "",
       email: ku.email || "",
       active: ku.active ?? "true"
     });
   }
-
-  // NOTE: firmKey user association, API tarafında users tablosunda firmKey yoksa,
-  // login "firmName" ile firm map yapıyorsun. Eğer API "users" içinde firmKey bekliyorsa,
-  // buraya da eklersin. Şimdilik seed ile "firmKey" kullanmıyoruz; alias + login firmName üzerinden yürür.
-  // Eğer istersen Users tablosuna firmKey kolonu ekleyip burayı da yazabiliriz.
-
   return {
-    firms: tpl.firms || [],
-    aliases: tpl.aliases || [],
-    roles: tpl.roles || [],
+    firms: tpl.firms||[],
+    aliases: tpl.aliases||[],
+    roles: tpl.roles||[],
     users,
     keyUsers,
-    firmAccessRoles: tpl.firmAccessRoles || [],
-    reports: tpl.reports || []
+    firmAccessRoles: tpl.firmAccessRoles||[],
+    reports: tpl.reports||[],
+    audit: tpl.audit||[]
   };
 }
 
-/** WebCrypto SHA-256 hex */
 async function sha256Hex(str) {
   const enc = new TextEncoder();
   const data = enc.encode(str);
-  if (crypto?.subtle?.digest) {
-    const buf = await crypto.subtle.digest("SHA-256", data);
-    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,"0")).join("");
-  }
-  // Fallback: NOT cryptographically strong, but should not happen in modern browsers
-  let h = 0;
-  for (let i=0;i<str.length;i++) h = (h<<5)-h + str.charCodeAt(i) | 0;
-  return String(h >>> 0).padStart(64,"0");
+  const buf = await crypto.subtle.digest("SHA-256", data);
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,"0")).join("");
 }
 
-/** =========================
- *  SAVE ADMIN
- *  ========================= */
 async function saveAdmin() {
   if (session?.mode !== "ADMIN") return toast("bad","Admin gerekli");
   if (!DB) return toast("bad","DB yok");
 
-  // Auto backup BEFORE saving (safety net)
-  adminBackupLocal();
-
-  const payloadDB = sanitizeDB(DB);
+  adminBackupLocal(); // safety
 
   try {
-    const res = await apiCall({ action:"saveDB", token: session.token, db: payloadDB });
+    const res = await apiCall({ action:"saveDB", token: session.token, db: sanitizeDB(DB) });
     if (!res.ok) return toast("bad", res.error || "saveDB failed");
-    toast("good","Kaydedildi (saveDB). Yenileme yapılıyor…");
+    toast("good","Kaydedildi. DB yenileniyor…");
     await refreshDB(true);
     renderAdminTable();
-    renderMain();
+    hydrateCategories();
+    renderReports();
   } catch (e) {
     toast("bad","saveAdmin hata: " + e.message);
   }
-}
-
-function exportJSON() {
-  if (!DB) return toast("warn","DB yok");
-  const blob = new Blob([JSON.stringify(DB, null, 2)], { type:"application/json" });
-  const url = URL.createObjectURL(blob);
-  window.open(url, "_blank");
-  toast("good","JSON export açıldı.");
-}
-
-/** =========================
- *  DATA HEALTH (ADMIN)
- *  ========================= */
-function renderHealth(silent=false) {
-  if (session?.mode !== "ADMIN") return;
-  if (!DB) return;
-
-  const firms = DB.firms || [];
-  const firmKeys = new Set(firms.map(f => String(f.firmKey||"").trim()).filter(Boolean));
-  const reports = DB.reports || [];
-
-  const issues = [];
-  const warn = [];
-
-  reports.forEach((r, i) => {
-    const name = String(r.name||`(row ${i})`);
-    const id = String(r.id||"");
-    const firmKey = String(r.firmKey||"").trim();
-    const url = String(r.url||"").trim();
-
-    if (!id) issues.push(`Reports: <span class="dangerText">${escapeHtml(name)}</span> → <b>id boş</b>`);
-    if (!url) issues.push(`Reports: <span class="dangerText">${escapeHtml(name)}</span> → <b>url boş</b>`);
-    if (firmKey && !firmKeys.has(firmKey)) issues.push(`Reports: <span class="dangerText">${escapeHtml(name)}</span> → firmKey bulunamadı: <span class="mono">${escapeHtml(firmKey)}</span>`);
-    if (!String(r.cat||"").trim()) warn.push(`Reports: ${escapeHtml(name)} → cat boş (Genel'e düşer)`);
-  });
-
-  (DB.users||[]).forEach(u => {
-    const un = String(u.username||"");
-    const ph = String(u.passHash||"");
-    if (!un) issues.push(`Users: <b>username boş</b>`);
-    if (!ph) warn.push(`Users: ${escapeHtml(un||"(?)")} → passHash boş`);
-  });
-
-  const box = document.getElementById("healthBox");
-  const html = [];
-  html.push(`<div><b>Issues:</b> ${issues.length} · <b>Warnings:</b> ${warn.length}</div>`);
-  html.push(`<div class="hr" style="margin:10px 0"></div>`);
-  if (!issues.length && !warn.length) {
-    html.push(`<div class="goodText"><b>OK</b> — kritik problem görünmüyor.</div>`);
-  } else {
-    if (issues.length) {
-      html.push(`<div><b class="dangerText">Kritik</b></div>`);
-      html.push(`<ul style="margin:6px 0 0 18px;padding:0">` + issues.slice(0,12).map(x=>`<li>${x}</li>`).join("") + `</ul>`);
-      if (issues.length > 12) html.push(`<div class="muted">+${issues.length-12} daha…</div>`);
-      html.push(`<div class="hr" style="margin:10px 0"></div>`);
-    }
-    if (warn.length) {
-      html.push(`<div><b>Uyarı</b></div>`);
-      html.push(`<ul style="margin:6px 0 0 18px;padding:0">` + warn.slice(0,12).map(x=>`<li>${x}</li>`).join("") + `</ul>`);
-      if (warn.length > 12) html.push(`<div class="muted">+${warn.length-12} daha…</div>`);
-    }
-  }
-  box.innerHTML = html.join("");
-
-  if (!silent) toast("good","Data Health tarandı.");
 }
 
 /** =========================
@@ -1352,23 +1119,6 @@ function renderHealth(silent=false) {
  *  ========================= */
 function csvToArr(csv){
   return String(csv||"").split(",").map(x=>x.trim()).filter(Boolean);
-}
-function firmDisplayByKey(firmKey){
-  const firms = DB?.firms || [];
-  const f = firms.find(x => String(x.firmKey||"").trim() === String(firmKey||"").trim());
-  return f ? (String(f.display||"").trim() || firmKey) : firmKey;
-}
-function spanBadge(k,v){
-  const s = document.createElement("span");
-  s.className = "badge";
-  s.textContent = `${k}: ${v}`;
-  return s;
-}
-function badgeState(text, kind){
-  const s = document.createElement("span");
-  s.className = "badge " + (kind || "");
-  s.textContent = text;
-  return s;
 }
 function escapeHtml(s){
   return String(s||"")
@@ -1392,9 +1142,7 @@ function toast(level, msg) {
   clearTimeout(toast._timer);
   toast._timer = setTimeout(hideToast, 4200);
 }
-function hideToast() {
-  document.getElementById("toast").classList.add("hidden");
-}
+function hideToast() { document.getElementById("toast").classList.add("hidden"); }
 </script>
 </body>
 </html>

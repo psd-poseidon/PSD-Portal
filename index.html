@@ -8,30 +8,46 @@
     :root{
       --bg:#0b1020; --card:#0f1730; --muted:#9aa7c7; --txt:#e9efff;
       --line:rgba(255,255,255,.10); --good:#42d392; --bad:#ff5a6b; --warn:#ffcc00;
-      --btn:#3b82f6; --btn2:#22c55e; --btn3:#f59e0b; --btn4:#ef4444;
       --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --r:16px;
+      --r:18px;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: ui-sans-serif, -apple-system, system-ui, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      --accent:#3b82f6;
+      --accent2:#22c55e;
+      --accentSoft: rgba(59,130,246,.14);
+      --accentLine: rgba(147,197,253,.55);
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:var(--sans);background:radial-gradient(1200px 800px at 20% 10%, rgba(59,130,246,.25), transparent 60%),
+    body{
+      margin:0;font-family:var(--sans);color:var(--txt);
+      background:
+        radial-gradient(1200px 800px at 20% 10%, rgba(59,130,246,.25), transparent 60%),
         radial-gradient(900px 700px at 90% 30%, rgba(34,197,94,.18), transparent 55%),
         radial-gradient(900px 700px at 40% 110%, rgba(245,158,11,.18), transparent 55%),
-        var(--bg); color:var(--txt);}
+        var(--bg);
+    }
     a{color:#93c5fd;text-decoration:none}
     a:hover{text-decoration:underline}
-    .wrap{max-width:1200px;margin:0 auto;padding:22px}
-    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
-    .brand{display:flex;align-items:center;gap:10px}
-    .logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#3b82f6,#22c55e);box-shadow:var(--shadow)}
+    .wrap{max-width:1280px;margin:0 auto;padding:22px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:42px;height:42px;border-radius:14px;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      box-shadow:var(--shadow)
+    }
     .title{display:flex;flex-direction:column;line-height:1.1}
     .title b{font-size:16px}
     .title span{font-size:12px;color:var(--muted)}
     .pill{padding:6px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:12px}
     .row{display:flex;gap:14px;flex-wrap:wrap}
-    .card{background:rgba(15,23,48,.82);backdrop-filter: blur(6px);
-      border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+    .card{
+      background:rgba(15,23,48,.82);
+      backdrop-filter: blur(6px);
+      border:1px solid var(--line);
+      border-radius:var(--r);
+      box-shadow:var(--shadow)
+    }
     .card .hd{padding:14px 14px 0 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
     .card .hd h2{margin:0;font-size:15px}
     .card .hd p{margin:6px 0 0 0;color:var(--muted);font-size:12px}
@@ -39,25 +55,25 @@
     .grid{display:grid;gap:12px}
     .grid-2{grid-template-columns:repeat(2, minmax(0,1fr))}
     .grid-3{grid-template-columns:repeat(3, minmax(0,1fr))}
-    @media(max-width:900px){ .grid-2,.grid-3{grid-template-columns:1fr} }
+    @media(max-width:980px){ .grid-2,.grid-3{grid-template-columns:1fr} }
     .input, select, textarea{
       width:100%; padding:10px 11px; border-radius:12px; border:1px solid var(--line);
-      background:rgba(8,12,25,.8); color:var(--txt); outline:none;
+      background:rgba(8,12,25,.78); color:var(--txt); outline:none;
     }
     textarea{min-height:90px; resize:vertical}
-    .input:focus, select:focus, textarea:focus{border-color:rgba(147,197,253,.7); box-shadow:0 0 0 4px rgba(59,130,246,.15)}
+    .input:focus, select:focus, textarea:focus{border-color:var(--accentLine); box-shadow:0 0 0 4px rgba(59,130,246,.15)}
     label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
     .btn{
       display:inline-flex;align-items:center;justify-content:center; gap:8px;
       padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);
-      background:rgba(59,130,246,.18); color:var(--txt); cursor:pointer; user-select:none;
+      background:transparent; color:var(--txt); cursor:pointer; user-select:none;
     }
     .btn:hover{filter:brightness(1.06)}
     .btn:active{transform:translateY(1px)}
-    .btn.primary{background:rgba(59,130,246,.25); border-color:rgba(59,130,246,.45)}
-    .btn.success{background:rgba(34,197,94,.20); border-color:rgba(34,197,94,.45)}
-    .btn.warn{background:rgba(245,158,11,.20); border-color:rgba(245,158,11,.45)}
-    .btn.danger{background:rgba(239,68,68,.20); border-color:rgba(239,68,68,.45)}
+    .btn.primary{background:var(--accentSoft); border-color:rgba(59,130,246,.45)}
+    .btn.success{background:rgba(34,197,94,.16); border-color:rgba(34,197,94,.45)}
+    .btn.warn{background:rgba(245,158,11,.16); border-color:rgba(245,158,11,.45)}
+    .btn.danger{background:rgba(239,68,68,.16); border-color:rgba(239,68,68,.45)}
     .btn.ghost{background:transparent}
     .btn.small{padding:7px 9px;border-radius:10px;font-size:12px}
     .muted{color:var(--muted)}
@@ -70,31 +86,36 @@
     .dot.warn{background:var(--warn)}
     .hidden{display:none !important}
     .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
-    .tab{padding:8px 10px;border-radius:999px;border:1px solid var(--line);cursor:pointer;font-size:12px;color:var(--muted)}
-    .tab.active{color:var(--txt); border-color:rgba(147,197,253,.55); background:rgba(59,130,246,.12)}
-    table{width:100%;border-collapse:collapse}
-    th,td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;font-size:12px;vertical-align:top}
-    th{color:var(--muted);font-weight:600}
-    .kpi{display:flex;gap:10px;flex-wrap:wrap}
-    .kpi .box{padding:10px 12px;border:1px solid var(--line);border-radius:14px;min-width:160px;background:rgba(8,12,25,.6)}
-    .kpi .box b{display:block;font-size:16px}
-    .kpi .box span{font-size:12px;color:var(--muted)}
+    .tab{
+      padding:8px 10px;border-radius:999px;border:1px solid var(--line);
+      cursor:pointer;font-size:12px;color:var(--muted);display:inline-flex;gap:8px;align-items:center
+    }
+    .tab.active{color:var(--txt); border-color:var(--accentLine); background:var(--accentSoft)}
+    .chip{
+      padding:3px 8px;border-radius:999px;border:1px solid var(--line);
+      font-size:11px;color:var(--muted);background:rgba(8,12,25,.55)
+    }
     .badge{padding:4px 8px;border-radius:999px;border:1px solid var(--line);font-size:11px;color:var(--muted)}
     .badge.good{border-color:rgba(34,197,94,.5); color:#bdf7d6}
     .badge.bad{border-color:rgba(239,68,68,.5); color:#ffd0d6}
     .badge.warn{border-color:rgba(245,158,11,.55); color:#ffe7b3}
-    .toast{
-      position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
-      background:rgba(10,14,28,.92); border:1px solid var(--line); border-radius:14px;
-      padding:10px 12px; box-shadow:var(--shadow); display:flex; align-items:center; gap:10px;
-      max-width:min(760px, calc(100% - 24px));
+    .kpi{display:flex;gap:10px;flex-wrap:wrap}
+    .kpi .box{
+      padding:10px 12px;border:1px solid var(--line);border-radius:16px;
+      min-width:170px;background:rgba(8,12,25,.60)
     }
-    .toast .msg{font-size:13px}
-    .toast .x{margin-left:auto}
+    .kpi .box b{display:block;font-size:16px}
+    .kpi .box span{font-size:12px;color:var(--muted)}
+    .keyline{
+      padding:10px 12px;border:1px dashed rgba(147,197,253,.35);
+      border-radius:16px;background:rgba(59,130,246,.08);
+      font-size:12px;color:var(--muted)
+    }
     .smallnote{font-size:12px;color:var(--muted);line-height:1.45}
     .list{display:grid;gap:10px}
     .report{
-      padding:12px;border:1px solid var(--line);border-radius:14px;background:rgba(8,12,25,.55);
+      padding:12px;border:1px solid var(--line);border-radius:16px;
+      background:linear-gradient(180deg, rgba(8,12,25,.60), rgba(8,12,25,.42));
       display:flex;align-items:flex-start;justify-content:space-between;gap:12px
     }
     .report h3{margin:0 0 6px 0;font-size:14px}
@@ -102,9 +123,31 @@
     .report .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
     .right-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
     .footer{margin-top:16px;color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-    .keyline{padding:10px 12px;border:1px dashed rgba(147,197,253,.35);border-radius:14px;background:rgba(59,130,246,.08);font-size:12px;color:var(--muted)}
+    table{width:100%;border-collapse:collapse}
+    th,td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;font-size:12px;vertical-align:top}
+    th{color:var(--muted);font-weight:600}
+    .toast{
+      position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
+      background:rgba(10,14,28,.92); border:1px solid var(--line); border-radius:16px;
+      padding:10px 12px; box-shadow:var(--shadow);
+      display:flex; align-items:center; gap:10px;
+      max-width:min(860px, calc(100% - 24px));
+      z-index:50;
+    }
+    .toast .msg{font-size:13px}
+    .toast .x{margin-left:auto}
+    .splitline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .sep{width:1px;height:24px;background:var(--line)}
+    .icon{
+      width:18px;height:18px;border-radius:6px;border:1px solid var(--line);
+      display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted);
+      background:rgba(8,12,25,.55)
+    }
+    .dangerText{color:#ffb4be}
+    .goodText{color:#bdf7d6}
   </style>
 </head>
+
 <body>
 <div class="wrap">
   <div class="topbar">
@@ -115,18 +158,19 @@
         <span>GitHub Pages UI · Google Apps Script API · Google Sheet DB</span>
       </div>
     </div>
+
     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
       <span id="statusPill" class="pill">Bağlantı: kontrol ediliyor…</span>
       <button class="btn ghost small" id="btnLogout" onclick="logout()" style="display:none;">Çıkış</button>
     </div>
   </div>
 
-  <!-- CONFIG CARD -->
+  <!-- CONFIG -->
   <div class="card" id="cardConfig">
     <div class="hd">
       <div>
         <h2>Kurulum</h2>
-        <p>Apps Script Web App URL’sini gir ve kaydet. (Tarayıcıda saklanır.)</p>
+        <p>Apps Script Web App URL’sini gir ve kaydet.</p>
       </div>
       <div class="status">
         <div id="apiDot" class="dot warn"></div>
@@ -138,12 +182,12 @@
         <label>API URL (Apps Script Web App)</label>
         <input class="input mono" id="apiUrl" placeholder="https://script.google.com/macros/s/.../exec" />
         <div class="smallnote" style="margin-top:8px">
-          Deploy ayarları: <span class="mono">Execute as: Me</span> · <span class="mono">Who has access: Anyone</span> (en azından test için).
+          Deploy: <span class="mono">Execute as: Me</span> · <span class="mono">Who has access: Anyone</span> (test için).
         </div>
       </div>
       <div class="grid">
         <div>
-          <label>Portal Tema Rengi</label>
+          <label>Portal Tema</label>
           <select id="themeSel" class="input" onchange="setTheme(this.value)">
             <option value="blue">Mavi</option>
             <option value="green">Yeşil</option>
@@ -182,13 +226,14 @@
           <label>Firma (Normal User için zorunlu · Admin/Key User için boş olabilir)</label>
           <input class="input" id="inFirm" placeholder="Örn: Sudesan / Dupack / ..." />
         </div>
-        <div style="grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+        <div style="grid-column:1/-1" class="right-actions">
           <button class="btn primary" onclick="login()">Giriş Yap</button>
           <button class="btn ghost" onclick="fillDemo()">Demo doldur</button>
         </div>
+
         <div class="keyline" style="grid-column:1/-1">
-          <b>Not:</b> Kullanıcılar ve firmalar <b>tarayıcıda değil</b>, Google Sheet’te tutulur.
-          Burada “silindi” gibi görünen durumlar genelde localStorage / cache / eski seed-data kaynaklıdır.
+          <b>Not:</b> “Kullanıcılar/firma silinmiş görünüyor” genelde eski sürümde <b>seed overwrite</b> ve <b>saveDB’nin yanlışlıkla boş DB ile çağrılması</b> nedeniyle olur.
+          Bu sürümde Admin panelde <b>Seed</b> ve <b>Local Yedek</b> ile geri dönüş çok hızlı.
         </div>
       </div>
     </div>
@@ -196,8 +241,8 @@
     <div class="card" style="flex:1;min-width:320px">
       <div class="hd">
         <div>
-          <h2>Bilgi</h2>
-          <p>Bu tek dosya UI; tüm veri API’den okunur / (Admin) kaydedilir.</p>
+          <h2>Özet</h2>
+          <p>Tek dosya UI · Yetkiler API’de</p>
         </div>
       </div>
       <div class="bd">
@@ -208,8 +253,7 @@
         </div>
         <div class="hr"></div>
         <div class="smallnote">
-          <b>Güvenlik notu (pratik):</b> Apps Script tarafında token 12 saat geçerli.
-          Admin harici kullanıcılar save yapamaz. Normal user erişimi rol ile kontrol edilir.
+          <b>İyileştirme:</b> Admin panelde “Seed / Backup / Restore” eklendi. Veri bozulsa bile tek tık geri dönebilirsin.
         </div>
       </div>
     </div>
@@ -217,8 +261,8 @@
 
   <!-- MAIN -->
   <div class="row hidden" id="rowMain" style="margin-top:14px">
-    <!-- LEFT: Portal view -->
-    <div class="card" style="flex:2;min-width:320px">
+    <!-- LEFT -->
+    <div class="card" style="flex:2.2;min-width:320px">
       <div class="hd">
         <div>
           <h2 id="mainTitle">Portal</h2>
@@ -229,13 +273,48 @@
           <button class="btn small warn hidden" id="btnAdminOpen" onclick="openAdmin()">Admin Paneli</button>
         </div>
       </div>
-      <div class="bd">
+
+      <div class="bd grid" style="gap:10px">
+        <!-- Executive controls -->
+        <div class="card" style="background:rgba(8,12,25,.40)">
+          <div class="bd grid grid-3" style="padding:12px">
+            <div>
+              <label>Arama (rapor adı / açıklama / kategori)</label>
+              <input class="input" id="qSearch" placeholder="Örn: WMS, KPI, S&OP, ... " oninput="renderReports()" />
+            </div>
+            <div id="keyFirmWrap" class="hidden">
+              <label>Firma Görünümü (Key User)</label>
+              <select class="input" id="keyFirmSel" onchange="setKeyFirmView(this.value)">
+                <option value="">— Firma seç (opsiyonel) —</option>
+              </select>
+            </div>
+            <div>
+              <label>Sıralama</label>
+              <select class="input" id="sortSel" onchange="renderReports()">
+                <option value="cat_name">Kategori + İsim</option>
+                <option value="name">İsim</option>
+                <option value="fav">Favoriler önce</option>
+              </select>
+            </div>
+          </div>
+          <div class="bd" style="padding:0 12px 12px 12px">
+            <div class="splitline">
+              <span class="chip" id="chipVisible">Görünen: —</span>
+              <span class="chip" id="chipTotal">Toplam: —</span>
+              <span class="chip" id="chipFav">Favori: —</span>
+              <span class="sep"></span>
+              <button class="btn small ghost" onclick="toggleShowOnlyFav()"><span class="icon">★</span> Sadece Favoriler</button>
+              <button class="btn small ghost" onclick="clearFilters()"><span class="icon">⟲</span> Filtreyi Sıfırla</button>
+            </div>
+          </div>
+        </div>
+
         <div class="tabs" id="catTabs"></div>
         <div id="reportsList" class="list"></div>
       </div>
     </div>
 
-    <!-- RIGHT: Session -->
+    <!-- RIGHT -->
     <div class="card" style="flex:1;min-width:320px">
       <div class="hd">
         <div>
@@ -244,12 +323,12 @@
         </div>
         <span class="badge" id="sessBadge">—</span>
       </div>
-      <div class="bd">
-        <div class="grid">
-          <div>
-            <div class="muted" style="font-size:12px">Kullanıcı</div>
-            <div id="sessUser" style="font-weight:700">—</div>
-          </div>
+      <div class="bd grid" style="gap:10px">
+        <div>
+          <div class="muted" style="font-size:12px">Kullanıcı</div>
+          <div id="sessUser" style="font-weight:700">—</div>
+        </div>
+        <div class="grid grid-2">
           <div>
             <div class="muted" style="font-size:12px">Mod</div>
             <div id="sessMode">—</div>
@@ -258,14 +337,29 @@
             <div class="muted" style="font-size:12px">Firma</div>
             <div id="sessFirm">—</div>
           </div>
-          <div>
-            <div class="muted" style="font-size:12px">Roller</div>
-            <div id="sessRoles" class="mono" style="font-size:12px;word-break:break-word">—</div>
+        </div>
+        <div>
+          <div class="muted" style="font-size:12px">Roller</div>
+          <div id="sessRoles" class="mono" style="font-size:12px;word-break:break-word">—</div>
+        </div>
+
+        <div class="hr"></div>
+
+        <!-- Data Health (Admin only) -->
+        <div id="healthWrap" class="hidden">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+            <div>
+              <div style="font-weight:700">Data Health</div>
+              <div class="muted" style="font-size:12px">Bozuk kayıtları hızlı yakala</div>
+            </div>
+            <button class="btn small ghost" onclick="renderHealth()"><span class="icon">✓</span> Tara</button>
           </div>
-          <div class="hr"></div>
-          <div class="right-actions">
-            <button class="btn danger" onclick="logout()">Çıkış</button>
-          </div>
+          <div class="hr" style="margin:10px 0"></div>
+          <div id="healthBox" class="smallnote">—</div>
+        </div>
+
+        <div class="right-actions">
+          <button class="btn danger" onclick="logout()">Çıkış</button>
         </div>
       </div>
     </div>
@@ -279,6 +373,13 @@
         <p>DB düzenleme: Firms · Aliases · Roles · Users · KeyUsers · FirmAccessRoles · Reports</p>
       </div>
       <div class="right-actions">
+        <!-- NEW: Backup / Restore / Seed -->
+        <button class="btn small" onclick="adminBackupLocal()"><span class="icon">⧉</span> Yedek Al (Local)</button>
+        <button class="btn small warn" onclick="adminRestoreLocal()"><span class="icon">↩</span> Yedeği Geri Yükle (Local)</button>
+        <button class="btn small danger" onclick="adminSeedDefaults()"><span class="icon">⚡</span> Seed (Varsayılan DB)</button>
+
+        <span class="sep"></span>
+
         <button class="btn small" onclick="closeAdmin()">Kapat</button>
         <button class="btn small warn" onclick="exportJSON()">JSON Export</button>
         <button class="btn small success" onclick="saveAdmin()">Kaydet (saveDB)</button>
@@ -289,15 +390,17 @@
       <div id="adminArea"></div>
       <div class="hr"></div>
       <div class="smallnote">
-        <b>İpucu:</b> Kullanıcı şifresi için <span class="mono">passHash</span> alanı SHA-256 hex olmalı.
-        Apps Script tarafında <span class="mono">UTIL_hashPasswordForSheet()</span> ile sheet’te düz şifreleri hash’leyebilirsin.
+        <b>Not:</b> Kullanıcı şifresi için <span class="mono">passHash</span> alanı SHA-256 hex olmalı.
+        Seed butonu şifreleri otomatik hash’ler.
       </div>
+      <div class="hr"></div>
+      <div class="smallnote mono" id="backupInfo">Local backup: —</div>
     </div>
   </div>
 
   <div class="footer">
-    <div>© PSD Portal · Tek dosya UI</div>
-    <div class="mono">v1.0</div>
+    <div>© PSD Portal · Single-file UI</div>
+    <div class="mono">v1.2-seed-restore</div>
   </div>
 </div>
 
@@ -309,28 +412,30 @@
 
 <script>
 /** =========================
- *  CONFIG
- *  =========================
- *  API_URL: localStorage('PSD_API_URL') ile tutulur.
- */
+ *  STATE / LOCAL STORAGE KEYS
+ *  ========================= */
 let API_URL = "";
 const LS = {
   api: "PSD_API_URL",
   theme: "PSD_THEME",
-  sess: "PSD_SESSION"
+  sess: "PSD_SESSION",
+  fav: "PSD_FAVS_V1",
+  keyFirmView: "PSD_KEY_FIRM_VIEW",
+  onlyFav: "PSD_ONLY_FAV",
+  backup: "PSD_DB_BACKUP_V1",          // NEW
+  backupMeta: "PSD_DB_BACKUP_META_V1"  // NEW
 };
 
-let session = null; // { token, mode, user: {..} }
+let session = null; // { token, mode, user }
 let DB = null;      // { firms, aliases, roles, users, keyUsers, firmAccessRoles, reports }
 let activeCat = "ALL";
 let adminActiveTab = "Firms";
+let showOnlyFav = (localStorage.getItem(LS.onlyFav) === "1");
 
-const DB_KEYS = [
-  "firms","aliases","roles","users","keyUsers","firmAccessRoles","reports"
-];
-
+/** =========================
+ *  INIT
+ *  ========================= */
 function init() {
-  // load config
   API_URL = localStorage.getItem(LS.api) || "";
   document.getElementById("apiUrl").value = API_URL;
 
@@ -338,36 +443,28 @@ function init() {
   document.getElementById("themeSel").value = th;
   setTheme(th);
 
-  // load session
   const s = localStorage.getItem(LS.sess);
-  if (s) {
-    try {
-      session = JSON.parse(s);
-    } catch(_) {}
-  }
+  if (s) { try { session = JSON.parse(s); } catch(_) {} }
 
-  // reflect
   updateConnPill("warn","Bağlantı: ayarlanmadı");
   if (API_URL) testApi(true);
 
   if (session && session.token) {
-    // try silent refresh DB and show main
-    refreshDB(true).catch(() => {
-      // session invalid -> logout
-      logout(true);
-    });
+    refreshDB(true).then(() => {
+      showMain();
+    }).catch(() => logout(true));
   }
+  refreshFavChips();
 }
 window.addEventListener("DOMContentLoaded", init);
 
 function setTheme(theme) {
   localStorage.setItem(LS.theme, theme);
   const root = document.documentElement.style;
-  // adjust button accent subtly
-  if (theme === "blue") { root.setProperty("--btn", "#3b82f6"); }
-  if (theme === "green"){ root.setProperty("--btn", "#22c55e"); }
-  if (theme === "amber"){ root.setProperty("--btn", "#f59e0b"); }
-  if (theme === "red"){ root.setProperty("--btn", "#ef4444"); }
+  if (theme === "blue")  { root.setProperty("--accent","#3b82f6"); root.setProperty("--accentLine","rgba(147,197,253,.55)"); root.setProperty("--accentSoft","rgba(59,130,246,.14)"); }
+  if (theme === "green") { root.setProperty("--accent","#22c55e"); root.setProperty("--accentLine","rgba(167,243,208,.55)"); root.setProperty("--accentSoft","rgba(34,197,94,.12)"); }
+  if (theme === "amber") { root.setProperty("--accent","#f59e0b"); root.setProperty("--accentLine","rgba(253,230,138,.60)"); root.setProperty("--accentSoft","rgba(245,158,11,.12)"); }
+  if (theme === "red")   { root.setProperty("--accent","#ef4444"); root.setProperty("--accentLine","rgba(254,202,202,.60)"); root.setProperty("--accentSoft","rgba(239,68,68,.12)"); }
 }
 
 function saveConfig() {
@@ -375,6 +472,21 @@ function saveConfig() {
   localStorage.setItem(LS.api, API_URL);
   toast("good","Kaydedildi. API Test önerilir.");
   testApi();
+}
+
+/** =========================
+ *  API CALL
+ *  ========================= */
+async function apiCall(payload) {
+  if (!API_URL) throw new Error("API URL yok");
+  const resp = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type":"text/plain;charset=utf-8" },
+    body: JSON.stringify(payload)
+  });
+  const txt = await resp.text();
+  try { return JSON.parse(txt); }
+  catch(e){ throw new Error("JSON parse error: " + txt.slice(0,200)); }
 }
 
 async function testApi(silent=false) {
@@ -403,31 +515,11 @@ async function testApi(silent=false) {
 }
 
 function setApiStatus(ok, text) {
-  const dot = document.getElementById("apiDot");
-  const t = document.getElementById("apiText");
-  dot.className = "dot " + (ok ? "good" : "bad");
-  t.textContent = text;
+  document.getElementById("apiDot").className = "dot " + (ok ? "good" : "bad");
+  document.getElementById("apiText").textContent = text;
 }
-
 function updateConnPill(level, text) {
-  const pill = document.getElementById("statusPill");
-  pill.textContent = text;
-  // just visual via dot style in config card
-}
-
-/** =========================
- *  API CALL
- *  ========================= */
-async function apiCall(payload) {
-  if (!API_URL) throw new Error("API URL yok");
-  const resp = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type":"text/plain;charset=utf-8" },
-    body: JSON.stringify(payload)
-  });
-  const txt = await resp.text();
-  try { return JSON.parse(txt); }
-  catch(e){ throw new Error("JSON parse error: " + txt.slice(0,200)); }
+  document.getElementById("statusPill").textContent = text;
 }
 
 /** =========================
@@ -453,11 +545,10 @@ async function login() {
 
     session = { token: res.token, mode: res.mode, user: res.user };
     localStorage.setItem(LS.sess, JSON.stringify(session));
-
     document.getElementById("modeBadge").textContent = res.mode;
-    toast("good","Giriş başarılı: " + res.mode);
 
-    await refreshDB(false);
+    toast("good","Giriş başarılı: " + res.mode);
+    await refreshDB(true);
     showMain();
   } catch (e) {
     toast("bad","Login hata: " + e.message);
@@ -465,8 +556,7 @@ async function login() {
 }
 
 function logout(silent=false) {
-  session = null;
-  DB = null;
+  session = null; DB = null;
   localStorage.removeItem(LS.sess);
 
   document.getElementById("rowMain").classList.add("hidden");
@@ -481,13 +571,9 @@ function logout(silent=false) {
   if (!silent) toast("warn","Çıkış yapıldı.");
 }
 
-/** =========================
- *  DB LOAD / RENDER
- *  ========================= */
 async function refreshDB(silent=false) {
   if (!session?.token) throw new Error("No session");
   const res = await apiCall({ action:"getDB", token: session.token });
-
   if (!res.ok) {
     if (!silent) toast("bad", res.error || "getDB error");
     throw new Error(res.error || "Unauthorized");
@@ -504,23 +590,22 @@ async function refreshDB(silent=false) {
   document.getElementById("kpiReports").textContent = repsN;
 
   if (!silent) toast("good","DB yenilendi.");
-
-  // Re-render main if visible
-  if (!document.getElementById("rowMain").classList.contains("hidden")) {
-    renderMain();
-  }
 }
 
+/** =========================
+ *  MAIN RENDER
+ *  ========================= */
 function showMain() {
   document.getElementById("rowLogin").classList.add("hidden");
   document.getElementById("rowMain").classList.remove("hidden");
   document.getElementById("btnLogout").style.display = "inline-flex";
 
-  // admin button
   const isAdmin = (session?.mode === "ADMIN");
   document.getElementById("btnAdminOpen").classList.toggle("hidden", !isAdmin);
+  document.getElementById("healthWrap").classList.toggle("hidden", !isAdmin);
 
   renderSessionCard();
+  renderExecutiveControls();
   renderMain();
 }
 
@@ -539,79 +624,208 @@ function renderSessionCard() {
   }
 }
 
+function renderExecutiveControls() {
+  const isKey = (session?.mode === "KEY");
+  const wrap = document.getElementById("keyFirmWrap");
+  wrap.classList.toggle("hidden", !isKey);
+
+  if (isKey) {
+    const sel = document.getElementById("keyFirmSel");
+    const firms = (DB?.firms || []).filter(f => String(f.active).toLowerCase() !== "false");
+    const current = localStorage.getItem(LS.keyFirmView) || "";
+
+    sel.innerHTML = `<option value="">— Firma seç (opsiyonel) —</option>` + firms
+      .sort((a,b)=> String(a.display||a.firmKey||"").localeCompare(String(b.display||b.firmKey||""), "tr"))
+      .map(f => {
+        const k = String(f.firmKey||"").trim();
+        const d = String(f.display||k).trim();
+        return `<option value="${escapeHtml(k)}">${escapeHtml(d)} (${escapeHtml(k)})</option>`;
+      }).join("");
+    sel.value = current;
+  }
+}
+
+function setKeyFirmView(firmKey) {
+  localStorage.setItem(LS.keyFirmView, firmKey || "");
+  toast("good", firmKey ? ("Key User görünümü: " + firmDisplayByKey(firmKey)) : "Key User görünümü: tüm firmalar");
+  activeCat = "ALL";
+  renderMain();
+}
+
+function clearFilters() {
+  document.getElementById("qSearch").value = "";
+  document.getElementById("sortSel").value = "cat_name";
+  activeCat = "ALL";
+  showOnlyFav = false;
+  localStorage.setItem(LS.onlyFav, "0");
+  toast("good","Filtreler sıfırlandı.");
+  renderMain();
+}
+
+function toggleShowOnlyFav() {
+  showOnlyFav = !showOnlyFav;
+  localStorage.setItem(LS.onlyFav, showOnlyFav ? "1" : "0");
+  toast("warn", showOnlyFav ? "Sadece favoriler açık" : "Sadece favoriler kapalı");
+  renderReports();
+}
+
 function renderMain() {
   const u = session?.user || {};
   const mode = session?.mode;
 
   if (mode === "ADMIN") {
     document.getElementById("mainTitle").textContent = "Admin Görünümü";
-    document.getElementById("mainSub").textContent = "Tüm raporlar listelenir. Düzenleme için Admin Paneli'ni aç.";
+    document.getElementById("mainSub").textContent = "Tüm raporlar listelenir. Admin panelde Seed/Backup/Restore var.";
   } else if (mode === "KEY") {
+    const keyFirm = localStorage.getItem(LS.keyFirmView) || "";
     document.getElementById("mainTitle").textContent = "Key User Görünümü";
-    document.getElementById("mainSub").textContent = "Firma seçmeden; izinli raporlar listelenir (role/user bazlı).";
+    document.getElementById("mainSub").textContent =
+      keyFirm ? ("Firma görünümü: " + firmDisplayByKey(keyFirm)) : "Firma görünümü: Tüm firmalar (opsiyonel filtre)";
   } else {
     document.getElementById("mainTitle").textContent = "Portal";
     document.getElementById("mainSub").textContent = (u.firmDisplay ? ("Firma: " + u.firmDisplay) : "—");
   }
 
-  // category tabs
-  const cats = collectCategories();
+  const cats = collectCategoriesWithCounts();
   renderCategoryTabs(cats);
-
-  // list reports
   renderReports();
+  refreshFavChips();
+  if (mode === "ADMIN") renderHealth(true);
 }
 
-function collectCategories() {
-  const reports = DB?.reports || [];
+/** =========================
+ *  CATEGORIES + COUNTS
+ *  ========================= */
+function collectCategoriesWithCounts() {
+  const reports = (DB?.reports || []).filter(r => String(r.active).toLowerCase() !== "false");
   const allowed = reports.filter(r => canSeeReport(r));
-  const set = new Set(["ALL"]);
-  allowed.forEach(r => set.add(String(r.cat || "Genel")));
-  return Array.from(set);
+
+  const map = new Map();
+  map.set("ALL", allowed.length);
+
+  allowed.forEach(r => {
+    const c = String(r.cat || "Genel");
+    map.set(c, (map.get(c) || 0) + 1);
+  });
+
+  const out = Array.from(map.entries()).map(([cat,count]) => ({cat,count}));
+  out.sort((a,b) => {
+    if (a.cat === "ALL") return -1;
+    if (b.cat === "ALL") return 1;
+    return a.cat.localeCompare(b.cat, "tr");
+  });
+  return out;
 }
 
 function renderCategoryTabs(cats) {
   const tabs = document.getElementById("catTabs");
   tabs.innerHTML = "";
-  cats.forEach(cat => {
+  cats.forEach(({cat,count}) => {
     const el = document.createElement("div");
     el.className = "tab" + (activeCat === cat ? " active" : "");
-    el.textContent = cat;
+    el.innerHTML = `<span>${escapeHtml(cat)}</span><span class="chip">${count}</span>`;
     el.onclick = () => { activeCat = cat; renderCategoryTabs(cats); renderReports(); };
     tabs.appendChild(el);
   });
 }
 
+/** =========================
+ *  FAVORITES
+ *  ========================= */
+function favKey() {
+  const uname = String(session?.user?.username || "anon");
+  return `${LS.fav}:${uname}`;
+}
+function getFavs() {
+  try { return JSON.parse(localStorage.getItem(favKey()) || "[]"); } catch(_) { return []; }
+}
+function setFavs(ids) {
+  localStorage.setItem(favKey(), JSON.stringify(ids || []));
+}
+function isFav(id) {
+  const favs = getFavs();
+  return favs.includes(String(id||""));
+}
+function toggleFav(id) {
+  id = String(id||"");
+  const favs = getFavs();
+  const i = favs.indexOf(id);
+  if (i >= 0) favs.splice(i,1); else favs.push(id);
+  setFavs(favs);
+  toast("good", i>=0 ? "Favoriden çıkarıldı" : "Favoriye eklendi");
+  renderReports();
+  refreshFavChips();
+}
+function refreshFavChips() {
+  const favs = getFavs();
+  const totalAllowed = ((DB?.reports||[]).filter(r => String(r.active).toLowerCase() !== "false").filter(canSeeReport)).length;
+  document.getElementById("chipFav").textContent = `Favori: ${favs.length}`;
+  document.getElementById("chipTotal").textContent = `Toplam: ${totalAllowed || 0}`;
+}
+
+/** =========================
+ *  REPORTS LIST
+ *  ========================= */
 function renderReports() {
   const list = document.getElementById("reportsList");
   list.innerHTML = "";
 
-  const reports = (DB?.reports || []).filter(r => String(r.active).toLowerCase() !== "false");
+  const q = (document.getElementById("qSearch").value || "").trim().toLowerCase();
+  const sortMode = document.getElementById("sortSel").value || "cat_name";
+  const favs = getFavs();
 
-  const allowed = reports
-    .filter(r => canSeeReport(r))
-    .filter(r => activeCat === "ALL" ? true : String(r.cat || "Genel") === activeCat);
+  let reports = (DB?.reports || [])
+    .filter(r => String(r.active).toLowerCase() !== "false")
+    .filter(r => canSeeReport(r));
 
-  if (!allowed.length) {
-    const empty = document.createElement("div");
-    empty.className = "smallnote";
-    empty.textContent = "Görüntülenecek rapor bulunamadı (kategori/rol yetkisi kontrol).";
-    list.appendChild(empty);
-    return;
+  reports = reports.filter(r => activeCat === "ALL" ? true : String(r.cat || "Genel") === activeCat);
+
+  if (q) {
+    reports = reports.filter(r => {
+      const s = `${r.name||""} ${r.desc||""} ${r.cat||""}`.toLowerCase();
+      return s.includes(q);
+    });
   }
 
-  // sort by cat then name
-  allowed.sort((a,b) => {
+  if (showOnlyFav) {
+    reports = reports.filter(r => favs.includes(String(r.id||r.name||"")));
+  }
+
+  reports.sort((a,b) => {
+    const aId = String(a.id||a.name||"");
+    const bId = String(b.id||b.name||"");
+    const aFav = favs.includes(aId) ? 1 : 0;
+    const bFav = favs.includes(bId) ? 1 : 0;
+
+    if (sortMode === "fav") {
+      if (aFav !== bFav) return bFav - aFav;
+    }
+    if (sortMode === "name") {
+      return String(a.name||"").localeCompare(String(b.name||""), "tr");
+    }
     const ca = String(a.cat||""); const cb = String(b.cat||"");
     if (ca !== cb) return ca.localeCompare(cb, "tr");
     return String(a.name||"").localeCompare(String(b.name||""), "tr");
   });
 
-  allowed.forEach(r => {
+  document.getElementById("chipVisible").textContent = `Görünen: ${reports.length}`;
+
+  if (!reports.length) {
+    const empty = document.createElement("div");
+    empty.className = "smallnote";
+    empty.textContent = "Görüntülenecek rapor bulunamadı (kategori/rol/arama/favori filtresi).";
+    list.appendChild(empty);
+    return;
+  }
+
+  reports.forEach(r => {
     const firmKey = String(r.firmKey || "").trim();
-    const firmLabel = firmKey ? firmDisplayByKey(firmKey) : "—";
+    const firmLabel = firmKey ? firmDisplayByKey(firmKey) : "";
     const allowRoles = csvToArr(r.allowRolesCsv);
     const allowUsers = csvToArr(r.allowUsersCsv);
+
+    const id = String(r.id || r.name || "");
+    const fav = isFav(id);
 
     const card = document.createElement("div");
     card.className = "report";
@@ -629,14 +843,32 @@ function renderReports() {
 
     const meta = document.createElement("div");
     meta.className = "meta";
-    meta.appendChild(badge("Kategori", String(r.cat || "Genel")));
-    if (firmKey) meta.appendChild(badge("Firma", firmLabel));
-    if (allowRoles.length) meta.appendChild(badge("Roles", allowRoles.join(", ")));
-    if (allowUsers.length) meta.appendChild(badge("Users", allowUsers.join(", ")));
+    meta.appendChild(spanBadge("Kategori", String(r.cat || "Genel")));
+    if (firmKey) meta.appendChild(spanBadge("Firma", firmLabel));
+    if (allowRoles.length) meta.appendChild(spanBadge("Roles", allowRoles.join(", ")));
+    if (allowUsers.length) meta.appendChild(spanBadge("Users", allowUsers.join(", ")));
+    if (!String(r.url||"").trim()) meta.appendChild(badgeState("URL boş", "bad"));
     left.appendChild(meta);
 
     const right = document.createElement("div");
     right.className = "right-actions";
+
+    const btnFav = document.createElement("button");
+    btnFav.className = "btn small ghost";
+    btnFav.title = "Favori";
+    btnFav.innerHTML = `<span class="icon">${fav ? "★" : "☆"}</span>`;
+    btnFav.onclick = () => toggleFav(id);
+
+    const btnCopy = document.createElement("button");
+    btnCopy.className = "btn small ghost";
+    btnCopy.title = "Link kopyala";
+    btnCopy.innerHTML = `<span class="icon">⧉</span>`;
+    btnCopy.onclick = async () => {
+      const url = String(r.url||"").trim();
+      if (!url) return toast("warn","URL boş.");
+      try { await navigator.clipboard.writeText(url); toast("good","Link kopyalandı."); }
+      catch(_) { toast("warn","Kopyalanamadı (tarayıcı izni)."); }
+    };
 
     const btnOpen = document.createElement("button");
     btnOpen.className = "btn small primary";
@@ -647,6 +879,8 @@ function renderReports() {
       window.open(url, "_blank", "noopener,noreferrer");
     };
 
+    right.appendChild(btnFav);
+    right.appendChild(btnCopy);
     right.appendChild(btnOpen);
 
     card.appendChild(left);
@@ -655,56 +889,37 @@ function renderReports() {
   });
 }
 
-function badge(k,v){
-  const s = document.createElement("span");
-  s.className = "badge";
-  s.textContent = `${k}: ${v}`;
-  return s;
-}
-
-function csvToArr(csv){
-  return String(csv||"").split(",").map(x=>x.trim()).filter(Boolean);
-}
-
-function firmDisplayByKey(firmKey){
-  const firms = DB?.firms || [];
-  const f = firms.find(x => String(x.firmKey||"").trim() === firmKey);
-  return f ? (String(f.display||"").trim() || firmKey) : firmKey;
-}
-
+/** =========================
+ *  VISIBILITY RULES
+ *  ========================= */
 function canSeeReport(r) {
   const mode = session?.mode;
   const u = session?.user || {};
 
-  // Admin sees all
   if (mode === "ADMIN") return true;
-
-  // Active check
   if (String(r.active).toLowerCase() === "false") return false;
 
   const firmKey = String(r.firmKey || "").trim();
 
-  // Normal user firm filter: if report has firmKey, must match
   if (mode === "PORTAL") {
     const myFirm = String(u.firmKey || "").trim();
     if (firmKey && myFirm && firmKey !== myFirm) return false;
     if (firmKey && !myFirm) return false;
   }
 
-  // Key user: firmKey if set -> allow all firms (no firm selection) OR you can enforce firmKey? We'll not enforce.
-  // Role/user allow lists
+  if (mode === "KEY") {
+    const viewFirm = localStorage.getItem(LS.keyFirmView) || "";
+    if (viewFirm && firmKey && firmKey !== viewFirm) return false;
+  }
+
   const allowRoles = csvToArr(r.allowRolesCsv);
   const allowUsers = csvToArr(r.allowUsersCsv).map(x=>x.toLowerCase());
 
-  // If both empty => public for that mode/firm
   if (!allowRoles.length && !allowUsers.length) return true;
 
   const uname = String(u.username || "").toLowerCase();
-
-  // allowUsers has priority
   if (allowUsers.includes(uname)) return true;
 
-  // roles
   const myRoles = (u.roles || []);
   return allowRoles.some(rr => myRoles.includes(rr));
 }
@@ -717,12 +932,10 @@ function openAdmin() {
   document.getElementById("cardAdmin").classList.remove("hidden");
   renderAdminTabs();
   renderAdminTable();
+  refreshBackupInfo();
   toast("good","Admin panel açıldı.");
 }
-
-function closeAdmin() {
-  document.getElementById("cardAdmin").classList.add("hidden");
-}
+function closeAdmin() { document.getElementById("cardAdmin").classList.add("hidden"); }
 
 function renderAdminTabs() {
   const tabs = document.getElementById("adminTabs");
@@ -739,13 +952,21 @@ function renderAdminTabs() {
     tabs.appendChild(el);
   });
 }
-
 function getTabKeyToDBKey(tab){
   if (tab === "FirmAccessRoles") return "firmAccessRoles";
   if (tab === "KeyUsers") return "keyUsers";
-  return tab.toLowerCase(); // Firms->firms, Reports->reports
+  return tab.toLowerCase();
 }
-
+function inferColumns(tab) {
+  if (tab === "Firms") return ["firmKey","display","active"];
+  if (tab === "Aliases") return ["alias","firmKey"];
+  if (tab === "Roles") return ["roleKey","desc","active"];
+  if (tab === "Users") return ["username","passHash","display","email","rolesCsv","active"];
+  if (tab === "KeyUsers") return ["username","passHash","display","email","active"];
+  if (tab === "FirmAccessRoles") return ["firmKey","requiredRolesCsv"];
+  if (tab === "Reports") return ["id","firmKey","cat","name","url","desc","allowRolesCsv","allowUsersCsv","active"];
+  return [];
+}
 function renderAdminTable() {
   const area = document.getElementById("adminArea");
   area.innerHTML = "";
@@ -756,12 +977,13 @@ function renderAdminTable() {
 
   const info = document.createElement("div");
   info.className = "smallnote";
-  info.innerHTML = `<b>Tab:</b> <span class="mono">${adminActiveTab}</span> · <b>Row:</b> ${rows.length}`;
+  info.innerHTML = `<b>Tab:</b> <span class="mono">${escapeHtml(adminActiveTab)}</span> · <b>Row:</b> ${rows.length}`;
   area.appendChild(info);
 
   const tools = document.createElement("div");
   tools.className = "right-actions";
   tools.style.margin = "10px 0 8px";
+
   const addBtn = document.createElement("button");
   addBtn.className = "btn small success";
   addBtn.textContent = "Satır Ekle";
@@ -772,10 +994,12 @@ function renderAdminTable() {
     DB[dbKey] = (DB[dbKey] || []).concat([blank]);
     renderAdminTable();
   };
+
   const delBtn = document.createElement("button");
   delBtn.className = "btn small danger";
   delBtn.textContent = "Seçili Satırları Sil";
   delBtn.onclick = () => deleteSelectedRows();
+
   tools.appendChild(addBtn);
   tools.appendChild(delBtn);
   area.appendChild(tools);
@@ -784,7 +1008,6 @@ function renderAdminTable() {
   const thead = document.createElement("thead");
   const trh = document.createElement("tr");
 
-  // select column
   const thSel = document.createElement("th");
   thSel.style.width = "34px";
   thSel.innerHTML = `<input type="checkbox" id="selAll" />`;
@@ -795,11 +1018,11 @@ function renderAdminTable() {
     th.textContent = c;
     trh.appendChild(th);
   });
+
   thead.appendChild(trh);
   table.appendChild(thead);
 
   const tbody = document.createElement("tbody");
-
   rows.forEach((r, idx) => {
     const tr = document.createElement("tr");
     tr.dataset.idx = idx;
@@ -814,9 +1037,7 @@ function renderAdminTable() {
       inp.className = "input";
       if (inp.tagName.toLowerCase() === "textarea") inp.style.minHeight = "42px";
       inp.value = (r && r[c] !== undefined) ? String(r[c]) : "";
-      inp.oninput = (e) => {
-        DB[dbKey][idx][c] = e.target.value;
-      };
+      inp.oninput = (e) => { DB[dbKey][idx][c] = e.target.value; };
       td.appendChild(inp);
       tr.appendChild(td);
     });
@@ -827,7 +1048,6 @@ function renderAdminTable() {
   table.appendChild(tbody);
   area.appendChild(table);
 
-  // hook select all
   setTimeout(() => {
     const selAll = document.getElementById("selAll");
     if (selAll) {
@@ -837,19 +1057,6 @@ function renderAdminTable() {
     }
   }, 0);
 }
-
-function inferColumns(tab) {
-  // match Apps Script writeTable_ columns (same order recommended)
-  if (tab === "Firms") return ["firmKey","display","active"];
-  if (tab === "Aliases") return ["alias","firmKey"];
-  if (tab === "Roles") return ["roleKey","desc","active"];
-  if (tab === "Users") return ["username","passHash","display","email","rolesCsv","active"];
-  if (tab === "KeyUsers") return ["username","passHash","display","email","active"];
-  if (tab === "FirmAccessRoles") return ["firmKey","requiredRolesCsv"];
-  if (tab === "Reports") return ["id","firmKey","cat","name","url","desc","allowRolesCsv","allowUsersCsv","active"];
-  return [];
-}
-
 function deleteSelectedRows() {
   const dbKey = getTabKeyToDBKey(adminActiveTab);
   const rows = DB?.[dbKey] || [];
@@ -858,20 +1065,211 @@ function deleteSelectedRows() {
     .map(cb => Number(cb.dataset.idx))
     .sort((a,b)=>b-a);
   if (!selected.length) return toast("warn","Seçili satır yok");
-
   selected.forEach(i => rows.splice(i,1));
   DB[dbKey] = rows;
   toast("good","Silindi: " + selected.length);
   renderAdminTable();
 }
 
+/** =========================
+ *  NEW: LOCAL BACKUP / RESTORE / SEED
+ *  ========================= */
+function sanitizeDB(db) {
+  const out = {};
+  ["firms","aliases","roles","users","keyUsers","firmAccessRoles","reports"].forEach(k => out[k] = Array.isArray(db?.[k]) ? db[k] : []);
+  return out;
+}
+function refreshBackupInfo() {
+  const metaRaw = localStorage.getItem(LS.backupMeta);
+  let msg = "Local backup: yok";
+  if (metaRaw) {
+    try {
+      const meta = JSON.parse(metaRaw);
+      msg = `Local backup: ${meta.at} · rows: firms=${meta.counts?.firms||0}, users=${meta.counts?.users||0}, keyUsers=${meta.counts?.keyUsers||0}, reports=${meta.counts?.reports||0}`;
+    } catch(_) {}
+  }
+  const el = document.getElementById("backupInfo");
+  if (el) el.textContent = msg;
+}
+function adminBackupLocal() {
+  if (session?.mode !== "ADMIN") return toast("bad","Admin gerekli");
+  if (!DB) return toast("warn","DB yok. Önce Yenile / getDB.");
+
+  const snap = sanitizeDB(DB);
+  const counts = {
+    firms: snap.firms.length,
+    users: snap.users.length,
+    keyUsers: snap.keyUsers.length,
+    reports: snap.reports.length
+  };
+  localStorage.setItem(LS.backup, JSON.stringify(snap));
+  localStorage.setItem(LS.backupMeta, JSON.stringify({ at: new Date().toISOString(), counts }));
+  toast("good","Local backup alındı.");
+  refreshBackupInfo();
+}
+function adminRestoreLocal() {
+  if (session?.mode !== "ADMIN") return toast("bad","Admin gerekli");
+  const raw = localStorage.getItem(LS.backup);
+  if (!raw) return toast("warn","Local backup yok.");
+
+  const ok = confirm("Local yedeği geri yüklemek DB'yi (UI tarafında) değiştirecek. Devam?");
+  if (!ok) return;
+
+  try {
+    const snap = JSON.parse(raw);
+    DB = sanitizeDB(snap);
+    toast("good","Local backup geri yüklendi. (Kaydet(saveDB) ile server’a basabilirsin.)");
+    renderAdminTable();
+    renderMain();
+  } catch(e) {
+    toast("bad","Backup parse hata: " + e.message);
+  }
+}
+
+/** Seed template (şifreler plaintext; seed sırasında SHA-256 hash yapılır) */
+function seedTemplatePlain() {
+  return {
+    firms: [
+      { firmKey:"PSD", display:"Poseidon (Internal)", active:"true" },
+      { firmKey:"SUD", display:"Sudesan", active:"true" },
+      { firmKey:"ELI", display:"Elida", active:"true" },
+      { firmKey:"DEGA", display:"DE-GA", active:"true" }
+    ],
+    aliases: [
+      { alias:"Poseidon", firmKey:"PSD" },
+      { alias:"Sudesan", firmKey:"SUD" },
+      { alias:"Elida", firmKey:"ELI" },
+      { alias:"DE-GA", firmKey:"DEGA" },
+      { alias:"DEGA", firmKey:"DEGA" }
+    ],
+    roles: [
+      { roleKey:"VIEWER", desc:"Read-only access", active:"true" },
+      { roleKey:"PLANNER", desc:"Planning / inventory", active:"true" },
+      { roleKey:"MANAGER", desc:"Management dashboards", active:"true" },
+      { roleKey:"FIN", desc:"Finance reports", active:"true" }
+    ],
+    users_plain: [
+      // username, password(plain), display, email, rolesCsv, active
+      { username:"admin",  password:"admin123", display:"Admin", email:"", rolesCsv:"MANAGER", active:"true" },
+      { username:"poseidon", password:"psd123", display:"Poseidon", email:"", rolesCsv:"MANAGER,PLANNER,FIN", active:"true" },
+
+      { username:"sud_user", password:"sud123", display:"Sudesan User", email:"", rolesCsv:"VIEWER,PLANNER", active:"true", firmKey:"SUD" },
+      { username:"eli_user", password:"eli123", display:"Elida User",   email:"", rolesCsv:"VIEWER,MANAGER", active:"true", firmKey:"ELI" }
+    ],
+    keyUsers_plain: [
+      { username:"keyuser", password:"key123", display:"Key User", email:"", active:"true" }
+    ],
+    firmAccessRoles: [
+      { firmKey:"SUD", requiredRolesCsv:"VIEWER,PLANNER,MANAGER,FIN" },
+      { firmKey:"ELI", requiredRolesCsv:"VIEWER,MANAGER,FIN" },
+      { firmKey:"DEGA", requiredRolesCsv:"VIEWER,PLANNER" }
+    ],
+    reports: [
+      { id:"R-SUD-001", firmKey:"SUD", cat:"KPI", name:"Sudesan KPI Dashboard", url:"https://lookerstudio.google.com/", desc:"KPI overview", allowRolesCsv:"VIEWER,MANAGER", allowUsersCsv:"", active:"true" },
+      { id:"R-SUD-002", firmKey:"SUD", cat:"Planlama", name:"S&OP Pack", url:"https://docs.google.com/", desc:"S&OP materials", allowRolesCsv:"PLANNER,MANAGER", allowUsersCsv:"", active:"true" },
+      { id:"R-ELI-001", firmKey:"ELI", cat:"KPI", name:"Elida Executive Pack", url:"https://lookerstudio.google.com/", desc:"Executive deck & dashboards", allowRolesCsv:"MANAGER,FIN", allowUsersCsv:"", active:"true" },
+      { id:"R-GEN-001", firmKey:"",    cat:"Genel", name:"Portal Kullanım Rehberi", url:"https://github.com/psd-poseidon/PSD-Portal", desc:"Readme / How-to", allowRolesCsv:"", allowUsersCsv:"", active:"true" }
+    ]
+  };
+}
+
+async function adminSeedDefaults() {
+  if (session?.mode !== "ADMIN") return toast("bad","Admin gerekli");
+
+  const ok = confirm(
+    "SEED çalıştırılacak.\n\n" +
+    "1) Önce mevcut DB local yedek alınacak\n" +
+    "2) DB varsayılan kayıtlarla değiştirilecek (UI)\n" +
+    "3) İstersen Kaydet(saveDB) ile server’a basarsın.\n\n" +
+    "Devam?"
+  );
+  if (!ok) return;
+
+  // Always backup current DB first (if any)
+  if (DB) adminBackupLocal();
+
+  const tpl = seedTemplatePlain();
+  toast("warn","Seed hazırlanıyor (şifre hash)...");
+  const seeded = await buildSeedDBWithHashes(tpl);
+
+  DB = sanitizeDB(seeded);
+  adminActiveTab = "Firms";
+  renderAdminTabs();
+  renderAdminTable();
+  renderMain();
+  refreshBackupInfo();
+  toast("good","Seed DB UI’ya yüklendi. Kaydet(saveDB) ile server’a basabilirsin.");
+}
+
+/** Build seeded DB: users/keyUsers plaintext -> passHash */
+async function buildSeedDBWithHashes(tpl) {
+  const users = [];
+  for (const u of (tpl.users_plain || [])) {
+    const passHash = await sha256Hex(u.password || "");
+    users.push({
+      username: String(u.username||"").trim(),
+      passHash,
+      display: u.display || "",
+      email: u.email || "",
+      rolesCsv: u.rolesCsv || "",
+      active: u.active ?? "true"
+    });
+  }
+
+  const keyUsers = [];
+  for (const ku of (tpl.keyUsers_plain || [])) {
+    const passHash = await sha256Hex(ku.password || "");
+    keyUsers.push({
+      username: String(ku.username||"").trim(),
+      passHash,
+      display: ku.display || "",
+      email: ku.email || "",
+      active: ku.active ?? "true"
+    });
+  }
+
+  // NOTE: firmKey user association, API tarafında users tablosunda firmKey yoksa,
+  // login "firmName" ile firm map yapıyorsun. Eğer API "users" içinde firmKey bekliyorsa,
+  // buraya da eklersin. Şimdilik seed ile "firmKey" kullanmıyoruz; alias + login firmName üzerinden yürür.
+  // Eğer istersen Users tablosuna firmKey kolonu ekleyip burayı da yazabiliriz.
+
+  return {
+    firms: tpl.firms || [],
+    aliases: tpl.aliases || [],
+    roles: tpl.roles || [],
+    users,
+    keyUsers,
+    firmAccessRoles: tpl.firmAccessRoles || [],
+    reports: tpl.reports || []
+  };
+}
+
+/** WebCrypto SHA-256 hex */
+async function sha256Hex(str) {
+  const enc = new TextEncoder();
+  const data = enc.encode(str);
+  if (crypto?.subtle?.digest) {
+    const buf = await crypto.subtle.digest("SHA-256", data);
+    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,"0")).join("");
+  }
+  // Fallback: NOT cryptographically strong, but should not happen in modern browsers
+  let h = 0;
+  for (let i=0;i<str.length;i++) h = (h<<5)-h + str.charCodeAt(i) | 0;
+  return String(h >>> 0).padStart(64,"0");
+}
+
+/** =========================
+ *  SAVE ADMIN
+ *  ========================= */
 async function saveAdmin() {
   if (session?.mode !== "ADMIN") return toast("bad","Admin gerekli");
   if (!DB) return toast("bad","DB yok");
 
-  // basic sanitize: ensure all keys exist
-  const payloadDB = {};
-  DB_KEYS.forEach(k => payloadDB[k] = Array.isArray(DB[k]) ? DB[k] : []);
+  // Auto backup BEFORE saving (safety net)
+  adminBackupLocal();
+
+  const payloadDB = sanitizeDB(DB);
+
   try {
     const res = await apiCall({ action:"saveDB", token: session.token, db: payloadDB });
     if (!res.ok) return toast("bad", res.error || "saveDB failed");
@@ -893,6 +1291,95 @@ function exportJSON() {
 }
 
 /** =========================
+ *  DATA HEALTH (ADMIN)
+ *  ========================= */
+function renderHealth(silent=false) {
+  if (session?.mode !== "ADMIN") return;
+  if (!DB) return;
+
+  const firms = DB.firms || [];
+  const firmKeys = new Set(firms.map(f => String(f.firmKey||"").trim()).filter(Boolean));
+  const reports = DB.reports || [];
+
+  const issues = [];
+  const warn = [];
+
+  reports.forEach((r, i) => {
+    const name = String(r.name||`(row ${i})`);
+    const id = String(r.id||"");
+    const firmKey = String(r.firmKey||"").trim();
+    const url = String(r.url||"").trim();
+
+    if (!id) issues.push(`Reports: <span class="dangerText">${escapeHtml(name)}</span> → <b>id boş</b>`);
+    if (!url) issues.push(`Reports: <span class="dangerText">${escapeHtml(name)}</span> → <b>url boş</b>`);
+    if (firmKey && !firmKeys.has(firmKey)) issues.push(`Reports: <span class="dangerText">${escapeHtml(name)}</span> → firmKey bulunamadı: <span class="mono">${escapeHtml(firmKey)}</span>`);
+    if (!String(r.cat||"").trim()) warn.push(`Reports: ${escapeHtml(name)} → cat boş (Genel'e düşer)`);
+  });
+
+  (DB.users||[]).forEach(u => {
+    const un = String(u.username||"");
+    const ph = String(u.passHash||"");
+    if (!un) issues.push(`Users: <b>username boş</b>`);
+    if (!ph) warn.push(`Users: ${escapeHtml(un||"(?)")} → passHash boş`);
+  });
+
+  const box = document.getElementById("healthBox");
+  const html = [];
+  html.push(`<div><b>Issues:</b> ${issues.length} · <b>Warnings:</b> ${warn.length}</div>`);
+  html.push(`<div class="hr" style="margin:10px 0"></div>`);
+  if (!issues.length && !warn.length) {
+    html.push(`<div class="goodText"><b>OK</b> — kritik problem görünmüyor.</div>`);
+  } else {
+    if (issues.length) {
+      html.push(`<div><b class="dangerText">Kritik</b></div>`);
+      html.push(`<ul style="margin:6px 0 0 18px;padding:0">` + issues.slice(0,12).map(x=>`<li>${x}</li>`).join("") + `</ul>`);
+      if (issues.length > 12) html.push(`<div class="muted">+${issues.length-12} daha…</div>`);
+      html.push(`<div class="hr" style="margin:10px 0"></div>`);
+    }
+    if (warn.length) {
+      html.push(`<div><b>Uyarı</b></div>`);
+      html.push(`<ul style="margin:6px 0 0 18px;padding:0">` + warn.slice(0,12).map(x=>`<li>${x}</li>`).join("") + `</ul>`);
+      if (warn.length > 12) html.push(`<div class="muted">+${warn.length-12} daha…</div>`);
+    }
+  }
+  box.innerHTML = html.join("");
+
+  if (!silent) toast("good","Data Health tarandı.");
+}
+
+/** =========================
+ *  HELPERS
+ *  ========================= */
+function csvToArr(csv){
+  return String(csv||"").split(",").map(x=>x.trim()).filter(Boolean);
+}
+function firmDisplayByKey(firmKey){
+  const firms = DB?.firms || [];
+  const f = firms.find(x => String(x.firmKey||"").trim() === String(firmKey||"").trim());
+  return f ? (String(f.display||"").trim() || firmKey) : firmKey;
+}
+function spanBadge(k,v){
+  const s = document.createElement("span");
+  s.className = "badge";
+  s.textContent = `${k}: ${v}`;
+  return s;
+}
+function badgeState(text, kind){
+  const s = document.createElement("span");
+  s.className = "badge " + (kind || "");
+  s.textContent = text;
+  return s;
+}
+function escapeHtml(s){
+  return String(s||"")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+/** =========================
  *  TOAST
  *  ========================= */
 function toast(level, msg) {
@@ -906,8 +1393,7 @@ function toast(level, msg) {
   toast._timer = setTimeout(hideToast, 4200);
 }
 function hideToast() {
-  const t = document.getElementById("toast");
-  t.classList.add("hidden");
+  document.getElementById("toast").classList.add("hidden");
 }
 </script>
 </body>

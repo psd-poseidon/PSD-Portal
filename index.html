@@ -6,142 +6,90 @@
   <title>PSD Portal</title>
   <style>
     :root{
-      --bg:#0b1020; --card:#0f1730; --muted:#9aa7c7; --txt:#e9efff;
-      --line:rgba(255,255,255,.10); --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --bg:#0b1020; --card:#101a35; --txt:#eaf0ff; --muted:#9fb0d6; --line:rgba(255,255,255,.12);
+      --accent:#3b82f6; --accentSoft:rgba(59,130,246,.16); --shadow:0 12px 30px rgba(0,0,0,.35);
       --r:18px;
-      --accent:#3b82f6;
-      --accent2:#22c55e;
-      --accentSoft: rgba(59,130,246,.14);
-      --accentLine: rgba(147,197,253,.55);
-      --good:#42d392; --bad:#ff5a6b; --warn:#ffcc00;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: ui-sans-serif, -apple-system, system-ui, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
     }
     *{box-sizing:border-box}
     body{
-      margin:0;font-family:var(--sans);color:var(--txt);
+      margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--txt);
       background:
-        radial-gradient(1200px 800px at 20% 10%, rgba(59,130,246,.25), transparent 60%),
+        radial-gradient(1100px 800px at 20% 10%, rgba(59,130,246,.25), transparent 60%),
         radial-gradient(900px 700px at 90% 30%, rgba(34,197,94,.18), transparent 55%),
-        radial-gradient(900px 700px at 40% 110%, rgba(245,158,11,.18), transparent 55%),
         var(--bg);
     }
-    a{color:#93c5fd;text-decoration:none}
-    a:hover{text-decoration:underline}
-    .wrap{max-width:1300px;margin:0 auto;padding:18px}
-    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap}
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{
-      width:42px;height:42px;border-radius:14px;
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
-      box-shadow:var(--shadow)
-    }
-    .title{display:flex;flex-direction:column;line-height:1.1}
-    .title b{font-size:16px}
-    .title span{font-size:12px;color:var(--muted)}
-    .pill{padding:6px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:12px}
+    .wrap{max-width:1300px;margin:0 auto;padding:16px}
+    .topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}
+    .brand{display:flex;gap:10px;align-items:center}
+    .logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--accent),#22c55e);box-shadow:var(--shadow)}
+    .title b{display:block;font-size:16px}
+    .title span{display:block;font-size:12px;color:var(--muted)}
+    .pill{padding:6px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted);font-size:12px}
+    .card{background:rgba(16,26,53,.85);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+    .hd{padding:14px 14px 0 14px;display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+    .hd h2{margin:0;font-size:15px}
+    .hd p{margin:6px 0 0 0;font-size:12px;color:var(--muted)}
+    .bd{padding:14px}
     .row{display:flex;gap:14px;flex-wrap:wrap}
-    .card{
-      background:rgba(15,23,48,.82);
-      backdrop-filter: blur(6px);
-      border:1px solid var(--line);
-      border-radius:var(--r);
-      box-shadow:var(--shadow)
-    }
-    .card .hd{padding:14px 14px 0 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-    .card .hd h2{margin:0;font-size:15px}
-    .card .hd p{margin:6px 0 0 0;color:var(--muted);font-size:12px}
-    .card .bd{padding:14px}
     .grid{display:grid;gap:12px}
-    .grid-2{grid-template-columns:repeat(2, minmax(0,1fr))}
-    .grid-3{grid-template-columns:repeat(3, minmax(0,1fr))}
-    @media(max-width:980px){ .grid-2,.grid-3{grid-template-columns:1fr} }
-    .input, select, textarea{
-      width:100%; padding:10px 11px; border-radius:12px; border:1px solid var(--line);
-      background:rgba(8,12,25,.78); color:var(--txt); outline:none;
+    .g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    @media(max-width:980px){.g2,.g3{grid-template-columns:1fr}}
+    label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+    input,select,textarea{
+      width:100%;padding:10px 11px;border-radius:12px;border:1px solid var(--line);
+      background:rgba(6,10,22,.72);color:var(--txt);outline:none;
     }
-    textarea{min-height:90px; resize:vertical}
-    .input:focus, select:focus, textarea:focus{border-color:var(--accentLine); box-shadow:0 0 0 4px rgba(59,130,246,.15)}
-    label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
+    input:focus,select:focus,textarea:focus{border-color:rgba(147,197,253,.6);box-shadow:0 0 0 4px rgba(59,130,246,.18)}
+    textarea{min-height:90px;resize:vertical}
     .btn{
-      display:inline-flex;align-items:center;justify-content:center; gap:8px;
-      padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);
-      background:transparent; color:var(--txt); cursor:pointer; user-select:none;
+      display:inline-flex;gap:8px;align-items:center;justify-content:center;
+      padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.14);
+      background:transparent;color:var(--txt);cursor:pointer;user-select:none;
     }
     .btn:hover{filter:brightness(1.06)}
     .btn:active{transform:translateY(1px)}
-    .btn.primary{background:var(--accentSoft); border-color:rgba(59,130,246,.45)}
-    .btn.success{background:rgba(34,197,94,.16); border-color:rgba(34,197,94,.45)}
-    .btn.warn{background:rgba(245,158,11,.16); border-color:rgba(245,158,11,.45)}
-    .btn.danger{background:rgba(239,68,68,.16); border-color:rgba(239,68,68,.45)}
-    .btn.small{padding:7px 9px;border-radius:10px;font-size:12px}
-    .muted{color:var(--muted)}
-    .mono{font-family:var(--mono)}
-    .hr{height:1px;background:var(--line);margin:12px 0}
-    .status{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
-    .dot{width:10px;height:10px;border-radius:50%}
-    .dot.good{background:var(--good)}
-    .dot.bad{background:var(--bad)}
-    .dot.warn{background:var(--warn)}
+    .primary{background:var(--accentSoft);border-color:rgba(59,130,246,.45)}
+    .success{background:rgba(34,197,94,.16);border-color:rgba(34,197,94,.45)}
+    .danger{background:rgba(239,68,68,.16);border-color:rgba(239,68,68,.45)}
+    .warn{background:rgba(245,158,11,.16);border-color:rgba(245,158,11,.45)}
+    .small{padding:7px 10px;border-radius:10px;font-size:12px}
     .hidden{display:none !important}
-    .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
-    .tab{
-      padding:8px 10px;border-radius:999px;border:1px solid var(--line);
-      cursor:pointer;font-size:12px;color:var(--muted);display:inline-flex;gap:8px;align-items:center
+    .hr{height:1px;background:var(--line);margin:12px 0}
+    .modes{display:grid;gap:10px;grid-template-columns:repeat(3,minmax(0,1fr))}
+    @media(max-width:980px){.modes{grid-template-columns:1fr}}
+    .mode{
+      padding:12px;border-radius:16px;border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(6,10,22,.68), rgba(6,10,22,.40));
+      cursor:pointer;
     }
-    .tab.active{color:var(--txt); border-color:var(--accentLine); background:var(--accentSoft)}
-    .badge{padding:4px 8px;border-radius:999px;border:1px solid var(--line);font-size:11px;color:var(--muted)}
-    .badge.good{border-color:rgba(34,197,94,.5); color:#bdf7d6}
-    .badge.bad{border-color:rgba(239,68,68,.5); color:#ffd0d6}
-    .badge.warn{border-color:rgba(245,158,11,.55); color:#ffe7b3}
-    .toast{
-      position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
-      background:rgba(10,14,28,.92); border:1px solid var(--line); border-radius:16px;
-      padding:10px 12px; box-shadow:var(--shadow);
-      display:flex; align-items:center; gap:10px;
-      max-width:min(900px, calc(100% - 24px));
-      z-index:50;
+    .mode.active{border-color:rgba(147,197,253,.6);background:linear-gradient(180deg, rgba(59,130,246,.20), rgba(6,10,22,.40))}
+    .mode b{display:block}
+    .mode span{font-size:12px;color:var(--muted)}
+    .badge{padding:4px 10px;border-radius:999px;border:1px solid var(--line);font-size:12px;color:var(--muted)}
+    .right{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .chipRow{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{padding:8px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(6,10,22,.45);color:var(--muted);cursor:pointer;font-size:12px}
+    .chip.active{background:var(--accentSoft);border-color:rgba(147,197,253,.6);color:var(--txt)}
+    .report{
+      border:1px solid var(--line);border-radius:16px;padding:12px;
+      background:linear-gradient(180deg, rgba(6,10,22,.64), rgba(6,10,22,.35));
+      display:flex;justify-content:space-between;gap:10px;align-items:flex-start
     }
-    .toast .msg{font-size:13px}
-    .toast .x{margin-left:auto}
-    .loginModes{display:grid;gap:10px;grid-template-columns:repeat(3,minmax(0,1fr))}
-    @media(max-width:980px){ .loginModes{grid-template-columns:1fr} }
-    .modeCard{
-      padding:12px;border:1px solid var(--line);border-radius:16px;
-      background:linear-gradient(180deg, rgba(8,12,25,.62), rgba(8,12,25,.42));
-      cursor:pointer; user-select:none;
-    }
-    .modeCard.active{
-      border-color:var(--accentLine);
-      background:linear-gradient(180deg, rgba(59,130,246,.18), rgba(8,12,25,.42));
-    }
-    .modeCard b{display:block}
-    .modeCard span{font-size:12px;color:var(--muted)}
+    .report b{display:block}
+    .meta{font-size:12px;color:var(--muted);margin-top:4px}
     table{width:100%;border-collapse:collapse}
     th,td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;font-size:12px;vertical-align:top}
     th{color:var(--muted);font-weight:600}
-    .right-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-    .hint{font-size:12px;color:var(--muted);line-height:1.45}
-    .mini{font-size:11px;color:var(--muted)}
-    .chipRow{display:flex;gap:8px;flex-wrap:wrap}
-    .chip{
-      padding:8px 10px;border-radius:999px;border:1px solid var(--line);
-      cursor:pointer;font-size:12px;color:var(--muted);
-      background:rgba(8,12,25,.42);
+    .console{
+      position:fixed;left:12px;right:12px;bottom:12px;z-index:99;
+      border-radius:16px;border:1px solid var(--line);background:rgba(6,10,22,.92);
+      box-shadow:var(--shadow);overflow:hidden
     }
-    .chip.active{color:var(--txt); border-color:var(--accentLine); background:var(--accentSoft)}
-    .reportCard{
-      border:1px solid var(--line); border-radius:16px; padding:12px;
-      background:linear-gradient(180deg, rgba(8,12,25,.62), rgba(8,12,25,.38));
-      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
-    }
-    .reportCard b{display:block}
-    .reportCard .meta{font-size:12px;color:var(--muted);margin-top:4px}
-    .themePick{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
-    .swatch{
-      width:22px;height:22px;border-radius:8px;border:1px solid var(--line);cursor:pointer;
-      box-shadow:0 6px 18px rgba(0,0,0,.25);
-    }
+    .console .chd{display:flex;align-items:center;justify-content:space-between;padding:10px 12px}
+    .console pre{margin:0;padding:10px 12px;max-height:180px;overflow:auto;font-size:11px;color:#dbe7ff}
+    .swatches{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .sw{width:22px;height:22px;border-radius:8px;border:1px solid var(--line);cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.25)}
   </style>
 </head>
 
@@ -152,55 +100,27 @@
       <div class="logo"></div>
       <div class="title">
         <b>PSD Portal</b>
-        <span>Normal · Super User · Admin | Firma + Rol bazlı rapor yetkisi</span>
+        <span>Normal · Super User · Admin | Firma + Rol bazlı rapor erişimi</span>
       </div>
     </div>
 
     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
-      <div class="themePick">
+      <div class="swatches">
         <span class="pill">Tema</span>
-        <div class="swatch" style="background:#3b82f6" onclick="setTheme('#3b82f6')"></div>
-        <div class="swatch" style="background:#22c55e" onclick="setTheme('#22c55e')"></div>
-        <div class="swatch" style="background:#f59e0b" onclick="setTheme('#f59e0b')"></div>
-        <div class="swatch" style="background:#a855f7" onclick="setTheme('#a855f7')"></div>
-        <div class="swatch" style="background:#ef4444" onclick="setTheme('#ef4444')"></div>
+        <div class="sw" style="background:#3b82f6" onclick="setTheme('#3b82f6')"></div>
+        <div class="sw" style="background:#22c55e" onclick="setTheme('#22c55e')"></div>
+        <div class="sw" style="background:#f59e0b" onclick="setTheme('#f59e0b')"></div>
+        <div class="sw" style="background:#a855f7" onclick="setTheme('#a855f7')"></div>
+        <div class="sw" style="background:#ef4444" onclick="setTheme('#ef4444')"></div>
       </div>
 
-      <span id="statusPill" class="pill">DB: kontrol ediliyor…</span>
-      <button class="btn small" id="btnLogout" onclick="logout()" style="display:none;">Çıkış</button>
-    </div>
-  </div>
-
-  <!-- CONFIG -->
-  <div class="card" id="cardConfig">
-    <div class="hd">
-      <div>
-        <h2>Kurulum (Opsiyonel)</h2>
-        <p>Apps Script Web App URL girersen DB orada tutulur. Girmezsen LocalStorage kullanılır.</p>
-      </div>
-      <div class="status">
-        <div id="apiDot" class="dot warn"></div>
-        <span id="apiText">API yok (LocalStorage)</span>
-      </div>
-    </div>
-    <div class="bd grid grid-2">
-      <div>
-        <label>API URL (Apps Script Web App)</label>
-        <input class="input mono" id="apiUrl" placeholder="https://script.google.com/macros/s/.../exec" />
-        <div class="hint" style="margin-top:8px">
-          Not: API yoksa veri tarayıcıda saklanır → farklı cihaz/profil/origin’de “silinmiş” gibi görünebilir.
-        </div>
-      </div>
-      <div class="right-actions" style="align-items:end">
-        <button class="btn primary" onclick="saveConfig()">Kaydet</button>
-        <button class="btn warn" onclick="testApi()">API Test</button>
-        <button class="btn" onclick="resetLocal()">Local DB sıfırla (Dikkat)</button>
-      </div>
+      <span class="pill" id="dbPill">DB: —</span>
+      <button class="btn small" id="logoutBtn" onclick="logout()" style="display:none;">Çıkış</button>
     </div>
   </div>
 
   <!-- LOGIN -->
-  <div class="row" id="rowLogin" style="margin-top:14px">
+  <div class="row" id="loginRow">
     <div class="card" style="flex:1.2;min-width:340px">
       <div class="hd">
         <div>
@@ -209,50 +129,43 @@
         </div>
         <span class="badge" id="modeBadge">NORMAL</span>
       </div>
-
       <div class="bd grid" style="gap:12px">
-        <div class="loginModes">
-          <div class="modeCard active" id="mode_NORMAL" onclick="setLoginMode('NORMAL')">
-            <b>Normal Kullanıcı</b>
-            <span>Firma zorunlu · Firma + rol bazlı rapor</span>
+        <div class="modes">
+          <div class="mode active" id="m_NORMAL" onclick="setMode('NORMAL')">
+            <b>Normal Kullanıcı</b><span>Firma zorunlu · Firma + rol bazlı rapor</span>
           </div>
-          <div class="modeCard" id="mode_SUPER" onclick="setLoginMode('SUPER')">
-            <b>Super User</b>
-            <span>Firma bağımsız · Tüm raporlar</span>
+          <div class="mode" id="m_SUPER" onclick="setMode('SUPER')">
+            <b>Super User</b><span>Firma bağımsız · Tüm raporlar</span>
           </div>
-          <div class="modeCard" id="mode_ADMIN" onclick="setLoginMode('ADMIN')">
-            <b>Admin</b>
-            <span>Firma/Rol/Kullanıcı/Rapor yönetimi</span>
+          <div class="mode" id="m_ADMIN" onclick="setMode('ADMIN')">
+            <b>Admin</b><span>Firma/rol/kullanıcı/rapor yönetimi</span>
           </div>
         </div>
 
-        <div class="grid grid-2">
+        <div class="grid g2">
           <div>
-            <label>Kullanıcı Adı</label>
-            <input class="input" id="inUser" autocomplete="username" />
+            <label>Kullanıcı adı</label>
+            <input id="inUser" autocomplete="username">
           </div>
           <div>
             <label>Şifre</label>
-            <input class="input" id="inPass" type="password" autocomplete="current-password" />
+            <input id="inPass" type="password" autocomplete="current-password">
           </div>
         </div>
 
-        <div id="firmNormalWrap">
-          <label>Firma (Normal Kullanıcı için)</label>
-          <input class="input" id="inFirm" placeholder="Örn: Sudesan / Elida / ..." />
-          <div class="mini" style="margin-top:6px">
-            Firma adı “alias” üzerinden firmKey’e eşleşir.
-          </div>
+        <div id="firmWrap">
+          <label>Firma (Normal için)</label>
+          <input id="inFirm" placeholder="Örn: Sudesan">
         </div>
 
-        <div class="right-actions">
+        <div class="right">
           <button class="btn primary" onclick="login()">Giriş Yap</button>
           <button class="btn" onclick="fillDemo()">Demo doldur</button>
+          <button class="btn warn" onclick="hardReset()">DB Sıfırla</button>
         </div>
 
-        <div class="hint">
-          <b>Kural:</b> Normal girişte kullanıcı firmaya bağlı olmalı ve firmaya giriş için tanımlı rollerden en az birine sahip olmalı.
-          (Admin → <span class="mono">FirmAccessRoles</span>)
+        <div style="font-size:12px;color:var(--muted);line-height:1.45">
+          Not: Bu sürüm <b>LocalStorage</b> kullanır. Tarayıcı/site verisi temizlenirse veri “silinmiş” gibi görünür.
         </div>
       </div>
     </div>
@@ -260,68 +173,65 @@
     <div class="card" style="flex:1;min-width:320px">
       <div class="hd">
         <div>
-          <h2>DB Özeti</h2>
-          <p>Admin panelden yönetilir</p>
+          <h2>Özet</h2>
+          <p>DB içeriği</p>
         </div>
       </div>
       <div class="bd">
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <div class="badge" id="kpiFirms">Firms: —</div>
-          <div class="badge" id="kpiRoles">Roles: —</div>
-          <div class="badge" id="kpiUsers">Users: —</div>
-          <div class="badge" id="kpiSuper">Super: —</div>
-          <div class="badge" id="kpiReports">Reports: —</div>
+        <div class="chipRow">
+          <span class="badge" id="kF">Firms: 0</span>
+          <span class="badge" id="kR">Roles: 0</span>
+          <span class="badge" id="kU">Users: 0</span>
+          <span class="badge" id="kS">Super: 0</span>
+          <span class="badge" id="kP">Reports: 0</span>
         </div>
         <div class="hr"></div>
-        <div class="hint">
-          “Silinmiş” hissi genelde LocalStorage/origin farkından olur.
-          API’ye bağlanırsan veri kaybolmaz.
+        <div style="font-size:12px;color:var(--muted)">
+          Eğer altta “Hata Konsolu”nda kırmızı hata görürsen, kopyalayıp buraya at.
         </div>
       </div>
     </div>
   </div>
 
   <!-- PORTAL -->
-  <div class="row hidden" id="rowMain" style="margin-top:14px">
+  <div class="row hidden" id="mainRow">
     <div class="card" style="flex:2.2;min-width:340px">
       <div class="hd">
         <div>
           <h2 id="mainTitle">Portal</h2>
-          <p id="mainSub" class="muted">—</p>
+          <p id="mainSub">—</p>
         </div>
-        <div class="right-actions">
-          <button class="btn small" onclick="refreshDB()">Yenile</button>
-          <button class="btn small warn hidden" id="btnAdminOpen" onclick="openAdmin()">Admin Paneli</button>
+        <div class="right">
+          <button class="btn small" onclick="render()">Yenile</button>
+          <button class="btn small warn hidden" id="openAdminBtn" onclick="openAdmin()">Admin</button>
         </div>
       </div>
       <div class="bd grid" style="gap:10px">
-        <!-- Category buttons for normal users -->
+        <!-- Normal user: category buttons -->
         <div>
-          <div class="muted" style="font-size:12px;margin-bottom:6px">Kategoriler</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Kategoriler</div>
           <div class="chipRow" id="catChips"></div>
         </div>
 
-        <div class="grid grid-3">
+        <div class="grid g3">
           <div>
             <label>Arama</label>
-            <input class="input" id="qSearch" placeholder="Örn: KPI, WMS, S&OP..." oninput="renderReports()" />
+            <input id="qSearch" placeholder="rapor adı..." oninput="renderReports()">
           </div>
           <div>
-            <label>Kategori (Filtre)</label>
-            <select class="input" id="catSel" onchange="renderReports()">
-              <option value="ALL">Tümü</option>
-            </select>
+            <label>Kategori</label>
+            <select id="catSel" onchange="syncChipFromSel();renderReports()"></select>
           </div>
           <div>
             <label>Sıralama</label>
-            <select class="input" id="sortSel" onchange="renderReports()">
-              <option value="cat_name">Kategori + İsim</option>
-              <option value="name">İsim</option>
+            <select id="sortSel" onchange="renderReports()">
+              <option value="cat">Kategori + Ad</option>
+              <option value="name">Ad</option>
             </select>
           </div>
         </div>
 
-        <div id="reportsList" class="grid" style="gap:10px"></div>
+        <div class="grid" id="repList"></div>
       </div>
     </div>
 
@@ -329,1460 +239,1103 @@
       <div class="hd">
         <div>
           <h2>Oturum</h2>
-          <p>Kimlik ve erişim</p>
+          <p>Kimlik ve yetki</p>
         </div>
         <span class="badge" id="sessBadge">—</span>
       </div>
       <div class="bd grid" style="gap:10px">
         <div>
-          <div class="muted" style="font-size:12px">Kullanıcı</div>
-          <div id="sessUser" style="font-weight:700">—</div>
+          <div style="font-size:12px;color:var(--muted)">Kullanıcı</div>
+          <div style="font-weight:700" id="sessUser">—</div>
         </div>
-        <div class="grid grid-2">
+        <div class="grid g2">
           <div>
-            <div class="muted" style="font-size:12px">Mod</div>
+            <div style="font-size:12px;color:var(--muted)">Mod</div>
             <div id="sessMode">—</div>
           </div>
           <div>
-            <div class="muted" style="font-size:12px">Firma</div>
+            <div style="font-size:12px;color:var(--muted)">Firma</div>
             <div id="sessFirm">—</div>
           </div>
         </div>
         <div>
-          <div class="muted" style="font-size:12px">Roller</div>
-          <div id="sessRoles" class="mono" style="font-size:12px">—</div>
+          <div style="font-size:12px;color:var(--muted)">Roller</div>
+          <div id="sessRoles" style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px">—</div>
         </div>
         <div class="hr"></div>
-        <div class="hint">
-          Normal kullanıcı yalnızca <b>firmasına</b> ve <b>rolüne</b> atanmış raporları görür.
-          Super User tüm raporlara erişir.
+        <div style="font-size:12px;color:var(--muted);line-height:1.45">
+          Normal kullanıcı sadece <b>kendi firmasına</b> ve <b>rolüne</b> atanmış raporları görür.
+          Super User tüm raporları görür.
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ADMIN PANEL -->
-  <div class="card hidden" id="adminPanel" style="margin-top:14px">
+  <!-- ADMIN -->
+  <div class="card hidden" id="adminCard" style="margin-top:14px">
     <div class="hd">
       <div>
         <h2>Admin Paneli</h2>
-        <p>Değişiklikler “Kaydet” basılınca aktif olur.</p>
+        <p>Değişiklikler sadece <b>Kaydet</b> basınca aktif olur.</p>
       </div>
-      <div class="right-actions">
-        <span class="badge warn hidden" id="unsavedBadge">Kaydedilmemiş değişiklik</span>
-        <button class="btn success" onclick="saveAll()">Kaydet</button>
+      <div class="right">
+        <span class="badge" id="dirtyBadge" style="display:none;border-color:rgba(245,158,11,.55)">Kaydedilmemiş</span>
+        <button class="btn success" onclick="saveDraft()">Kaydet</button>
         <button class="btn" onclick="closeAdmin()">Kapat</button>
       </div>
     </div>
-
     <div class="bd">
-      <div class="tabs" id="adminTabs"></div>
-
-      <!-- TAB CONTENTS -->
-      <div id="tabContent"></div>
+      <div class="chipRow" id="adminTabs"></div>
+      <div class="hr"></div>
+      <div id="adminBody"></div>
     </div>
   </div>
 </div>
 
+<!-- Visible error console -->
+<div class="console" id="consoleBox">
+  <div class="chd">
+    <span class="pill">Hata Konsolu (çalışmazsa burayı kopyala)</span>
+    <div class="right">
+      <button class="btn small" onclick="clearLog()">Temizle</button>
+      <button class="btn small" onclick="toggleConsole()">Gizle/Göster</button>
+    </div>
+  </div>
+  <pre id="log"></pre>
+</div>
+
 <script>
-/* =========================
-   STORAGE + API
-========================= */
-const LS_CONFIG_KEY = "psd_portal_config_v1";
-const LS_DB_KEY = "psd_portal_db_v2";
-const LS_THEME_KEY = "psd_portal_theme";
-
-let CONFIG = { apiUrl: "" };
-
-let DB = null;       // active db
-let DRAFT = null;    // admin edit copy
-let SESSION = null;  // current session
-
-let LOGIN_MODE = "NORMAL";
-let ACTIVE_CAT_CHIP = "ALL";
-
-/** Small helpers */
-const nowISO = () => new Date().toISOString();
-const uid = (p="id") => p + "_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
-const deepClone = (o) => JSON.parse(JSON.stringify(o));
-const byId = (id) => document.getElementById(id);
-
-function toast(msg, type="info"){
-  const t = document.createElement("div");
-  t.className = "toast";
-  const dot = document.createElement("div");
-  dot.className = "dot " + (type==="good"?"good":type==="bad"?"bad":"warn");
-  const m = document.createElement("div");
-  m.className = "msg";
-  m.textContent = msg;
-  const x = document.createElement("button");
-  x.className = "btn small x";
-  x.textContent = "Kapat";
-  x.onclick = ()=>t.remove();
-  t.append(dot,m,x);
-  document.body.appendChild(t);
-  setTimeout(()=>{ try{ t.remove(); }catch(e){} }, 5000);
+/* =============================
+  ERROR LOG
+============================= */
+const logEl = document.getElementById("log");
+function log(msg){ logEl.textContent += msg + "\n"; }
+function clearLog(){ logEl.textContent=""; }
+function toggleConsole(){
+  const box = document.getElementById("consoleBox");
+  const pre = document.getElementById("log");
+  pre.style.display = (pre.style.display==="none") ? "block" : "none";
 }
+window.addEventListener("error", (e)=>{
+  log("❌ ERROR: " + (e.message || "unknown") + " @ " + (e.filename||"") + ":" + (e.lineno||0));
+});
+window.addEventListener("unhandledrejection", (e)=>{
+  log("❌ PROMISE: " + (e.reason?.message || e.reason || "unknown"));
+});
 
-function setApiStatus(ok, text){
-  byId("apiDot").className = "dot " + (ok ? "good" : "warn");
-  byId("apiText").textContent = text;
-  byId("statusPill").textContent = ok ? "DB: API bağlı" : "DB: LocalStorage";
-}
+/* =============================
+  STATE
+============================= */
+const LS_DB="psd_portal_db_v3";
+const LS_THEME="psd_portal_theme_v1";
 
-function saveConfig(){
-  CONFIG.apiUrl = (byId("apiUrl").value || "").trim();
-  localStorage.setItem(LS_CONFIG_KEY, JSON.stringify(CONFIG));
-  toast("Kurulum kaydedildi.", "good");
-  testApi();
-}
+let DB = null;
+let DRAFT = null;
+let DIRTY = false;
 
-function loadConfig(){
-  try{
-    const c = JSON.parse(localStorage.getItem(LS_CONFIG_KEY) || "null");
-    if(c && typeof c === "object") CONFIG = { ...CONFIG, ...c };
-  }catch(e){}
-  byId("apiUrl").value = CONFIG.apiUrl || "";
-}
+let MODE="NORMAL";
+let SESSION=null;
+let ACTIVE_CAT="ALL";
+let ACTIVE_TAB="firms";
 
-function resetLocal(){
-  if(!confirm("Local DB sıfırlansın mı? (Geri alınamaz)")) return;
-  localStorage.removeItem(LS_DB_KEY);
-  toast("Local DB sıfırlandı. Yeniden seed yüklenecek.", "warn");
-  init();
-}
-
-async function apiCall(action, payload){
-  const base = (CONFIG.apiUrl || "").trim();
-  if(!base) throw new Error("API URL yok");
-  const url = base + (base.includes("?") ? "&" : "?") + "action=" + encodeURIComponent(action);
-  const res = await fetch(url, {
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify(payload || {})
-  });
-  if(!res.ok) throw new Error("API HTTP " + res.status);
-  const data = await res.json();
-  if(data && data.ok === false) throw new Error(data.error || "API error");
-  return data;
-}
-
-async function testApi(){
-  if(!(CONFIG.apiUrl||"").trim()){
-    setApiStatus(false, "API yok (LocalStorage)");
-    return;
-  }
-  try{
-    const r = await apiCall("ping", { t: Date.now() });
-    setApiStatus(true, "API OK");
-    toast("API bağlantısı başarılı.", "good");
-  }catch(e){
-    setApiStatus(false, "API hata (LocalStorage)");
-    toast("API test başarısız: " + e.message, "bad");
-  }
-}
-
-/* =========================
-   DB MODEL
-========================= */
-function seedDB(){
-  // Demo seed (istersen admin’den silip kendi datanı girersin)
-  const firms = [
-    { firmKey:"SUDESAN", name:"Sudesan", aliases:["Sudesan","SUDESAN"] },
-    { firmKey:"ELIDA", name:"Elida", aliases:["Elida","ELIDA"] }
-  ];
-
-  const roles = [
-    { roleKey:"VIEWER", name:"Viewer" },
-    { roleKey:"PLANNER", name:"Planner" },
-    { roleKey:"MANAGER", name:"Manager" },
-    { roleKey:"ADMIN", name:"Admin" }
-  ];
-
-  const users = [
-    { userId:"u_admin", username:"admin", password:"admin123", fullName:"Portal Admin", isSuper:false, isAdmin:true },
-    { userId:"u_super", username:"super", password:"super123", fullName:"Super User", isSuper:true, isAdmin:false },
-    { userId:"u_alper", username:"alper", password:"1234", fullName:"Alper", isSuper:false, isAdmin:false }
-  ];
-
-  // user-firm membership
-  const userFirms = [
-    { id:uid("uf"), userId:"u_alper", firmKey:"SUDESAN" },
-    { id:uid("uf"), userId:"u_alper", firmKey:"ELIDA" }
-  ];
-
-  // user-roles
-  const userRoles = [
-    { id:uid("ur"), userId:"u_alper", roleKey:"MANAGER" },
-    { id:uid("ur"), userId:"u_admin", roleKey:"ADMIN" }
-  ];
-
-  // Firm access rules: which roles can login to that firm (NORMAL mode)
-  // if a firmKey has no rule rows -> any role accepted (still must be member of firm)
-  const firmAccessRoles = [
-    { id:uid("far"), firmKey:"SUDESAN", roleKey:"MANAGER" },
-    { id:uid("far"), firmKey:"SUDESAN", roleKey:"PLANNER" },
-    { id:uid("far"), firmKey:"ELIDA", roleKey:"MANAGER" }
-  ];
-
-  const categories = [
-    { catKey:"OPERATIONS", name:"Operasyon" },
-    { catKey:"FINANCE", name:"Finans" },
-    { catKey:"SCM", name:"Tedarik Zinciri" }
-  ];
-
-  // Reports: firm assign is via reportFirms rows
-  const reports = [
-    { reportId:"r_ops1", name:"Operasyon KPI Dashboard", url:"https://lookerstudio.google.com/", catKey:"OPERATIONS" },
-    { reportId:"r_fin1", name:"Tahsilat & Nakit Akışı", url:"https://lookerstudio.google.com/", catKey:"FINANCE" },
-    { reportId:"r_scm1", name:"Stok & Servis Seviyesi", url:"https://lookerstudio.google.com/", catKey:"SCM" }
-  ];
-
-  const reportFirms = [
-    { id:uid("rf"), reportId:"r_ops1", firmKey:"SUDESAN" },
-    { id:uid("rf"), reportId:"r_fin1", firmKey:"ELIDA" },
-    { id:uid("rf"), reportId:"r_scm1", firmKey:"SUDESAN" }
-  ];
-
-  // Report access control: per report, allow roles/users.
-  // If no row exists for a report -> firm members can see it.
-  const reportAccess = [
-    { id:uid("ra"), reportId:"r_ops1", allowedRoleKeys:["MANAGER","PLANNER"], allowedUserIds:[] },
-    { id:uid("ra"), reportId:"r_fin1", allowedRoleKeys:["MANAGER"], allowedUserIds:[] }
-  ];
-
-  return {
-    meta:{ version:2, updatedAt: nowISO() },
-    firms, roles, users, userFirms, userRoles, firmAccessRoles,
-    categories, reports, reportFirms, reportAccess
-  };
-}
-
-function loadLocalDB(){
-  try{
-    const d = JSON.parse(localStorage.getItem(LS_DB_KEY) || "null");
-    if(d && d.meta && d.meta.version) return d;
-  }catch(e){}
-  const seeded = seedDB();
-  localStorage.setItem(LS_DB_KEY, JSON.stringify(seeded));
-  return seeded;
-}
-
-function saveLocalDB(db){
-  db.meta = db.meta || {};
-  db.meta.version = 2;
-  db.meta.updatedAt = nowISO();
-  localStorage.setItem(LS_DB_KEY, JSON.stringify(db));
-}
-
-/* =========================
-   INIT / REFRESH
-========================= */
-async function loadDB(){
-  // if api url exists -> use API, else local
-  if((CONFIG.apiUrl||"").trim()){
-    try{
-      const r = await apiCall("getDB", {});
-      if(r && r.db){
-        DB = r.db;
-        setApiStatus(true, "API OK");
-        return;
-      }
-      throw new Error("API: db yok");
-    }catch(e){
-      // fallback local
-      DB = loadLocalDB();
-      setApiStatus(false, "API hata (LocalStorage)");
-      toast("API’den DB alınamadı, LocalStorage kullanıldı. ("+e.message+")", "warn");
-      return;
-    }
-  }else{
-    DB = loadLocalDB();
-    setApiStatus(false, "API yok (LocalStorage)");
-  }
-}
-
-async function saveDB(db){
-  if((CONFIG.apiUrl||"").trim()){
-    const r = await apiCall("saveDB", { db });
-    if(r && r.ok){
-      DB = db;
-      return;
-    }
-    throw new Error("API save error");
-  }else{
-    saveLocalDB(db);
-    DB = db;
-  }
-}
-
-function updateKPIs(){
-  const f = DB?.firms?.length || 0;
-  const r = DB?.roles?.length || 0;
-  const u = DB?.users?.length || 0;
-  const su = (DB?.users||[]).filter(x=>x.isSuper).length;
-  const rep = DB?.reports?.length || 0;
-  byId("kpiFirms").textContent = "Firms: " + f;
-  byId("kpiRoles").textContent = "Roles: " + r;
-  byId("kpiUsers").textContent = "Users: " + u;
-  byId("kpiSuper").textContent = "Super: " + su;
-  byId("kpiReports").textContent = "Reports: " + rep;
-  byId("statusPill").textContent = (CONFIG.apiUrl||"").trim() ? "DB: API" : "DB: LocalStorage";
-}
-
-async function refreshDB(){
-  await loadDB();
-  updateKPIs();
-  if(SESSION) renderPortal();
-}
-
-/* =========================
-   THEME
-========================= */
+/* =============================
+  THEME
+============================= */
 function setTheme(accent){
   document.documentElement.style.setProperty("--accent", accent);
-  // accent line + soft computed:
-  // keep soft same (we can leave), but adjust line shade a bit:
-  localStorage.setItem(LS_THEME_KEY, accent);
+  document.documentElement.style.setProperty("--accentSoft", hexToRgba(accent, .16));
+  localStorage.setItem(LS_THEME, accent);
 }
 function loadTheme(){
-  const t = localStorage.getItem(LS_THEME_KEY);
+  const t = localStorage.getItem(LS_THEME);
   if(t) setTheme(t);
 }
-
-/* =========================
-   LOGIN
-========================= */
-function setLoginMode(m){
-  LOGIN_MODE = m;
-  ["NORMAL","SUPER","ADMIN"].forEach(x=>{
-    const el = byId("mode_"+x);
-    if(el) el.classList.toggle("active", x===m);
-  });
-  byId("modeBadge").textContent = m;
-  byId("firmNormalWrap").classList.toggle("hidden", m!=="NORMAL");
+function hexToRgba(hex, a){
+  try{
+    const h=hex.replace("#","").trim();
+    const r=parseInt(h.slice(0,2),16);
+    const g=parseInt(h.slice(2,4),16);
+    const b=parseInt(h.slice(4,6),16);
+    return `rgba(${r},${g},${b},${a})`;
+  }catch(_){ return "rgba(59,130,246,.16)"; }
 }
 
-function fillDemo(){
-  if(LOGIN_MODE==="ADMIN"){
-    byId("inUser").value="admin"; byId("inPass").value="admin123"; byId("inFirm").value="";
-  }else if(LOGIN_MODE==="SUPER"){
-    byId("inUser").value="super"; byId("inPass").value="super123"; byId("inFirm").value="";
-  }else{
-    byId("inUser").value="alper"; byId("inPass").value="1234"; byId("inFirm").value="Sudesan";
+/* =============================
+  DB SEED
+============================= */
+function seed(){
+  return {
+    meta:{version:3, updatedAt:new Date().toISOString()},
+    firms:[
+      {firmKey:"SUDESAN", name:"Sudesan", aliases:["Sudesan","sudesan","SUDESAN"]},
+      {firmKey:"ELIDA", name:"Elida", aliases:["Elida","elida","ELIDA"]}
+    ],
+    roles:[
+      {roleKey:"VIEWER", name:"Viewer"},
+      {roleKey:"MANAGER", name:"Manager"},
+      {roleKey:"PLANNER", name:"Planner"},
+      {roleKey:"ADMIN", name:"Admin"}
+    ],
+    users:[
+      {userId:"u_admin", username:"admin", password:"admin123", fullName:"Admin", isAdmin:true, isSuper:false},
+      {userId:"u_super", username:"super", password:"super123", fullName:"Super User", isAdmin:false, isSuper:true},
+      {userId:"u_user",  username:"user",  password:"1234",     fullName:"Normal User", isAdmin:false, isSuper:false}
+    ],
+    // user->firm membership
+    userFirms:[
+      {id:gid("uf"), userId:"u_user", firmKey:"SUDESAN"}
+    ],
+    // user roles
+    userRoles:[
+      {id:gid("ur"), userId:"u_user", roleKey:"MANAGER"},
+      {id:gid("ur"), userId:"u_admin", roleKey:"ADMIN"}
+    ],
+    // firm login rules (NORMAL): which roles can login to that firm
+    firmAccessRoles:[
+      {id:gid("far"), firmKey:"SUDESAN", roleKey:"MANAGER"},
+      {id:gid("far"), firmKey:"SUDESAN", roleKey:"PLANNER"}
+    ],
+    categories:[
+      {catKey:"SCM", name:"Tedarik Zinciri"},
+      {catKey:"OPS", name:"Operasyon"},
+      {catKey:"FIN", name:"Finans"}
+    ],
+    reports:[
+      {reportId:"r1", name:"Stok & Servis Seviyesi", url:"https://lookerstudio.google.com/", catKey:"SCM"},
+      {reportId:"r2", name:"Operasyon KPI", url:"https://lookerstudio.google.com/", catKey:"OPS"},
+      {reportId:"r3", name:"Nakit Akışı", url:"https://lookerstudio.google.com/", catKey:"FIN"}
+    ],
+    reportFirms:[
+      {id:gid("rf"), reportId:"r1", firmKey:"SUDESAN"},
+      {id:gid("rf"), reportId:"r2", firmKey:"SUDESAN"},
+      {id:gid("rf"), reportId:"r3", firmKey:"ELIDA"}
+    ],
+    // report access rules: if none for a report -> all firm members can see
+    reportAccess:[
+      {id:gid("ra"), reportId:"r1", allowedRoleKeys:["MANAGER","PLANNER"], allowedUserIds:[]}
+    ]
+  };
+}
+function gid(p){ return p+"_"+Math.random().toString(16).slice(2)+"_"+Date.now().toString(16); }
+
+function loadDB(){
+  try{
+    const raw = localStorage.getItem(LS_DB);
+    if(!raw){ DB=seed(); saveDB(DB); return; }
+    DB = JSON.parse(raw);
+    if(!DB || !DB.meta){ DB=seed(); saveDB(DB); }
+  }catch(e){
+    log("DB load error: "+e.message);
+    DB=seed(); saveDB(DB);
   }
 }
+function saveDB(db){
+  db.meta = db.meta || {};
+  db.meta.version = 3;
+  db.meta.updatedAt = new Date().toISOString();
+  localStorage.setItem(LS_DB, JSON.stringify(db));
+  document.getElementById("dbPill").textContent = "DB: LocalStorage ✓";
+  updateKPIs();
+}
+function hardReset(){
+  if(!confirm("DB sıfırlansın mı?")) return;
+  localStorage.removeItem(LS_DB);
+  loadDB();
+  updateKPIs();
+  alert("DB sıfırlandı.");
+}
 
-function firmKeyFromInput(firmName){
-  const s = (firmName||"").trim().toLowerCase();
+/* =============================
+  LOGIN
+============================= */
+function setMode(m){
+  MODE=m;
+  ["NORMAL","SUPER","ADMIN"].forEach(x=>{
+    document.getElementById("m_"+x).classList.toggle("active", x===m);
+  });
+  document.getElementById("modeBadge").textContent = m;
+  document.getElementById("firmWrap").classList.toggle("hidden", m!=="NORMAL");
+}
+function fillDemo(){
+  const u=document.getElementById("inUser");
+  const p=document.getElementById("inPass");
+  const f=document.getElementById("inFirm");
+  if(MODE==="ADMIN"){ u.value="admin"; p.value="admin123"; f.value=""; }
+  if(MODE==="SUPER"){ u.value="super"; p.value="super123"; f.value=""; }
+  if(MODE==="NORMAL"){ u.value="user"; p.value="1234"; f.value="Sudesan"; }
+}
+function findUser(username){
+  const u=(username||"").trim().toLowerCase();
+  return DB.users.find(x=>(x.username||"").toLowerCase()===u) || null;
+}
+function rolesOf(userId){
+  return Array.from(new Set(DB.userRoles.filter(x=>x.userId===userId).map(x=>x.roleKey)));
+}
+function firmKeyFromInput(name){
+  const s=(name||"").trim().toLowerCase();
   if(!s) return null;
-  // match firmKey or alias
-  for(const f of (DB.firms||[])){
+  for(const f of DB.firms){
     if((f.firmKey||"").toLowerCase()===s) return f.firmKey;
-    for(const a of (f.aliases||[])){
-      if((a||"").toLowerCase()===s) return f.firmKey;
-    }
     if((f.name||"").toLowerCase()===s) return f.firmKey;
+    for(const a of (f.aliases||[])){ if((a||"").toLowerCase()===s) return f.firmKey; }
   }
   return null;
 }
-
-function getUserByUsername(username){
-  const u = (username||"").trim().toLowerCase();
-  return (DB.users||[]).find(x => (x.username||"").toLowerCase()===u) || null;
+function isFirmMember(userId, firmKey){
+  return DB.userFirms.some(x=>x.userId===userId && x.firmKey===firmKey);
 }
-
-function rolesOfUser(userId){
-  const keys = (DB.userRoles||[]).filter(x=>x.userId===userId).map(x=>x.roleKey);
-  return Array.from(new Set(keys));
-}
-
-function isMemberOfFirm(userId, firmKey){
-  return (DB.userFirms||[]).some(x=>x.userId===userId && x.firmKey===firmKey);
-}
-
-function isFirmLoginAllowedByRole(firmKey, userRoleKeys){
-  const rules = (DB.firmAccessRoles||[]).filter(x=>x.firmKey===firmKey).map(x=>x.roleKey);
-  if(rules.length===0) return true; // no rule -> any role ok
-  return userRoleKeys.some(r => rules.includes(r));
+function firmLoginAllowed(firmKey, userRoleKeys){
+  const rules = DB.firmAccessRoles.filter(x=>x.firmKey===firmKey).map(x=>x.roleKey);
+  if(rules.length===0) return true;
+  return userRoleKeys.some(r=>rules.includes(r));
 }
 
 function login(){
-  const username = (byId("inUser").value||"").trim();
-  const password = (byId("inPass").value||"").trim();
-  const firmInput = (byId("inFirm").value||"").trim();
+  const username=document.getElementById("inUser").value;
+  const pass=document.getElementById("inPass").value;
+  const firm=document.getElementById("inFirm").value;
 
-  const u = getUserByUsername(username);
-  if(!u || u.password !== password){
-    toast("Kullanıcı adı / şifre hatalı.", "bad");
-    return;
+  const u=findUser(username);
+  if(!u || u.password!==pass){ alert("Kullanıcı adı/şifre hatalı"); return; }
+
+  const rks=rolesOf(u.userId);
+
+  if(MODE==="ADMIN"){
+    if(!(u.isAdmin || rks.includes("ADMIN"))){ alert("Admin yetkisi yok"); return; }
+    SESSION={mode:"ADMIN", userId:u.userId, username:u.username, fullName:u.fullName, firmKey:null, roles:rks, isSuper:!!u.isSuper, isAdmin:true};
+  }
+  if(MODE==="SUPER"){
+    if(!u.isSuper){ alert("Super User değil"); return; }
+    SESSION={mode:"SUPER", userId:u.userId, username:u.username, fullName:u.fullName, firmKey:null, roles:rks, isSuper:true, isAdmin:!!u.isAdmin};
+  }
+  if(MODE==="NORMAL"){
+    const fk=firmKeyFromInput(firm);
+    if(!fk){ alert("Firma bulunamadı"); return; }
+    if(!isFirmMember(u.userId, fk)){ alert("Kullanıcı bu firmaya bağlı değil"); return; }
+    if(!firmLoginAllowed(fk, rks)){ alert("Bu rollerle bu firmaya giriş izni yok"); return; }
+    SESSION={mode:"NORMAL", userId:u.userId, username:u.username, fullName:u.fullName, firmKey:fk, roles:rks, isSuper:!!u.isSuper, isAdmin:!!u.isAdmin};
   }
 
-  const userRoleKeys = rolesOfUser(u.userId);
-
-  if(LOGIN_MODE==="ADMIN"){
-    const adminOk = u.isAdmin || userRoleKeys.includes("ADMIN");
-    if(!adminOk){
-      toast("Bu kullanıcı Admin değil.", "bad");
-      return;
-    }
-    SESSION = { mode:"ADMIN", userId:u.userId, username:u.username, fullName:u.fullName, firmKey:null, roles:userRoleKeys, isSuper:!!u.isSuper, isAdmin:true };
-  }
-
-  if(LOGIN_MODE==="SUPER"){
-    if(!u.isSuper){
-      toast("Bu kullanıcı Super User değil.", "bad");
-      return;
-    }
-    SESSION = { mode:"SUPER", userId:u.userId, username:u.username, fullName:u.fullName, firmKey:null, roles:userRoleKeys, isSuper:true, isAdmin:!!u.isAdmin };
-  }
-
-  if(LOGIN_MODE==="NORMAL"){
-    const fk = firmKeyFromInput(firmInput);
-    if(!fk){
-      toast("Firma bulunamadı. (Admin panelden alias ekleyebilirsin)", "bad");
-      return;
-    }
-    if(!isMemberOfFirm(u.userId, fk)){
-      toast("Kullanıcı bu firmaya bağlı değil.", "bad");
-      return;
-    }
-    if(!isFirmLoginAllowedByRole(fk, userRoleKeys)){
-      toast("Kullanıcının rolleri bu firmaya giriş için uygun değil.", "bad");
-      return;
-    }
-    SESSION = { mode:"NORMAL", userId:u.userId, username:u.username, fullName:u.fullName, firmKey:fk, roles:userRoleKeys, isSuper:!!u.isSuper, isAdmin:!!u.isAdmin };
-  }
-
-  // Show UI
-  byId("rowLogin").classList.add("hidden");
-  byId("rowMain").classList.remove("hidden");
-  byId("btnLogout").style.display="inline-flex";
-  byId("btnAdminOpen").classList.toggle("hidden", !(SESSION.mode==="ADMIN"));
-
-  renderPortal();
-  toast("Giriş başarılı.", "good");
+  document.getElementById("loginRow").classList.add("hidden");
+  document.getElementById("mainRow").classList.remove("hidden");
+  document.getElementById("logoutBtn").style.display="inline-flex";
+  document.getElementById("openAdminBtn").classList.toggle("hidden", SESSION.mode!=="ADMIN");
+  render();
 }
-
 function logout(){
-  SESSION = null;
-  byId("rowMain").classList.add("hidden");
-  byId("adminPanel").classList.add("hidden");
-  byId("rowLogin").classList.remove("hidden");
-  byId("btnLogout").style.display="none";
-  toast("Çıkış yapıldı.", "warn");
+  SESSION=null;
+  closeAdmin();
+  document.getElementById("mainRow").classList.add("hidden");
+  document.getElementById("loginRow").classList.remove("hidden");
+  document.getElementById("logoutBtn").style.display="none";
 }
 
-/* =========================
-   PORTAL (Normal user requirements)
-   1) categories as buttons
-   2) theme top-right (done)
-   3) firm+role-based access
-========================= */
-function firmName(firmKey){
-  const f = (DB.firms||[]).find(x=>x.firmKey===firmKey);
-  return f ? f.name : firmKey;
+/* =============================
+  PORTAL VIEW
+============================= */
+function firmName(fk){
+  const f=DB.firms.find(x=>x.firmKey===fk);
+  return f ? f.name : (fk||"—");
 }
-function catName(catKey){
-  const c = (DB.categories||[]).find(x=>x.catKey===catKey);
-  return c ? c.name : (catKey||"—");
+function catName(ck){
+  const c=DB.categories.find(x=>x.catKey===ck);
+  return c ? c.name : (ck||"—");
 }
-
 function accessibleReports(){
   if(!SESSION) return [];
+  if(SESSION.mode==="SUPER") return DB.reports.slice();
+  if(SESSION.mode==="ADMIN") return DB.reports.slice();
 
-  // Super: all
-  if(SESSION.mode==="SUPER" || SESSION.isSuper) return (DB.reports||[]).slice();
+  const fk=SESSION.firmKey;
+  const ids=new Set(DB.reportFirms.filter(x=>x.firmKey===fk).map(x=>x.reportId));
+  let list=DB.reports.filter(r=>ids.has(r.reportId));
 
-  // Admin logged in: show all (for convenience)
-  if(SESSION.mode==="ADMIN") return (DB.reports||[]).slice();
-
-  // Normal:
-  const fk = SESSION.firmKey;
-  const firmReportIds = new Set((DB.reportFirms||[]).filter(x=>x.firmKey===fk).map(x=>x.reportId));
-  let list = (DB.reports||[]).filter(r => firmReportIds.has(r.reportId));
-
-  // Access control per report (role/user)
-  const roleSet = new Set(SESSION.roles||[]);
-  const userId = SESSION.userId;
-
-  list = list.filter(r=>{
-    const ra = (DB.reportAccess||[]).find(x=>x.reportId===r.reportId);
-    if(!ra) return true; // no access row => firm members can view
-    const allowedUsers = new Set(ra.allowedUserIds||[]);
-    const allowedRoles = new Set(ra.allowedRoleKeys||[]);
-    if(allowedUsers.has(userId)) return true;
-    if(allowedRoles.size===0 && allowedUsers.size===0) return true;
-    for(const rk of roleSet){ if(allowedRoles.has(rk)) return true; }
+  // role/user access layer
+  const roleSet=new Set(SESSION.roles);
+  list=list.filter(r=>{
+    const rule=DB.reportAccess.find(x=>x.reportId===r.reportId);
+    if(!rule) return true; // default: firm members can see
+    const allowUsers=new Set(rule.allowedUserIds||[]);
+    const allowRoles=new Set(rule.allowedRoleKeys||[]);
+    if(allowUsers.has(SESSION.userId)) return true;
+    if(allowUsers.size===0 && allowRoles.size===0) return true;
+    for(const rk of roleSet){ if(allowRoles.has(rk)) return true; }
     return false;
   });
 
   return list;
 }
+function render(){
+  document.getElementById("mainTitle").textContent="Portal";
+  document.getElementById("mainSub").textContent =
+    SESSION.mode==="NORMAL"
+      ? `Firma: ${firmName(SESSION.firmKey)} · Firma+rol bazlı raporlar`
+      : (SESSION.mode==="SUPER" ? "Super User · Firma bağımsız tüm raporlar" : "Admin · Yönetim paneli aktif");
 
-function buildCategoryUI(reports){
-  // dropdown
-  const catSel = byId("catSel");
-  const prev = catSel.value || "ALL";
-  catSel.innerHTML = `<option value="ALL">Tümü</option>`;
-  const catKeys = Array.from(new Set(reports.map(r=>r.catKey))).sort();
-  for(const ck of catKeys){
-    const opt = document.createElement("option");
-    opt.value = ck;
-    opt.textContent = catName(ck);
-    catSel.appendChild(opt);
-  }
-  catSel.value = (prev && (prev==="ALL" || catKeys.includes(prev))) ? prev : "ALL";
+  document.getElementById("sessBadge").textContent=SESSION.mode;
+  document.getElementById("sessUser").textContent=SESSION.fullName||SESSION.username;
+  document.getElementById("sessMode").textContent=SESSION.mode;
+  document.getElementById("sessFirm").textContent=SESSION.firmKey ? firmName(SESSION.firmKey) : "—";
+  document.getElementById("sessRoles").textContent=(SESSION.roles||[]).join(", ") || "—";
 
-  // chips
-  const chips = byId("catChips");
-  chips.innerHTML = "";
-  const addChip = (key, label)=>{
-    const c = document.createElement("div");
-    c.className = "chip" + (ACTIVE_CAT_CHIP===key ? " active":"");
-    c.textContent = label;
-    c.onclick = ()=>{
-      ACTIVE_CAT_CHIP = key;
-      // sync dropdown too
-      byId("catSel").value = key==="ALL" ? "ALL" : key;
-      renderReports();
-      buildCategoryUI(accessibleReports());
-    };
-    chips.appendChild(c);
-  };
-  addChip("ALL","Tümü");
-  for(const ck of catKeys){
-    addChip(ck, catName(ck));
-  }
-}
-
-function renderPortal(){
-  byId("mainTitle").textContent = "Portal";
-  const sub = SESSION.mode==="NORMAL"
-    ? `Firma: ${firmName(SESSION.firmKey)} · Raporlar firma+rol bazlı`
-    : (SESSION.mode==="SUPER" ? "Super User · Firma bağımsız tüm raporlar" : "Admin · Tüm raporlar + yönetim");
-  byId("mainSub").textContent = sub;
-
-  byId("sessBadge").textContent = SESSION.mode;
-  byId("sessUser").textContent = SESSION.fullName || SESSION.username;
-  byId("sessMode").textContent = SESSION.mode;
-  byId("sessFirm").textContent = SESSION.firmKey ? firmName(SESSION.firmKey) : "—";
-  byId("sessRoles").textContent = (SESSION.roles||[]).join(", ") || "—";
-
-  const reps = accessibleReports();
-  buildCategoryUI(reps);
+  buildCategories();
   renderReports();
 }
+function buildCategories(){
+  const list=accessibleReports();
+  const catKeys = Array.from(new Set(list.map(r=>r.catKey))).sort();
 
+  // select
+  const sel=document.getElementById("catSel");
+  sel.innerHTML="";
+  sel.append(new Option("Tümü","ALL"));
+  catKeys.forEach(k=> sel.append(new Option(catName(k), k)));
+  if(!catKeys.includes(ACTIVE_CAT)) ACTIVE_CAT="ALL";
+  sel.value=ACTIVE_CAT;
+
+  // chips
+  const chips=document.getElementById("catChips");
+  chips.innerHTML="";
+  chips.append(chip("ALL","Tümü"));
+  catKeys.forEach(k=> chips.append(chip(k, catName(k))));
+}
+function chip(key,label){
+  const el=document.createElement("div");
+  el.className="chip"+(ACTIVE_CAT===key?" active":"");
+  el.textContent=label;
+  el.onclick=()=>{
+    ACTIVE_CAT=key;
+    document.getElementById("catSel").value=key;
+    buildCategories();
+    renderReports();
+  };
+  return el;
+}
+function syncChipFromSel(){
+  ACTIVE_CAT=document.getElementById("catSel").value;
+  buildCategories();
+}
 function renderReports(){
-  const reps = accessibleReports();
+  const q=(document.getElementById("qSearch").value||"").trim().toLowerCase();
+  const sort=document.getElementById("sortSel").value;
+  let list=accessibleReports();
 
-  const q = (byId("qSearch").value||"").trim().toLowerCase();
-  const cat = byId("catSel").value || "ALL";
-  const sort = byId("sortSel").value || "cat_name";
+  if(ACTIVE_CAT!=="ALL") list=list.filter(r=>r.catKey===ACTIVE_CAT);
+  if(q) list=list.filter(r=>(r.name||"").toLowerCase().includes(q) || (r.url||"").toLowerCase().includes(q) || catName(r.catKey).toLowerCase().includes(q));
 
-  let list = reps.slice();
+  if(sort==="name") list.sort((a,b)=>(a.name||"").localeCompare(b.name||""));
+  else list.sort((a,b)=>(catName(a.catKey)+a.name).localeCompare(catName(b.catKey)+b.name));
 
-  // cat chip sync
-  if(ACTIVE_CAT_CHIP!=="ALL" && cat==="ALL"){
-    // if chip active but dropdown reset, keep dropdown in sync
-    byId("catSel").value = ACTIVE_CAT_CHIP;
-  }
-
-  const activeCat = (byId("catSel").value || "ALL");
-  if(activeCat !== "ALL"){
-    list = list.filter(r => r.catKey === activeCat);
-  }
-
-  if(q){
-    list = list.filter(r =>
-      (r.name||"").toLowerCase().includes(q) ||
-      (r.url||"").toLowerCase().includes(q) ||
-      catName(r.catKey).toLowerCase().includes(q)
-    );
-  }
-
-  if(sort==="name"){
-    list.sort((a,b)=> (a.name||"").localeCompare(b.name||""));
-  }else{
-    list.sort((a,b)=> (catName(a.catKey)+a.name).localeCompare(catName(b.catKey)+b.name));
-  }
-
-  const box = byId("reportsList");
-  box.innerHTML = "";
-
+  const box=document.getElementById("repList");
+  box.innerHTML="";
   if(list.length===0){
-    const empty = document.createElement("div");
-    empty.className="hint";
-    empty.textContent="Bu filtrelerde erişilebilir rapor bulunamadı.";
-    box.appendChild(empty);
+    const div=document.createElement("div");
+    div.style.color="var(--muted)"; div.style.fontSize="12px";
+    div.textContent="Erişilebilir rapor bulunamadı.";
+    box.append(div);
     return;
   }
 
-  for(const r of list){
-    const div = document.createElement("div");
-    div.className="reportCard";
-    const left = document.createElement("div");
-    const b = document.createElement("b");
-    b.textContent = r.name || "(isimsiz rapor)";
-    const meta = document.createElement("div");
-    meta.className="meta";
-    meta.textContent = "Kategori: " + catName(r.catKey);
-    const url = document.createElement("div");
-    url.className="meta mono";
-    url.textContent = (r.url||"");
-    left.append(b, meta, url);
-
-    const right = document.createElement("div");
-    right.className="right-actions";
-    const open = document.createElement("a");
-    open.className="btn small primary";
-    open.textContent="Aç";
-    open.href = r.url || "#";
-    open.target="_blank";
-    open.rel="noopener";
-    right.appendChild(open);
-
+  list.forEach(r=>{
+    const div=document.createElement("div");
+    div.className="report";
+    const left=document.createElement("div");
+    left.innerHTML=`<b>${escapeHTML(r.name||"(isimsiz)")}</b>
+      <div class="meta">Kategori: ${escapeHTML(catName(r.catKey))}</div>
+      <div class="meta" style="font-family:ui-monospace,Menlo,Consolas,monospace">${escapeHTML(r.url||"")}</div>`;
+    const right=document.createElement("div");
+    right.className="right";
+    const a=document.createElement("a");
+    a.className="btn small primary";
+    a.textContent="Aç";
+    a.href=r.url||"#";
+    a.target="_blank";
+    a.rel="noopener";
+    right.append(a);
     div.append(left,right);
-    box.appendChild(div);
-  }
+    box.append(div);
+  });
+}
+function escapeHTML(s){
+  return String(s??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
 }
 
-/* =========================
-   ADMIN PANEL
-========================= */
-const ADMIN_TABS = [
-  { key:"firms", label:"Firmalar" },
-  { key:"roles", label:"Roller" },
-  { key:"users", label:"Kullanıcılar" },
-  { key:"userFirms", label:"Kullanıcı-Firma" },
-  { key:"userRoles", label:"Kullanıcı-Rol" },
-  { key:"firmAccess", label:"Firma Giriş Kuralları" },
-  { key:"categories", label:"Kategoriler" },
-  { key:"reports", label:"Raporlar" },
-  { key:"reportFirms", label:"Rapor-Firma" },
-  { key:"reportAccess", label:"Rapor Yetkileri" }
+/* =============================
+  ADMIN (11 madde)
+============================= */
+const TABS=[
+  {k:"firms", t:"Firmalar"},
+  {k:"roles", t:"Roller"},
+  {k:"users", t:"Kullanıcılar"},
+  {k:"userFirms", t:"Kullanıcı→Firma"},
+  {k:"userRoles", t:"Kullanıcı→Rol"},
+  {k:"firmAccess", t:"Firma Giriş Rolleri"},
+  {k:"categories", t:"Kategoriler"},
+  {k:"reports", t:"Raporlar"},
+  {k:"reportFirms", t:"Rapor→Firma"},
+  {k:"reportAccess", t:"Rapor Yetkileri"},
 ];
 
-let ACTIVE_ADMIN_TAB = "firms";
-
 function openAdmin(){
-  if(!SESSION || SESSION.mode!=="ADMIN"){
-    toast("Admin yetkisi yok.", "bad");
-    return;
-  }
-  DRAFT = deepClone(DB);
-  byId("adminPanel").classList.remove("hidden");
+  if(!SESSION || SESSION.mode!=="ADMIN"){ alert("Admin değil"); return; }
+  DRAFT = JSON.parse(JSON.stringify(DB));
+  DIRTY=false; setDirty(false);
+  document.getElementById("adminCard").classList.remove("hidden");
   buildAdminTabs();
-  setAdminTab(ACTIVE_ADMIN_TAB);
-  byId("unsavedBadge").classList.add("hidden");
+  setTab(ACTIVE_TAB);
 }
-
 function closeAdmin(){
-  DRAFT = null;
-  byId("adminPanel").classList.add("hidden");
+  document.getElementById("adminCard").classList.add("hidden");
+  DRAFT=null; DIRTY=false; setDirty(false);
 }
-
-function markUnsaved(flag){
-  byId("unsavedBadge").classList.toggle("hidden", !flag);
+function setDirty(v){
+  DIRTY=v;
+  document.getElementById("dirtyBadge").style.display = v ? "inline-flex" : "none";
 }
-
 function buildAdminTabs(){
-  const t = byId("adminTabs");
-  t.innerHTML="";
-  for(const tab of ADMIN_TABS){
-    const el = document.createElement("div");
-    el.className = "tab" + (tab.key===ACTIVE_ADMIN_TAB ? " active":"");
-    el.textContent = tab.label;
-    el.onclick = ()=> setAdminTab(tab.key);
-    t.appendChild(el);
-  }
+  const bar=document.getElementById("adminTabs");
+  bar.innerHTML="";
+  TABS.forEach(x=>{
+    const b=document.createElement("div");
+    b.className="chip"+(ACTIVE_TAB===x.k?" active":"");
+    b.textContent=x.t;
+    b.onclick=()=>setTab(x.k);
+    bar.append(b);
+  });
 }
-
-function setAdminTab(key){
-  ACTIVE_ADMIN_TAB = key;
+function setTab(k){
+  ACTIVE_TAB=k;
   buildAdminTabs();
-  renderAdminTab();
+  renderAdmin();
 }
-
-function renderAdminTab(){
-  const c = byId("tabContent");
-  c.innerHTML = "";
+function saveDraft(){
+  if(!DRAFT) return;
+  DB = JSON.parse(JSON.stringify(DRAFT));
+  saveDB(DB);
+  setDirty(false);
+  // portal da anında güncellensin
+  render();
+  alert("Kaydedildi. Portal güncellendi.");
+}
+function renderAdmin(){
+  const body=document.getElementById("adminBody");
+  body.innerHTML="";
   if(!DRAFT) return;
 
-  const sectionTitle = (label) => {
-    const h = document.createElement("div");
-    h.className="hint";
-    h.innerHTML = "<b>"+label+"</b>";
-    return h;
+  // helpers
+  const h = (title, sub="")=>{
+    const div=document.createElement("div");
+    div.innerHTML=`<div style="font-weight:700">${escapeHTML(title)}</div><div style="font-size:12px;color:var(--muted)">${escapeHTML(sub)}</div>`;
+    div.style.marginBottom="10px";
+    return div;
+  };
+  const addRow = (el)=>{ body.append(el); body.append(hr()); };
+  const hr = ()=>{ const d=document.createElement("div"); d.className="hr"; return d; };
+
+  if(ACTIVE_TAB==="firms"){
+    body.append(h("1) Firma ekle/düzenle/sil","Alias ekleyerek normal login’de firma yazımı serbestleşir."));
+    body.append(firmEditor());
+    return;
+  }
+  if(ACTIVE_TAB==="roles"){
+    body.append(h("2) Kullanıcı rolü ekle/düzenle/sil","RoleKey benzersiz olmalı."));
+    body.append(roleEditor());
+    return;
+  }
+  if(ACTIVE_TAB==="users"){
+    body.append(h("3) Kullanıcı ekle/düzenle/sil","Admin ve Super işaretlenebilir."));
+    body.append(userEditor());
+    return;
+  }
+  if(ACTIVE_TAB==="userFirms"){
+    body.append(h("4) Kullanıcıyı firmaya ekle/düzenle/sil","Normal login için üyelik şart."));
+    body.append(userFirmEditor());
+    return;
+  }
+  if(ACTIVE_TAB==="userRoles"){
+    body.append(h("5) Kullanıcıya rol ekle/düzenle/sil","Rapor ve firma giriş kuralları için kullanılır."));
+    body.append(userRoleEditor());
+    return;
+  }
+  if(ACTIVE_TAB==="firmAccess"){
+    body.append(h("6) Kullanıcı rollerine göre firmaya giriş","Bir firmada kural yoksa: üyelik + herhangi rol yeterli."));
+    body.append(firmAccessEditor());
+    return;
+  }
+  if(ACTIVE_TAB==="categories"){
+    body.append(h("11) Kategoriler","Rapor eklerken kategori zorunlu."));
+    body.append(categoryEditor());
+    return;
+  }
+  if(ACTIVE_TAB==="reports"){
+    body.append(h("7) Rapor ekle/düzenle/sil","URL + kategori zorunlu."));
+    body.append(reportEditor());
+    return;
+  }
+  if(ACTIVE_TAB==="reportFirms"){
+    body.append(h("7) Raporu firmaya ata","Firma havuzu: report→firma."));
+    body.append(reportFirmEditor());
+    return;
+  }
+  if(ACTIVE_TAB==="reportAccess"){
+    body.append(h("8) Rapor erişimi (kullanıcı + yetki)","Kural yoksa: firmadaki herkes görür."));
+    body.append(reportAccessEditor());
+    return;
+  }
+
+  body.append(h("Tab bulunamadı"));
+}
+
+/* ====== Editors (minimal + stable) ====== */
+function firmEditor(){
+  const box=document.createElement("div");
+  box.className="grid";
+  box.innerHTML=`
+    <div class="grid g3">
+      <div><label>FirmKey</label><input id="f_key" placeholder="SUDESAN"></div>
+      <div><label>Firma Adı</label><input id="f_name" placeholder="Sudesan"></div>
+      <div><label>Aliases (virgül)</label><input id="f_alias" placeholder="Sudesan,sudesan,SUDESAN"></div>
+    </div>
+    <div class="right"><button class="btn success" id="f_add">Ekle</button></div>
+    <div class="hr"></div>
+    <table>
+      <thead><tr><th>FirmKey</th><th>Ad</th><th>Aliases</th><th></th></tr></thead>
+      <tbody id="f_tb"></tbody>
+    </table>
+  `;
+  box.querySelector("#f_add").onclick=()=>{
+    const key=(box.querySelector("#f_key").value||"").trim().toUpperCase();
+    const name=(box.querySelector("#f_name").value||"").trim();
+    const aliases=(box.querySelector("#f_alias").value||"").split(",").map(x=>x.trim()).filter(Boolean);
+    if(!key||!name){ alert("FirmKey ve Ad zorunlu"); return; }
+    if(DRAFT.firms.some(x=>x.firmKey===key)){ alert("FirmKey zaten var"); return; }
+    DRAFT.firms.push({firmKey:key,name,aliases});
+    setDirty(true); renderAdmin();
+  };
+  const tb=box.querySelector("#f_tb");
+  DRAFT.firms.forEach(f=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${escapeHTML(f.firmKey)}</td>
+      <td><input value="${escapeHTML(f.name)}" data-k="${escapeHTML(f.firmKey)}" data-f="name"></td>
+      <td><input value="${escapeHTML((f.aliases||[]).join(", "))}" data-k="${escapeHTML(f.firmKey)}" data-f="aliases"></td>
+      <td class="right"><button class="btn small danger" data-del="${escapeHTML(f.firmKey)}">Sil</button></td>
+    `;
+    tb.append(tr);
+  });
+  tb.oninput=(e)=>{
+    const el=e.target;
+    const k=el.dataset.k, fld=el.dataset.f;
+    const f=DRAFT.firms.find(x=>x.firmKey===k);
+    if(!f) return;
+    if(fld==="name") f.name=el.value;
+    if(fld==="aliases") f.aliases=el.value.split(",").map(x=>x.trim()).filter(Boolean);
+    setDirty(true);
+  };
+  tb.onclick=(e)=>{
+    const del=e.target.dataset.del;
+    if(!del) return;
+    if(!confirm("Firma silinsin mi?")) return;
+    DRAFT.firms=DRAFT.firms.filter(x=>x.firmKey!==del);
+    // cleanup mappings
+    DRAFT.userFirms=DRAFT.userFirms.filter(x=>x.firmKey!==del);
+    DRAFT.firmAccessRoles=DRAFT.firmAccessRoles.filter(x=>x.firmKey!==del);
+    DRAFT.reportFirms=DRAFT.reportFirms.filter(x=>x.firmKey!==del);
+    setDirty(true); renderAdmin();
+  };
+  return box;
+}
+
+function roleEditor(){
+  const box=document.createElement("div");
+  box.className="grid";
+  box.innerHTML=`
+    <div class="grid g3">
+      <div><label>RoleKey</label><input id="r_key" placeholder="PLANNER"></div>
+      <div><label>Ad</label><input id="r_name" placeholder="Planner"></div>
+      <div class="right" style="align-items:end"><button class="btn success" id="r_add">Ekle</button></div>
+    </div>
+    <div class="hr"></div>
+    <table>
+      <thead><tr><th>RoleKey</th><th>Ad</th><th></th></tr></thead>
+      <tbody id="r_tb"></tbody>
+    </table>
+  `;
+  box.querySelector("#r_add").onclick=()=>{
+    const k=(box.querySelector("#r_key").value||"").trim().toUpperCase();
+    const n=(box.querySelector("#r_name").value||"").trim();
+    if(!k||!n){ alert("RoleKey ve Ad zorunlu"); return; }
+    if(DRAFT.roles.some(x=>x.roleKey===k)){ alert("RoleKey zaten var"); return; }
+    DRAFT.roles.push({roleKey:k,name:n});
+    setDirty(true); renderAdmin();
+  };
+  const tb=box.querySelector("#r_tb");
+  DRAFT.roles.forEach(r=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${escapeHTML(r.roleKey)}</td>
+      <td><input value="${escapeHTML(r.name)}" data-k="${escapeHTML(r.roleKey)}"></td>
+      <td class="right"><button class="btn small danger" data-del="${escapeHTML(r.roleKey)}">Sil</button></td>
+    `;
+    tb.append(tr);
+  });
+  tb.oninput=(e)=>{
+    const k=e.target.dataset.k;
+    const r=DRAFT.roles.find(x=>x.roleKey===k);
+    if(!r) return;
+    r.name=e.target.value;
+    setDirty(true);
+  };
+  tb.onclick=(e)=>{
+    const del=e.target.dataset.del;
+    if(!del) return;
+    if(del==="ADMIN"){ alert("ADMIN silinemez"); return; }
+    if(!confirm("Rol silinsin mi?")) return;
+    DRAFT.roles=DRAFT.roles.filter(x=>x.roleKey!==del);
+    DRAFT.userRoles=DRAFT.userRoles.filter(x=>x.roleKey!==del);
+    DRAFT.firmAccessRoles=DRAFT.firmAccessRoles.filter(x=>x.roleKey!==del);
+    DRAFT.reportAccess.forEach(ra=>{
+      ra.allowedRoleKeys=(ra.allowedRoleKeys||[]).filter(x=>x!==del);
+    });
+    setDirty(true); renderAdmin();
+  };
+  return box;
+}
+
+function userEditor(){
+  const box=document.createElement("div");
+  box.className="grid";
+  box.innerHTML=`
+    <div class="grid g3">
+      <div><label>Username</label><input id="u_user"></div>
+      <div><label>Password</label><input id="u_pass"></div>
+      <div><label>Full Name</label><input id="u_name"></div>
+    </div>
+    <div class="grid g3">
+      <div style="display:flex;gap:10px;align-items:center"><input type="checkbox" id="u_admin"><span style="font-size:12px;color:var(--muted)">Admin</span></div>
+      <div style="display:flex;gap:10px;align-items:center"><input type="checkbox" id="u_super"><span style="font-size:12px;color:var(--muted)">Super User</span></div>
+      <div class="right"><button class="btn success" id="u_add">Ekle</button></div>
+    </div>
+    <div class="hr"></div>
+    <table>
+      <thead><tr><th>Username</th><th>Full Name</th><th>Admin</th><th>Super</th><th>Password</th><th></th></tr></thead>
+      <tbody id="u_tb"></tbody>
+    </table>
+  `;
+  box.querySelector("#u_add").onclick=()=>{
+    const username=(box.querySelector("#u_user").value||"").trim();
+    const password=(box.querySelector("#u_pass").value||"").trim();
+    const fullName=(box.querySelector("#u_name").value||"").trim();
+    const isAdmin=!!box.querySelector("#u_admin").checked;
+    const isSuper=!!box.querySelector("#u_super").checked;
+    if(!username||!password){ alert("username/password zorunlu"); return; }
+    if(DRAFT.users.some(x=>(x.username||"").toLowerCase()===username.toLowerCase())){ alert("username zaten var"); return; }
+    DRAFT.users.push({userId:gid("u"), username, password, fullName, isAdmin, isSuper});
+    setDirty(true); renderAdmin();
   };
 
-  /* ---------- Firms ---------- */
-  if(ACTIVE_ADMIN_TAB==="firms"){
-    c.appendChild(sectionTitle("Firma ekle/düzenle/sil (aliases dahil)"));
-
-    const form = document.createElement("div");
-    form.className="grid grid-3";
-    form.innerHTML = `
-      <div><label>Firm Key</label><input class="input mono" id="f_firmKey" placeholder="Örn: SUDESAN"></div>
-      <div><label>Firma Adı</label><input class="input" id="f_firmName" placeholder="Örn: Sudesan"></div>
-      <div>
-        <label>Aliases (virgülle)</label>
-        <input class="input" id="f_aliases" placeholder="Sudesan,SUDESAN,Su desan">
-      </div>
-      <div class="right-actions" style="grid-column:1/-1">
-        <button class="btn success" id="f_addBtn">Ekle</button>
-      </div>
+  const tb=box.querySelector("#u_tb");
+  DRAFT.users.forEach(u=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${escapeHTML(u.username)}</td>
+      <td><input value="${escapeHTML(u.fullName||"")}" data-id="${escapeHTML(u.userId)}" data-f="fullName"></td>
+      <td><input type="checkbox" ${u.isAdmin?"checked":""} data-id="${escapeHTML(u.userId)}" data-f="isAdmin"></td>
+      <td><input type="checkbox" ${u.isSuper?"checked":""} data-id="${escapeHTML(u.userId)}" data-f="isSuper"></td>
+      <td><input value="${escapeHTML(u.password||"")}" data-id="${escapeHTML(u.userId)}" data-f="password"></td>
+      <td class="right"><button class="btn small danger" data-del="${escapeHTML(u.userId)}">Sil</button></td>
     `;
-    c.appendChild(form);
+    tb.append(tr);
+  });
 
-    byId("f_addBtn").onclick = ()=>{
-      const firmKey = (byId("f_firmKey").value||"").trim().toUpperCase();
-      const name = (byId("f_firmName").value||"").trim();
-      const aliases = (byId("f_aliases").value||"").split(",").map(x=>x.trim()).filter(Boolean);
-      if(!firmKey || !name) return toast("FirmKey ve Firma adı zorunlu.", "bad");
-      if(DRAFT.firms.some(x=>x.firmKey===firmKey)) return toast("Bu firmKey zaten var.", "bad");
-      DRAFT.firms.push({ firmKey, name, aliases });
-      markUnsaved(true);
-      renderAdminTab();
-    };
+  tb.oninput=(e)=>{
+    const el=e.target;
+    const id=el.dataset.id, f=el.dataset.f;
+    const u=DRAFT.users.find(x=>x.userId===id);
+    if(!u) return;
+    if(el.type==="checkbox") u[f]=el.checked;
+    else u[f]=el.value;
+    setDirty(true);
+  };
+  tb.onclick=(e)=>{
+    const del=e.target.dataset.del;
+    if(!del) return;
+    if(!confirm("Kullanıcı silinsin mi?")) return;
+    DRAFT.users=DRAFT.users.filter(x=>x.userId!==del);
+    DRAFT.userFirms=DRAFT.userFirms.filter(x=>x.userId!==del);
+    DRAFT.userRoles=DRAFT.userRoles.filter(x=>x.userId!==del);
+    DRAFT.reportAccess.forEach(ra=>{
+      ra.allowedUserIds=(ra.allowedUserIds||[]).filter(x=>x!==del);
+    });
+    setDirty(true); renderAdmin();
+  };
+  return box;
+}
 
-    c.appendChild(renderTableFirms());
-    return;
-  }
+function selFirmsHTML(id){
+  return `<select id="${id}">${DRAFT.firms.map(f=>`<option value="${f.firmKey}">${escapeHTML(f.name)} (${f.firmKey})</option>`).join("")}</select>`;
+}
+function selUsersHTML(id){
+  return `<select id="${id}">${DRAFT.users.map(u=>`<option value="${u.userId}">${escapeHTML(u.username)} (${escapeHTML(u.fullName||"")})</option>`).join("")}</select>`;
+}
+function selRolesHTML(id){
+  return `<select id="${id}">${DRAFT.roles.map(r=>`<option value="${r.roleKey}">${escapeHTML(r.name)} (${r.roleKey})</option>`).join("")}</select>`;
+}
+function selCatsHTML(id){
+  return `<select id="${id}">${DRAFT.categories.map(c=>`<option value="${c.catKey}">${escapeHTML(c.name)} (${c.catKey})</option>`).join("")}</select>`;
+}
+function selReportsHTML(id){
+  return `<select id="${id}">${DRAFT.reports.map(r=>`<option value="${r.reportId}">${escapeHTML(r.name)} (${r.reportId})</option>`).join("")}</select>`;
+}
 
-  function renderTableFirms(){
-    const wrap = document.createElement("div");
-    wrap.className="hr";
-    const table = document.createElement("table");
-    table.innerHTML = `
-      <thead><tr>
-        <th>FirmKey</th><th>Ad</th><th>Aliases</th><th></th>
-      </tr></thead>
-      <tbody></tbody>
+function userFirmEditor(){
+  const box=document.createElement("div");
+  box.className="grid";
+  box.innerHTML=`
+    <div class="grid g3">
+      <div><label>Kullanıcı</label>${selUsersHTML("uf_user")}</div>
+      <div><label>Firma</label>${selFirmsHTML("uf_firm")}</div>
+      <div class="right" style="align-items:end"><button class="btn success" id="uf_add">Ekle</button></div>
+    </div>
+    <div class="hr"></div>
+    <table><thead><tr><th>Kullanıcı</th><th>Firma</th><th></th></tr></thead><tbody id="uf_tb"></tbody></table>
+  `;
+  box.querySelector("#uf_add").onclick=()=>{
+    const userId=box.querySelector("#uf_user").value;
+    const firmKey=box.querySelector("#uf_firm").value;
+    if(DRAFT.userFirms.some(x=>x.userId===userId && x.firmKey===firmKey)){ alert("Zaten var"); return; }
+    DRAFT.userFirms.push({id:gid("uf"), userId, firmKey});
+    setDirty(true); renderAdmin();
+  };
+  const tb=box.querySelector("#uf_tb");
+  DRAFT.userFirms.forEach(m=>{
+    const u=DRAFT.users.find(x=>x.userId===m.userId);
+    const f=DRAFT.firms.find(x=>x.firmKey===m.firmKey);
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${escapeHTML(u?.username||m.userId)}</td>
+      <td>${escapeHTML(f?.name||m.firmKey)}</td>
+      <td class="right"><button class="btn small danger" data-del="${m.id}">Sil</button></td>
     `;
-    const tb = table.querySelector("tbody");
-    for(const f of DRAFT.firms){
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td class="mono">${esc(f.firmKey)}</td>
-        <td><input class="input" value="${esc(f.name)}" data-k="${esc(f.firmKey)}" data-f="name"></td>
-        <td><input class="input" value="${esc((f.aliases||[]).join(", "))}" data-k="${esc(f.firmKey)}" data-f="aliases"></td>
-        <td class="right-actions">
-          <button class="btn small danger" data-del="${esc(f.firmKey)}">Sil</button>
-        </td>
-      `;
-      tb.appendChild(tr);
+    tb.append(tr);
+  });
+  tb.onclick=(e)=>{
+    const del=e.target.dataset.del;
+    if(!del) return;
+    DRAFT.userFirms=DRAFT.userFirms.filter(x=>x.id!==del);
+    setDirty(true); renderAdmin();
+  };
+  return box;
+}
+
+function userRoleEditor(){
+  const box=document.createElement("div");
+  box.className="grid";
+  box.innerHTML=`
+    <div class="grid g3">
+      <div><label>Kullanıcı</label>${selUsersHTML("ur_user")}</div>
+      <div><label>Rol</label>${selRolesHTML("ur_role")}</div>
+      <div class="right" style="align-items:end"><button class="btn success" id="ur_add">Ekle</button></div>
+    </div>
+    <div class="hr"></div>
+    <table><thead><tr><th>Kullanıcı</th><th>Rol</th><th></th></tr></thead><tbody id="ur_tb"></tbody></table>
+  `;
+  box.querySelector("#ur_add").onclick=()=>{
+    const userId=box.querySelector("#ur_user").value;
+    const roleKey=box.querySelector("#ur_role").value;
+    if(DRAFT.userRoles.some(x=>x.userId===userId && x.roleKey===roleKey)){ alert("Zaten var"); return; }
+    DRAFT.userRoles.push({id:gid("ur"), userId, roleKey});
+    setDirty(true); renderAdmin();
+  };
+  const tb=box.querySelector("#ur_tb");
+  DRAFT.userRoles.forEach(m=>{
+    const u=DRAFT.users.find(x=>x.userId===m.userId);
+    const r=DRAFT.roles.find(x=>x.roleKey===m.roleKey);
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${escapeHTML(u?.username||m.userId)}</td>
+      <td>${escapeHTML(r?.name||m.roleKey)}</td>
+      <td class="right"><button class="btn small danger" data-del="${m.id}">Sil</button></td>
+    `;
+    tb.append(tr);
+  });
+  tb.onclick=(e)=>{
+    const del=e.target.dataset.del;
+    if(!del) return;
+    DRAFT.userRoles=DRAFT.userRoles.filter(x=>x.id!==del);
+    setDirty(true); renderAdmin();
+  };
+  return box;
+}
+
+function firmAccessEditor(){
+  const box=document.createElement("div");
+  box.className="grid";
+  box.innerHTML=`
+    <div class="grid g3">
+      <div><label>Firma</label>${selFirmsHTML("fa_firm")}</div>
+      <div><label>İzinli Rol</label>${selRolesHTML("fa_role")}</div>
+      <div class="right" style="align-items:end"><button class="btn success" id="fa_add">Ekle</button></div>
+    </div>
+    <div class="hr"></div>
+    <table><thead><tr><th>Firma</th><th>Rol</th><th></th></tr></thead><tbody id="fa_tb"></tbody></table>
+  `;
+  box.querySelector("#fa_add").onclick=()=>{
+    const firmKey=box.querySelector("#fa_firm").value;
+    const roleKey=box.querySelector("#fa_role").value;
+    if(DRAFT.firmAccessRoles.some(x=>x.firmKey===firmKey && x.roleKey===roleKey)){ alert("Zaten var"); return; }
+    DRAFT.firmAccessRoles.push({id:gid("far"), firmKey, roleKey});
+    setDirty(true); renderAdmin();
+  };
+  const tb=box.querySelector("#fa_tb");
+  DRAFT.firmAccessRoles.forEach(m=>{
+    const f=DRAFT.firms.find(x=>x.firmKey===m.firmKey);
+    const r=DRAFT.roles.find(x=>x.roleKey===m.roleKey);
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${escapeHTML(f?.name||m.firmKey)}</td>
+      <td>${escapeHTML(r?.name||m.roleKey)}</td>
+      <td class="right"><button class="btn small danger" data-del="${m.id}">Sil</button></td>
+    `;
+    tb.append(tr);
+  });
+  tb.onclick=(e)=>{
+    const del=e.target.dataset.del;
+    if(!del) return;
+    DRAFT.firmAccessRoles=DRAFT.firmAccessRoles.filter(x=>x.id!==del);
+    setDirty(true); renderAdmin();
+  };
+  return box;
+}
+
+function categoryEditor(){
+  const box=document.createElement("div");
+  box.className="grid";
+  box.innerHTML=`
+    <div class="grid g3">
+      <div><label>CatKey</label><input id="c_key" placeholder="SCM"></div>
+      <div><label>Ad</label><input id="c_name" placeholder="Tedarik Zinciri"></div>
+      <div class="right" style="align-items:end"><button class="btn success" id="c_add">Ekle</button></div>
+    </div>
+    <div class="hr"></div>
+    <table><thead><tr><th>CatKey</th><th>Ad</th><th></th></tr></thead><tbody id="c_tb"></tbody></table>
+  `;
+  box.querySelector("#c_add").onclick=()=>{
+    const catKey=(box.querySelector("#c_key").value||"").trim().toUpperCase();
+    const name=(box.querySelector("#c_name").value||"").trim();
+    if(!catKey||!name){ alert("CatKey ve ad zorunlu"); return; }
+    if(DRAFT.categories.some(x=>x.catKey===catKey)){ alert("CatKey var"); return; }
+    DRAFT.categories.push({catKey,name});
+    setDirty(true); renderAdmin();
+  };
+  const tb=box.querySelector("#c_tb");
+  DRAFT.categories.forEach(c=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${escapeHTML(c.catKey)}</td>
+      <td><input value="${escapeHTML(c.name)}" data-k="${escapeHTML(c.catKey)}"></td>
+      <td class="right"><button class="btn small danger" data-del="${escapeHTML(c.catKey)}">Sil</button></td>
+    `;
+    tb.append(tr);
+  });
+  tb.oninput=(e)=>{
+    const k=e.target.dataset.k;
+    const c=DRAFT.categories.find(x=>x.catKey===k);
+    if(!c) return;
+    c.name=e.target.value;
+    setDirty(true);
+  };
+  tb.onclick=(e)=>{
+    const del=e.target.dataset.del;
+    if(!del) return;
+    if(!confirm("Kategori silinsin mi?")) return;
+    DRAFT.categories=DRAFT.categories.filter(x=>x.catKey!==del);
+    setDirty(true); renderAdmin();
+  };
+  return box;
+}
+
+function reportEditor(){
+  const box=document.createElement("div");
+  box.className="grid";
+  box.innerHTML=`
+    <div class="grid g3">
+      <div><label>Rapor Adı</label><input id="rp_name"></div>
+      <div><label>URL</label><input id="rp_url"></div>
+      <div><label>Kategori</label>${selCatsHTML("rp_cat")}</div>
+    </div>
+    <div class="right"><button class="btn success" id="rp_add">Ekle</button></div>
+    <div class="hr"></div>
+    <table><thead><tr><th>Ad</th><th>URL</th><th>Kategori</th><th></th></tr></thead><tbody id="rp_tb"></tbody></table>
+  `;
+  box.querySelector("#rp_add").onclick=()=>{
+    const name=(box.querySelector("#rp_name").value||"").trim();
+    const url=(box.querySelector("#rp_url").value||"").trim();
+    const catKey=box.querySelector("#rp_cat").value;
+    if(!name||!url||!catKey){ alert("Ad, URL, kategori zorunlu"); return; }
+    DRAFT.reports.push({reportId:gid("r"), name,url,catKey});
+    setDirty(true); renderAdmin();
+  };
+  const tb=box.querySelector("#rp_tb");
+  DRAFT.reports.forEach(r=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td><input value="${escapeHTML(r.name)}" data-id="${escapeHTML(r.reportId)}" data-f="name"></td>
+      <td><input value="${escapeHTML(r.url)}" data-id="${escapeHTML(r.reportId)}" data-f="url"></td>
+      <td>${catSelectForReport(r.reportId, r.catKey)}</td>
+      <td class="right"><button class="btn small danger" data-del="${escapeHTML(r.reportId)}">Sil</button></td>
+    `;
+    tb.append(tr);
+  });
+  tb.oninput=(e)=>{
+    const el=e.target;
+    const id=el.dataset.id;
+    const f=el.dataset.f;
+    if(!id) return;
+    const r=DRAFT.reports.find(x=>x.reportId===id);
+    if(!r) return;
+    if(el.tagName==="SELECT"){ r.catKey=el.value; setDirty(true); return; }
+    r[f]=el.value;
+    setDirty(true);
+  };
+  tb.onclick=(e)=>{
+    const del=e.target.dataset.del;
+    if(!del) return;
+    if(!confirm("Rapor silinsin mi?")) return;
+    DRAFT.reports=DRAFT.reports.filter(x=>x.reportId!==del);
+    DRAFT.reportFirms=DRAFT.reportFirms.filter(x=>x.reportId!==del);
+    DRAFT.reportAccess=DRAFT.reportAccess.filter(x=>x.reportId!==del);
+    setDirty(true); renderAdmin();
+  };
+  return box;
+}
+function catSelectForReport(reportId, selected){
+  return `<select data-id="${escapeHTML(reportId)}">
+    ${DRAFT.categories.map(c=>`<option value="${c.catKey}" ${c.catKey===selected?"selected":""}>${escapeHTML(c.name)} (${c.catKey})</option>`).join("")}
+  </select>`;
+}
+
+function reportFirmEditor(){
+  const box=document.createElement("div");
+  box.className="grid";
+  box.innerHTML=`
+    <div class="grid g3">
+      <div><label>Rapor</label>${selReportsHTML("rf_r")}</div>
+      <div><label>Firma</label>${selFirmsHTML("rf_f")}</div>
+      <div class="right" style="align-items:end"><button class="btn success" id="rf_add">Ekle</button></div>
+    </div>
+    <div class="hr"></div>
+    <table><thead><tr><th>Rapor</th><th>Firma</th><th></th></tr></thead><tbody id="rf_tb"></tbody></table>
+  `;
+  box.querySelector("#rf_add").onclick=()=>{
+    const reportId=box.querySelector("#rf_r").value;
+    const firmKey=box.querySelector("#rf_f").value;
+    if(DRAFT.reportFirms.some(x=>x.reportId===reportId && x.firmKey===firmKey)){ alert("Zaten var"); return; }
+    DRAFT.reportFirms.push({id:gid("rf"), reportId, firmKey});
+    setDirty(true); renderAdmin();
+  };
+  const tb=box.querySelector("#rf_tb");
+  DRAFT.reportFirms.forEach(m=>{
+    const r=DRAFT.reports.find(x=>x.reportId===m.reportId);
+    const f=DRAFT.firms.find(x=>x.firmKey===m.firmKey);
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${escapeHTML(r?.name||m.reportId)}</td>
+      <td>${escapeHTML(f?.name||m.firmKey)}</td>
+      <td class="right"><button class="btn small danger" data-del="${m.id}">Sil</button></td>
+    `;
+    tb.append(tr);
+  });
+  tb.onclick=(e)=>{
+    const del=e.target.dataset.del;
+    if(!del) return;
+    DRAFT.reportFirms=DRAFT.reportFirms.filter(x=>x.id!==del);
+    setDirty(true); renderAdmin();
+  };
+  return box;
+}
+
+function reportAccessEditor(){
+  const box=document.createElement("div");
+  box.className="grid";
+  box.innerHTML=`
+    <div class="grid g3">
+      <div><label>Rapor</label>${selReportsHTML("ra_r")}</div>
+      <div><label>İzinli Roller (virgül)</label><input id="ra_roles" placeholder="MANAGER,PLANNER"></div>
+      <div><label>İzinli Usernames (virgül)</label><input id="ra_users" placeholder="user,super"></div>
+    </div>
+    <div class="right"><button class="btn success" id="ra_upsert">Ekle/Güncelle</button></div>
+    <div style="font-size:12px;color:var(--muted)">Rol veya kullanıcı boşsa sorun değil. İkisi de boşsa: herkes.</div>
+    <div class="hr"></div>
+    <table><thead><tr><th>Rapor</th><th>Roller</th><th>Kullanıcılar</th><th></th></tr></thead><tbody id="ra_tb"></tbody></table>
+  `;
+  box.querySelector("#ra_upsert").onclick=()=>{
+    const reportId=box.querySelector("#ra_r").value;
+    const roleKeys=(box.querySelector("#ra_roles").value||"").split(",").map(x=>x.trim().toUpperCase()).filter(Boolean);
+    const usernames=(box.querySelector("#ra_users").value||"").split(",").map(x=>x.trim().toLowerCase()).filter(Boolean);
+    const userIds = usernames.map(un=>{
+      const u=DRAFT.users.find(x=>(x.username||"").toLowerCase()===un);
+      return u ? u.userId : null;
+    }).filter(Boolean);
+
+    const existing=DRAFT.reportAccess.find(x=>x.reportId===reportId);
+    if(existing){
+      existing.allowedRoleKeys=roleKeys;
+      existing.allowedUserIds=userIds;
+    }else{
+      DRAFT.reportAccess.push({id:gid("ra"), reportId, allowedRoleKeys:roleKeys, allowedUserIds:userIds});
     }
-    table.oninput = (e)=>{
-      const inp = e.target;
-      if(!inp?.dataset?.k) return;
-      const k = inp.dataset.k;
-      const fld = inp.dataset.f;
-      const f = DRAFT.firms.find(x=>x.firmKey===k);
-      if(!f) return;
-      if(fld==="name") f.name = inp.value;
-      if(fld==="aliases") f.aliases = (inp.value||"").split(",").map(x=>x.trim()).filter(Boolean);
-      markUnsaved(true);
-    };
-    table.onclick = (e)=>{
-      const b = e.target;
-      const del = b?.dataset?.del;
-      if(!del) return;
-      if(!confirm("Silinsin mi? (Firmaya bağlı eşleşmeler de boşa düşer)")) return;
-      DRAFT.firms = DRAFT.firms.filter(x=>x.firmKey!==del);
-      // cleanup mappings
-      DRAFT.userFirms = DRAFT.userFirms.filter(x=>x.firmKey!==del);
-      DRAFT.firmAccessRoles = DRAFT.firmAccessRoles.filter(x=>x.firmKey!==del);
-      DRAFT.reportFirms = DRAFT.reportFirms.filter(x=>x.firmKey!==del);
-      markUnsaved(true);
-      renderAdminTab();
-    };
-    const box = document.createElement("div");
-    box.appendChild(document.createElement("div")).className="hr";
-    box.appendChild(table);
-    return box;
-  }
+    setDirty(true); renderAdmin();
+  };
 
-  /* ---------- Roles ---------- */
-  if(ACTIVE_ADMIN_TAB==="roles"){
-    c.appendChild(sectionTitle("Kullanıcı rolü ekle/düzenle/sil"));
-
-    const form = document.createElement("div");
-    form.className="grid grid-3";
-    form.innerHTML = `
-      <div><label>Role Key</label><input class="input mono" id="r_roleKey" placeholder="Örn: PLANNER"></div>
-      <div><label>Role Adı</label><input class="input" id="r_roleName" placeholder="Örn: Planner"></div>
-      <div class="right-actions" style="align-items:end">
-        <button class="btn success" id="r_addBtn">Ekle</button>
-      </div>
+  const tb=box.querySelector("#ra_tb");
+  DRAFT.reportAccess.forEach(ra=>{
+    const r=DRAFT.reports.find(x=>x.reportId===ra.reportId);
+    const roleStr=(ra.allowedRoleKeys||[]).join(", ") || "—";
+    const userStr=(ra.allowedUserIds||[]).map(id=>DRAFT.users.find(u=>u.userId===id)?.username || id).join(", ") || "—";
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${escapeHTML(r?.name||ra.reportId)}</td>
+      <td>${escapeHTML(roleStr)}</td>
+      <td>${escapeHTML(userStr)}</td>
+      <td class="right"><button class="btn small danger" data-del="${ra.id}">Sil</button></td>
     `;
-    c.appendChild(form);
-
-    byId("r_addBtn").onclick = ()=>{
-      const roleKey = (byId("r_roleKey").value||"").trim().toUpperCase();
-      const name = (byId("r_roleName").value||"").trim();
-      if(!roleKey || !name) return toast("RoleKey ve ad zorunlu.", "bad");
-      if(DRAFT.roles.some(x=>x.roleKey===roleKey)) return toast("Bu roleKey zaten var.", "bad");
-      DRAFT.roles.push({ roleKey, name });
-      markUnsaved(true);
-      renderAdminTab();
-    };
-
-    c.appendChild(renderTableRoles());
-    return;
-  }
-
-  function renderTableRoles(){
-    const table = document.createElement("table");
-    table.innerHTML = `<thead><tr><th>RoleKey</th><th>Ad</th><th></th></tr></thead><tbody></tbody>`;
-    const tb = table.querySelector("tbody");
-    for(const r of DRAFT.roles){
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td class="mono">${esc(r.roleKey)}</td>
-        <td><input class="input" value="${esc(r.name)}" data-k="${esc(r.roleKey)}"></td>
-        <td class="right-actions"><button class="btn small danger" data-del="${esc(r.roleKey)}">Sil</button></td>
-      `;
-      tb.appendChild(tr);
-    }
-    table.oninput = (e)=>{
-      const inp = e.target;
-      const k = inp?.dataset?.k;
-      if(!k) return;
-      const r = DRAFT.roles.find(x=>x.roleKey===k);
-      if(!r) return;
-      r.name = inp.value;
-      markUnsaved(true);
-    };
-    table.onclick = (e)=>{
-      const del = e.target?.dataset?.del;
-      if(!del) return;
-      if(del==="ADMIN") return toast("ADMIN rolü silinemez.", "bad");
-      if(!confirm("Silinsin mi? (Kullanıcı-Rol ve kurallar da temizlenir)")) return;
-      DRAFT.roles = DRAFT.roles.filter(x=>x.roleKey!==del);
-      DRAFT.userRoles = DRAFT.userRoles.filter(x=>x.roleKey!==del);
-      DRAFT.firmAccessRoles = DRAFT.firmAccessRoles.filter(x=>x.roleKey!==del);
-      // reportAccess arrays
-      for(const ra of DRAFT.reportAccess){
-        ra.allowedRoleKeys = (ra.allowedRoleKeys||[]).filter(x=>x!==del);
-      }
-      markUnsaved(true);
-      renderAdminTab();
-    };
-    return table;
-  }
-
-  /* ---------- Users ---------- */
-  if(ACTIVE_ADMIN_TAB==="users"){
-    c.appendChild(sectionTitle("Kullanıcı ekle/düzenle/sil + Super User tanımı"));
-
-    const form = document.createElement("div");
-    form.className="grid grid-3";
-    form.innerHTML = `
-      <div><label>Username</label><input class="input" id="u_username" placeholder="Örn: zeynep"></div>
-      <div><label>Password</label><input class="input" id="u_password" placeholder="••••"></div>
-      <div><label>Full Name</label><input class="input" id="u_fullname" placeholder="Örn: Zeynep"></div>
-      <div style="display:flex;gap:10px;align-items:center">
-        <label style="margin:0">Super User</label>
-        <input type="checkbox" id="u_isSuper">
-        <span class="mini">Firma bağımsız tüm raporlar</span>
-      </div>
-      <div style="display:flex;gap:10px;align-items:center">
-        <label style="margin:0">Admin</label>
-        <input type="checkbox" id="u_isAdmin">
-        <span class="mini">Admin panel erişimi</span>
-      </div>
-      <div class="right-actions" style="align-items:end">
-        <button class="btn success" id="u_addBtn">Ekle</button>
-      </div>
-    `;
-    c.appendChild(form);
-
-    byId("u_addBtn").onclick = ()=>{
-      const username = (byId("u_username").value||"").trim();
-      const password = (byId("u_password").value||"").trim();
-      const fullName = (byId("u_fullname").value||"").trim();
-      const isSuper = !!byId("u_isSuper").checked;
-      const isAdmin = !!byId("u_isAdmin").checked;
-      if(!username || !password) return toast("Username ve password zorunlu.", "bad");
-      if(DRAFT.users.some(x=>(x.username||"").toLowerCase()===username.toLowerCase())) return toast("Username zaten var.", "bad");
-      DRAFT.users.push({ userId:uid("u"), username, password, fullName, isSuper, isAdmin });
-      markUnsaved(true);
-      renderAdminTab();
-    };
-
-    c.appendChild(renderTableUsers());
-    return;
-  }
-
-  function renderTableUsers(){
-    const table = document.createElement("table");
-    table.innerHTML = `<thead><tr>
-      <th>Username</th><th>FullName</th><th>Super</th><th>Admin</th><th>Password</th><th></th>
-    </tr></thead><tbody></tbody>`;
-    const tb = table.querySelector("tbody");
-    for(const u of DRAFT.users){
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td class="mono">${esc(u.username)}</td>
-        <td><input class="input" value="${esc(u.fullName||"")}" data-id="${esc(u.userId)}" data-f="fullName"></td>
-        <td><input type="checkbox" ${u.isSuper?"checked":""} data-id="${esc(u.userId)}" data-f="isSuper"></td>
-        <td><input type="checkbox" ${u.isAdmin?"checked":""} data-id="${esc(u.userId)}" data-f="isAdmin"></td>
-        <td><input class="input mono" value="${esc(u.password||"")}" data-id="${esc(u.userId)}" data-f="password"></td>
-        <td class="right-actions"><button class="btn small danger" data-del="${esc(u.userId)}">Sil</button></td>
-      `;
-      tb.appendChild(tr);
-    }
-    table.oninput = (e)=>{
-      const el = e.target;
-      const id = el?.dataset?.id;
-      const fld = el?.dataset?.f;
-      if(!id || !fld) return;
-      const u = DRAFT.users.find(x=>x.userId===id);
-      if(!u) return;
-      if(el.type==="checkbox") u[fld] = el.checked;
-      else u[fld] = el.value;
-      markUnsaved(true);
-    };
-    table.onclick = (e)=>{
-      const del = e.target?.dataset?.del;
-      if(!del) return;
-      if(!confirm("Kullanıcı silinsin mi? (Bağları da temizlenir)")) return;
-      DRAFT.users = DRAFT.users.filter(x=>x.userId!==del);
-      DRAFT.userFirms = DRAFT.userFirms.filter(x=>x.userId!==del);
-      DRAFT.userRoles = DRAFT.userRoles.filter(x=>x.userId!==del);
-      for(const ra of DRAFT.reportAccess){
-        ra.allowedUserIds = (ra.allowedUserIds||[]).filter(x=>x!==del);
-      }
-      markUnsaved(true);
-      renderAdminTab();
-    };
-    return table;
-  }
-
-  /* ---------- User-Firms ---------- */
-  if(ACTIVE_ADMIN_TAB==="userFirms"){
-    c.appendChild(sectionTitle("Kullanıcıyı firmaya ekle/düzenle/sil"));
-
-    const form = document.createElement("div");
-    form.className="grid grid-3";
-    form.innerHTML = `
-      <div><label>Kullanıcı</label>${selUser("uf_user")}</div>
-      <div><label>Firma</label>${selFirm("uf_firm")}</div>
-      <div class="right-actions" style="align-items:end">
-        <button class="btn success" id="uf_addBtn">Ekle</button>
-      </div>
-    `;
-    c.appendChild(form);
-
-    byId("uf_addBtn").onclick = ()=>{
-      const userId = byId("uf_user").value;
-      const firmKey = byId("uf_firm").value;
-      if(!userId || !firmKey) return toast("Kullanıcı ve firma seç.", "bad");
-      if(DRAFT.userFirms.some(x=>x.userId===userId && x.firmKey===firmKey)) return toast("Zaten var.", "bad");
-      DRAFT.userFirms.push({ id:uid("uf"), userId, firmKey });
-      markUnsaved(true);
-      renderAdminTab();
-    };
-
-    c.appendChild(renderTableUserFirms());
-    return;
-  }
-
-  function renderTableUserFirms(){
-    const table = document.createElement("table");
-    table.innerHTML = `<thead><tr><th>Kullanıcı</th><th>Firma</th><th></th></tr></thead><tbody></tbody>`;
-    const tb = table.querySelector("tbody");
-    for(const m of DRAFT.userFirms){
-      const u = DRAFT.users.find(x=>x.userId===m.userId);
-      const f = DRAFT.firms.find(x=>x.firmKey===m.firmKey);
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${esc(u?.username||m.userId)}</td>
-        <td>${esc(f?.name||m.firmKey)} <span class="mini mono">(${esc(m.firmKey)})</span></td>
-        <td class="right-actions"><button class="btn small danger" data-del="${esc(m.id)}">Sil</button></td>
-      `;
-      tb.appendChild(tr);
-    }
-    table.onclick = (e)=>{
-      const del = e.target?.dataset?.del;
-      if(!del) return;
-      DRAFT.userFirms = DRAFT.userFirms.filter(x=>x.id!==del);
-      markUnsaved(true);
-      renderAdminTab();
-    };
-    return table;
-  }
-
-  /* ---------- User-Roles ---------- */
-  if(ACTIVE_ADMIN_TAB==="userRoles"){
-    c.appendChild(sectionTitle("Kullanıcıya rol ekle/düzenle/sil"));
-
-    const form = document.createElement("div");
-    form.className="grid grid-3";
-    form.innerHTML = `
-      <div><label>Kullanıcı</label>${selUser("ur_user")}</div>
-      <div><label>Rol</label>${selRole("ur_role")}</div>
-      <div class="right-actions" style="align-items:end">
-        <button class="btn success" id="ur_addBtn">Ekle</button>
-      </div>
-    `;
-    c.appendChild(form);
-
-    byId("ur_addBtn").onclick = ()=>{
-      const userId = byId("ur_user").value;
-      const roleKey = byId("ur_role").value;
-      if(!userId || !roleKey) return toast("Kullanıcı ve rol seç.", "bad");
-      if(DRAFT.userRoles.some(x=>x.userId===userId && x.roleKey===roleKey)) return toast("Zaten var.", "bad");
-      DRAFT.userRoles.push({ id:uid("ur"), userId, roleKey });
-      markUnsaved(true);
-      renderAdminTab();
-    };
-
-    c.appendChild(renderTableUserRoles());
-    return;
-  }
-
-  function renderTableUserRoles(){
-    const table = document.createElement("table");
-    table.innerHTML = `<thead><tr><th>Kullanıcı</th><th>Rol</th><th></th></tr></thead><tbody></tbody>`;
-    const tb = table.querySelector("tbody");
-    for(const m of DRAFT.userRoles){
-      const u = DRAFT.users.find(x=>x.userId===m.userId);
-      const r = DRAFT.roles.find(x=>x.roleKey===m.roleKey);
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${esc(u?.username||m.userId)}</td>
-        <td>${esc(r?.name||m.roleKey)} <span class="mini mono">(${esc(m.roleKey)})</span></td>
-        <td class="right-actions"><button class="btn small danger" data-del="${esc(m.id)}">Sil</button></td>
-      `;
-      tb.appendChild(tr);
-    }
-    table.onclick = (e)=>{
-      const del = e.target?.dataset?.del;
-      if(!del) return;
-      DRAFT.userRoles = DRAFT.userRoles.filter(x=>x.id!==del);
-      markUnsaved(true);
-      renderAdminTab();
-    };
-    return table;
-  }
-
-  /* ---------- Firm Access Roles ---------- */
-  if(ACTIVE_ADMIN_TAB==="firmAccess"){
-    c.appendChild(sectionTitle("Kullanıcı rollerine göre firmaya giriş kuralı (NORMAL login)"));
-    c.appendChild(sectionTitle("Not: Bir firmada hiç kural yoksa, o firmaya bağlı herhangi bir role izin verilir."));
-
-    const form = document.createElement("div");
-    form.className="grid grid-3";
-    form.innerHTML = `
-      <div><label>Firma</label>${selFirm("fa_firm")}</div>
-      <div><label>İzinli Rol</label>${selRole("fa_role")}</div>
-      <div class="right-actions" style="align-items:end">
-        <button class="btn success" id="fa_addBtn">Ekle</button>
-      </div>
-    `;
-    c.appendChild(form);
-
-    byId("fa_addBtn").onclick = ()=>{
-      const firmKey = byId("fa_firm").value;
-      const roleKey = byId("fa_role").value;
-      if(!firmKey || !roleKey) return toast("Firma ve rol seç.", "bad");
-      if(DRAFT.firmAccessRoles.some(x=>x.firmKey===firmKey && x.roleKey===roleKey)) return toast("Zaten var.", "bad");
-      DRAFT.firmAccessRoles.push({ id:uid("far"), firmKey, roleKey });
-      markUnsaved(true);
-      renderAdminTab();
-    };
-
-    c.appendChild(renderTableFirmAccess());
-    return;
-  }
-
-  function renderTableFirmAccess(){
-    const table = document.createElement("table");
-    table.innerHTML = `<thead><tr><th>Firma</th><th>İzinli Rol</th><th></th></tr></thead><tbody></tbody>`;
-    const tb = table.querySelector("tbody");
-    for(const m of DRAFT.firmAccessRoles){
-      const f = DRAFT.firms.find(x=>x.firmKey===m.firmKey);
-      const r = DRAFT.roles.find(x=>x.roleKey===m.roleKey);
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${esc(f?.name||m.firmKey)} <span class="mini mono">(${esc(m.firmKey)})</span></td>
-        <td>${esc(r?.name||m.roleKey)} <span class="mini mono">(${esc(m.roleKey)})</span></td>
-        <td class="right-actions"><button class="btn small danger" data-del="${esc(m.id)}">Sil</button></td>
-      `;
-      tb.appendChild(tr);
-    }
-    table.onclick = (e)=>{
-      const del = e.target?.dataset?.del;
-      if(!del) return;
-      DRAFT.firmAccessRoles = DRAFT.firmAccessRoles.filter(x=>x.id!==del);
-      markUnsaved(true);
-      renderAdminTab();
-    };
-    return table;
-  }
-
-  /* ---------- Categories ---------- */
-  if(ACTIVE_ADMIN_TAB==="categories"){
-    c.appendChild(sectionTitle("Rapor kategorileri (Rapor eklerken kategori zorunlu)"));
-
-    const form = document.createElement("div");
-    form.className="grid grid-3";
-    form.innerHTML = `
-      <div><label>Cat Key</label><input class="input mono" id="c_catKey" placeholder="Örn: SCM"></div>
-      <div><label>Ad</label><input class="input" id="c_catName" placeholder="Örn: Tedarik Zinciri"></div>
-      <div class="right-actions" style="align-items:end">
-        <button class="btn success" id="c_addBtn">Ekle</button>
-      </div>
-    `;
-    c.appendChild(form);
-
-    byId("c_addBtn").onclick = ()=>{
-      const catKey = (byId("c_catKey").value||"").trim().toUpperCase();
-      const name = (byId("c_catName").value||"").trim();
-      if(!catKey || !name) return toast("CatKey ve ad zorunlu.", "bad");
-      if(DRAFT.categories.some(x=>x.catKey===catKey)) return toast("Bu catKey zaten var.", "bad");
-      DRAFT.categories.push({ catKey, name });
-      markUnsaved(true);
-      renderAdminTab();
-    };
-
-    c.appendChild(renderTableCats());
-    return;
-  }
-
-  function renderTableCats(){
-    const table = document.createElement("table");
-    table.innerHTML = `<thead><tr><th>CatKey</th><th>Ad</th><th></th></tr></thead><tbody></tbody>`;
-    const tb = table.querySelector("tbody");
-    for(const x of DRAFT.categories){
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td class="mono">${esc(x.catKey)}</td>
-        <td><input class="input" value="${esc(x.name)}" data-k="${esc(x.catKey)}"></td>
-        <td class="right-actions"><button class="btn small danger" data-del="${esc(x.catKey)}">Sil</button></td>
-      `;
-      tb.appendChild(tr);
-    }
-    table.oninput = (e)=>{
-      const inp = e.target;
-      const k = inp?.dataset?.k;
-      if(!k) return;
-      const c = DRAFT.categories.find(x=>x.catKey===k);
-      if(!c) return;
-      c.name = inp.value;
-      markUnsaved(true);
-    };
-    table.onclick = (e)=>{
-      const del = e.target?.dataset?.del;
-      if(!del) return;
-      if(!confirm("Kategori silinsin mi? (Raporlar boşa düşebilir)")) return;
-      DRAFT.categories = DRAFT.categories.filter(x=>x.catKey!==del);
-      // reports keep catKey as is; you may edit them
-      markUnsaved(true);
-      renderAdminTab();
-    };
-    return table;
-  }
-
-  /* ---------- Reports ---------- */
-  if(ACTIVE_ADMIN_TAB==="reports"){
-    c.appendChild(sectionTitle("Rapor ekle/düzenle/sil (URL + Kategori)"));
-
-    const form = document.createElement("div");
-    form.className="grid grid-3";
-    form.innerHTML = `
-      <div><label>Rapor Adı</label><input class="input" id="rp_name" placeholder="Örn: Stok Raporu"></div>
-      <div><label>URL</label><input class="input mono" id="rp_url" placeholder="https://..."></div>
-      <div><label>Kategori</label>${selCat("rp_cat")}</div>
-      <div class="right-actions" style="grid-column:1/-1">
-        <button class="btn success" id="rp_addBtn">Ekle</button>
-      </div>
-    `;
-    c.appendChild(form);
-
-    byId("rp_addBtn").onclick = ()=>{
-      const name = (byId("rp_name").value||"").trim();
-      const url = (byId("rp_url").value||"").trim();
-      const catKey = byId("rp_cat").value;
-      if(!name || !url || !catKey) return toast("Ad, URL ve kategori zorunlu.", "bad");
-      DRAFT.reports.push({ reportId:uid("r"), name, url, catKey });
-      markUnsaved(true);
-      renderAdminTab();
-    };
-
-    c.appendChild(renderTableReports());
-    return;
-  }
-
-  function renderTableReports(){
-    const table = document.createElement("table");
-    table.innerHTML = `<thead><tr><th>Ad</th><th>URL</th><th>Kategori</th><th></th></tr></thead><tbody></tbody>`;
-    const tb = table.querySelector("tbody");
-    for(const r of DRAFT.reports){
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td><input class="input" value="${esc(r.name||"")}" data-id="${esc(r.reportId)}" data-f="name"></td>
-        <td><input class="input mono" value="${esc(r.url||"")}" data-id="${esc(r.reportId)}" data-f="url"></td>
-        <td>${selCat("rp_cat_"+r.reportId, r.catKey, r.reportId)}</td>
-        <td class="right-actions"><button class="btn small danger" data-del="${esc(r.reportId)}">Sil</button></td>
-      `;
-      tb.appendChild(tr);
-    }
-
-    table.oninput = (e)=>{
-      const el = e.target;
-      const id = el?.dataset?.id || el?.dataset?.rid;
-      const fld = el?.dataset?.f;
-      if(!id) return;
-      const r = DRAFT.reports.find(x=>x.reportId===id);
-      if(!r) return;
-      if(el.tagName==="SELECT"){
-        r.catKey = el.value;
-        markUnsaved(true);
-        return;
-      }
-      if(fld) r[fld] = el.value;
-      markUnsaved(true);
-    };
-
-    table.onclick = (e)=>{
-      const del = e.target?.dataset?.del;
-      if(!del) return;
-      if(!confirm("Rapor silinsin mi? (Firma/Yetişim bağları da temizlenir)")) return;
-      DRAFT.reports = DRAFT.reports.filter(x=>x.reportId!==del);
-      DRAFT.reportFirms = DRAFT.reportFirms.filter(x=>x.reportId!==del);
-      DRAFT.reportAccess = DRAFT.reportAccess.filter(x=>x.reportId!==del);
-      markUnsaved(true);
-      renderAdminTab();
-    };
-    return table;
-  }
-
-  /* ---------- Report-Firms ---------- */
-  if(ACTIVE_ADMIN_TAB==="reportFirms"){
-    c.appendChild(sectionTitle("Raporu firmaya ata (firma bazlı rapor havuzu)"));
-
-    const form = document.createElement("div");
-    form.className="grid grid-3";
-    form.innerHTML = `
-      <div><label>Rapor</label>${selReport("rf_report")}</div>
-      <div><label>Firma</label>${selFirm("rf_firm")}</div>
-      <div class="right-actions" style="align-items:end">
-        <button class="btn success" id="rf_addBtn">Ekle</button>
-      </div>
-    `;
-    c.appendChild(form);
-
-    byId("rf_addBtn").onclick = ()=>{
-      const reportId = byId("rf_report").value;
-      const firmKey = byId("rf_firm").value;
-      if(!reportId || !firmKey) return toast("Rapor ve firma seç.", "bad");
-      if(DRAFT.reportFirms.some(x=>x.reportId===reportId && x.firmKey===firmKey)) return toast("Zaten var.", "bad");
-      DRAFT.reportFirms.push({ id:uid("rf"), reportId, firmKey });
-      markUnsaved(true);
-      renderAdminTab();
-    };
-
-    c.appendChild(renderTableReportFirms());
-    return;
-  }
-
-  function renderTableReportFirms(){
-    const table = document.createElement("table");
-    table.innerHTML = `<thead><tr><th>Rapor</th><th>Firma</th><th></th></tr></thead><tbody></tbody>`;
-    const tb = table.querySelector("tbody");
-    for(const m of DRAFT.reportFirms){
-      const r = DRAFT.reports.find(x=>x.reportId===m.reportId);
-      const f = DRAFT.firms.find(x=>x.firmKey===m.firmKey);
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${esc(r?.name||m.reportId)} <span class="mini mono">(${esc(m.reportId)})</span></td>
-        <td>${esc(f?.name||m.firmKey)} <span class="mini mono">(${esc(m.firmKey)})</span></td>
-        <td class="right-actions"><button class="btn small danger" data-del="${esc(m.id)}">Sil</button></td>
-      `;
-      tb.appendChild(tr);
-    }
-    table.onclick = (e)=>{
-      const del = e.target?.dataset?.del;
-      if(!del) return;
-      DRAFT.reportFirms = DRAFT.reportFirms.filter(x=>x.id!==del);
-      markUnsaved(true);
-      renderAdminTab();
-    };
-    return table;
-  }
-
-  /* ---------- Report Access ---------- */
-  if(ACTIVE_ADMIN_TAB==="reportAccess"){
-    c.appendChild(sectionTitle("Rapor erişimi: kullanıcı + rol bazında (düzenle/sil)"));
-    c.appendChild(sectionTitle("Not: Bir raporda yetki satırı yoksa, firmaya bağlı kullanıcılar görebilir."));
-
-    const form = document.createElement("div");
-    form.className="grid";
-    form.innerHTML = `
-      <div class="grid grid-3">
-        <div><label>Rapor</label>${selReport("ra_report")}</div>
-        <div><label>İzinli Roller (çoklu)</label>${multiSelectRoles("ra_roles")}</div>
-        <div><label>İzinli Kullanıcılar (çoklu)</label>${multiSelectUsers("ra_users")}</div>
-      </div>
-      <div class="right-actions">
-        <button class="btn success" id="ra_addBtn">Ekle / Güncelle</button>
-      </div>
-      <div class="hint">Rol ya da kullanıcı boş bırakılabilir. İkisi de boş ise “herkes” anlamına gelir.</div>
-    `;
-    c.appendChild(form);
-
-    byId("ra_addBtn").onclick = ()=>{
-      const reportId = byId("ra_report").value;
-      if(!reportId) return toast("Rapor seç.", "bad");
-      const allowedRoleKeys = getMulti("ra_roles");
-      const allowedUserIds = getMulti("ra_users");
-      const existing = DRAFT.reportAccess.find(x=>x.reportId===reportId);
-      if(existing){
-        existing.allowedRoleKeys = allowedRoleKeys;
-        existing.allowedUserIds = allowedUserIds;
-      }else{
-        DRAFT.reportAccess.push({ id:uid("ra"), reportId, allowedRoleKeys, allowedUserIds });
-      }
-      markUnsaved(true);
-      renderAdminTab();
-    };
-
-    c.appendChild(renderTableReportAccess());
-    return;
-  }
-
-  function renderTableReportAccess(){
-    const table = document.createElement("table");
-    table.innerHTML = `<thead><tr><th>Rapor</th><th>Roller</th><th>Kullanıcılar</th><th></th></tr></thead><tbody></tbody>`;
-    const tb = table.querySelector("tbody");
-    for(const ra of DRAFT.reportAccess){
-      const r = DRAFT.reports.find(x=>x.reportId===ra.reportId);
-      const roleNames = (ra.allowedRoleKeys||[]).map(k => (DRAFT.roles.find(x=>x.roleKey===k)?.name || k)).join(", ");
-      const userNames = (ra.allowedUserIds||[]).map(id => (DRAFT.users.find(x=>x.userId===id)?.username || id)).join(", ");
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${esc(r?.name||ra.reportId)} <span class="mini mono">(${esc(ra.reportId)})</span></td>
-        <td>${esc(roleNames||"—")}</td>
-        <td>${esc(userNames||"—")}</td>
-        <td class="right-actions"><button class="btn small danger" data-del="${esc(ra.id)}">Sil</button></td>
-      `;
-      tb.appendChild(tr);
-    }
-    table.onclick = (e)=>{
-      const del = e.target?.dataset?.del;
-      if(!del) return;
-      DRAFT.reportAccess = DRAFT.reportAccess.filter(x=>x.id!==del);
-      markUnsaved(true);
-      renderAdminTab();
-    };
-    return table;
-  }
-
-  // fallback
-  c.appendChild(sectionTitle("Tab bulunamadı."));
+    tb.append(tr);
+  });
+  tb.onclick=(e)=>{
+    const del=e.target.dataset.del;
+    if(!del) return;
+    DRAFT.reportAccess=DRAFT.reportAccess.filter(x=>x.id!==del);
+    setDirty(true); renderAdmin();
+  };
+  return box;
 }
 
-/* ---------- Select builders ---------- */
-function selFirm(id){
-  const opts = DRAFT.firms.map(f=>`<option value="${esc(f.firmKey)}">${esc(f.name)} (${esc(f.firmKey)})</option>`).join("");
-  return `<select class="input" id="${esc(id)}">${opts}</select>`;
-}
-function selRole(id){
-  const opts = DRAFT.roles.map(r=>`<option value="${esc(r.roleKey)}">${esc(r.name)} (${esc(r.roleKey)})</option>`).join("");
-  return `<select class="input" id="${esc(id)}">${opts}</select>`;
-}
-function selUser(id){
-  const opts = DRAFT.users.map(u=>`<option value="${esc(u.userId)}">${esc(u.username)} (${esc(u.fullName||"")})</option>`).join("");
-  return `<select class="input" id="${esc(id)}">${opts}</select>`;
-}
-function selCat(id, selected=null, rid=null){
-  const opts = DRAFT.categories.map(c=>{
-    const sel = selected && c.catKey===selected ? "selected":"";
-    return `<option value="${esc(c.catKey)}" ${sel}>${esc(c.name)} (${esc(c.catKey)})</option>`;
-  }).join("");
-  // attach dataset for report cat editing
-  const ds = rid ? `data-rid="${esc(rid)}"` : "";
-  return `<select class="input" id="${esc(id)}" ${ds}>${opts}</select>`;
-}
-function selReport(id){
-  const opts = DRAFT.reports.map(r=>`<option value="${esc(r.reportId)}">${esc(r.name)} (${esc(r.reportId)})</option>`).join("");
-  return `<select class="input" id="${esc(id)}">${opts}</select>`;
+/* =============================
+  KPI
+============================= */
+function updateKPIs(){
+  const f=DB.firms.length, r=DB.roles.length, u=DB.users.length;
+  const s=DB.users.filter(x=>x.isSuper).length;
+  const p=DB.reports.length;
+  document.getElementById("kF").textContent="Firms: "+f;
+  document.getElementById("kR").textContent="Roles: "+r;
+  document.getElementById("kU").textContent="Users: "+u;
+  document.getElementById("kS").textContent="Super: "+s;
+  document.getElementById("kP").textContent="Reports: "+p;
 }
 
-/* Multi-select (simple checkbox list) */
-function multiSelectRoles(id){
-  const items = DRAFT.roles.map(r=>`
-    <label style="display:flex;gap:8px;align-items:center;border:1px solid var(--line);padding:8px;border-radius:12px;background:rgba(8,12,25,.42)">
-      <input type="checkbox" value="${esc(r.roleKey)}" data-ms="${esc(id)}">
-      <span>${esc(r.name)} <span class="mini mono">(${esc(r.roleKey)})</span></span>
-    </label>
-  `).join("");
-  return `<div class="grid" style="gap:8px;max-height:180px;overflow:auto;border:1px solid var(--line);padding:8px;border-radius:12px;background:rgba(8,12,25,.25)">${items}</div>`;
-}
-function multiSelectUsers(id){
-  const items = DRAFT.users.map(u=>`
-    <label style="display:flex;gap:8px;align-items:center;border:1px solid var(--line);padding:8px;border-radius:12px;background:rgba(8,12,25,.42)">
-      <input type="checkbox" value="${esc(u.userId)}" data-ms="${esc(id)}">
-      <span>${esc(u.username)} <span class="mini">(${esc(u.fullName||"")})</span></span>
-    </label>
-  `).join("");
-  return `<div class="grid" style="gap:8px;max-height:180px;overflow:auto;border:1px solid var(--line);padding:8px;border-radius:12px;background:rgba(8,12,25,.25)">${items}</div>`;
-}
-function getMulti(id){
-  return Array.from(document.querySelectorAll(`input[data-ms="${CSS.escape(id)}"]:checked`)).map(x=>x.value);
-}
-
-/* ---------- Save all ---------- */
-async function saveAll(){
-  if(!DRAFT) return;
-  // small sanity: keep version meta
-  DRAFT.meta = DRAFT.meta || {};
-  DRAFT.meta.version = 2;
-  DRAFT.meta.updatedAt = nowISO();
-
-  try{
-    await saveDB(DRAFT);
-    toast("Kaydedildi. Portal güncellendi.", "good");
-    markUnsaved(false);
-    // refresh portal if session exists
-    await refreshDB();
-    // keep admin open with fresh clone
-    DRAFT = deepClone(DB);
-    renderAdminTab();
-  }catch(e){
-    toast("Kaydetme hatası: " + e.message, "bad");
-  }
-}
-
-/* =========================
-   UTILS
-========================= */
-function esc(s){
-  return String(s ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-/* =========================
-   BOOT
-========================= */
-async function init(){
+/* =============================
+  BOOT
+============================= */
+(function boot(){
   loadTheme();
-  loadConfig();
-  await loadDB();
+  loadDB();
+  document.getElementById("dbPill").textContent="DB: LocalStorage ✓";
   updateKPIs();
-  await testApi();
-  // default mode
-  setLoginMode("NORMAL");
-}
-init();
+  setMode("NORMAL");
+  log("✅ Portal boot OK ("+new Date().toLocaleString()+")");
+})();
 </script>
 </body>
 </html>

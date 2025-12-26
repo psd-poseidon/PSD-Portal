@@ -36,7 +36,6 @@
       min-height:100vh;
     }
 
-    /* layout */
     .shell{ min-height:100vh; display:flex; flex-direction:column; }
     header{
       padding:16px 18px 10px;
@@ -96,7 +95,6 @@
       flex:1;
     }
 
-    /* sections */
     .section{
       margin:12px 0 16px;
       padding:14px;
@@ -115,7 +113,6 @@
     }
     .muted{ color:var(--muted); font-size:12.5px; line-height:1.5; }
 
-    /* portal toolbar */
     .toolbar{
       margin:0 0 10px;
       padding:12px 14px;
@@ -159,7 +156,6 @@
       box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 20%, transparent) inset;
     }
 
-    /* report cards */
     .grid{
       display:grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -214,7 +210,6 @@
     .name{ font-weight:800; font-size:12.8px; margin:0 0 6px; padding-right:86px; line-height:1.2; }
     .desc{ margin:0; font-size:11.8px; color:var(--muted); line-height:1.35; }
 
-    /* admin layout */
     .adminTabs{
       display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;
     }
@@ -355,7 +350,6 @@
       font-size:12px;
     }
 
-    /* login */
     .overlay{
       position:fixed;
       inset:0;
@@ -421,7 +415,6 @@
     }
     .tiny{ color: rgba(255,255,255,.45); font-size:11px; margin-top:8px; line-height:1.4; }
 
-    /* theme panel */
     .themePanel{
       position:fixed;
       top:72px;
@@ -643,15 +636,14 @@
    - Normal / Super / Admin
    - Draft -> Save workflow
    - User theme prefs
+   - Login logs + CSV exports
    ============================================================ */
 
-/* ---------- Keys (IMPORTANT: new keys to avoid old corrupted DB) ---------- */
 const DB_KEY       = "PSD_PORTAL_DB_V4";
 const WORKING_KEY  = "PSD_PORTAL_WORKING_V4";
 const SESSION_KEY  = "PSD_PORTAL_SESSION_V4";
 const PREFS_KEY    = "PSD_PORTAL_PREFS_V2";
 
-/* ---------- Admin credential ---------- */
 const ADMIN_LOGIN = { username:"Poseidon", password:"psd123" };
 
 /* ---------- Utilities ---------- */
@@ -676,6 +668,46 @@ function setMsg(id, text, type){
 }
 function isHexColor(s){ return /^#([0-9a-fA-F]{6})$/.test(String(s||"").trim()); }
 function genId(){ return "r"+Math.random().toString(16).slice(2,10)+Date.now().toString(16).slice(-4); }
+
+function nowISO(){
+  return new Date().toISOString();
+}
+
+/* ---------- CSV download helpers (Excel friendly) ---------- */
+function downloadCSV(filename, rows){
+  // rows: array of arrays or array of objects
+  // If objects: use keys of first row
+  let csv = "";
+  if(!rows || !rows.length){
+    csv = "No data\n";
+  }else if(!Array.isArray(rows[0])){
+    const headers = Object.keys(rows[0]);
+    csv += headers.map(csvCell).join(",") + "\n";
+    for(const r of rows){
+      csv += headers.map(h=>csvCell(r[h])).join(",") + "\n";
+    }
+  }else{
+    for(const row of rows){
+      csv += row.map(csvCell).join(",") + "\n";
+    }
+  }
+
+  // Add UTF-8 BOM so Excel opens Turkish chars correctly
+  const blob = new Blob(["\uFEFF"+csv], {type:"text/csv;charset=utf-8;"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 2500);
+}
+function csvCell(v){
+  const s = (v===null || typeof v==="undefined") ? "" : String(v);
+  const escaped = s.replace(/"/g,'""');
+  return `"${escaped}"`;
+}
 
 /* ---------- Theme ---------- */
 const DEFAULT_THEME = { bg:"#0b1220", card:"#111a2e", accent:"#60a5fa", accent2:"#22c55e" };
@@ -827,7 +859,6 @@ const SEED_DB = {
     { key:"FINANCE_VIEW", desc:"Finans raporları", active:true },
     { key:"OPS_VIEW", desc:"Operasyon raporları", active:true },
   ],
-  // Firmaya giriş için gereken roller (boşsa fallback: FIRMKEY_VIEW)
   firmAccessRoles: {
     "SUDESAN": ["SUDESAN_VIEW"],
     "DUPACK":  ["DUPACK_VIEW"]
@@ -843,11 +874,11 @@ const SEED_DB = {
     { id:"r1", firm:"SUDESAN", cat:"DASHBOARD", name:"Sudesan | Looker Dashboard", desc:"Looker Studio", url:"", acl:{ allowRoles:["SUDESAN_VIEW","DASHBOARD_VIEW"], allowUsers:[] } },
     { id:"r2", firm:"SUDESAN", cat:"FINANCE", name:"Sudesan | Finans Sheet", desc:"Google Sheet", url:"", acl:{ allowRoles:["SUDESAN_VIEW","FINANCE_VIEW"], allowUsers:[] } },
     { id:"r3", firm:"DUPACK",  cat:"DASHBOARD", name:"Dupack | Üretim Dashboard", desc:"Looker Studio", url:"", acl:{ allowRoles:["DUPACK_VIEW","DASHBOARD_VIEW"], allowUsers:[] } },
-  ]
+  ],
+  loginLogs: [] // NEW
 };
 
 function migrateDB(db){
-  // defensive migration for missing fields
   db.version = db.version || 4;
   db.firms = db.firms || [];
   db.aliases = db.aliases || {};
@@ -856,6 +887,7 @@ function migrateDB(db){
   db.users = db.users || [];
   db.superUsers = db.superUsers || [];
   db.reports = db.reports || [];
+  db.loginLogs = db.loginLogs || [];
 
   db.firms.forEach(f=>{ if(typeof f.active==="undefined") f.active=true; });
   db.roles.forEach(r=>{ if(typeof r.active==="undefined") r.active=true; });
@@ -869,6 +901,9 @@ function migrateDB(db){
     if(!r.acl) r.acl={};
     if(!Array.isArray(r.acl.allowRoles)) r.acl.allowRoles=[];
     if(!Array.isArray(r.acl.allowUsers)) r.acl.allowUsers=[];
+  });
+  db.loginLogs.forEach(l=>{
+    if(!l.ts) l.ts = nowISO();
   });
 
   return db;
@@ -905,6 +940,28 @@ function commitWorkingToDB(){
   return true;
 }
 
+/* ---------- Login Logs (commit directly to DB) ---------- */
+function pushLoginLog(entry){
+  const db = loadCommittedDB();
+  db.loginLogs = db.loginLogs || [];
+  db.loginLogs.push({
+    ts: nowISO(),
+    username: entry.username || "",
+    firmInput: entry.firmInput || "",
+    firmKey: entry.firmKey || "",
+    mode: entry.mode || "",
+    success: !!entry.success,
+    reason: entry.reason || ""
+  });
+
+  // keep last 2000 logs (prevent bloating)
+  if(db.loginLogs.length > 2000){
+    db.loginLogs = db.loginLogs.slice(-2000);
+  }
+
+  setLocalJSON(DB_KEY, db);
+}
+
 /* ============================================================
    SESSION + PERMISSIONS
    ============================================================ */
@@ -936,7 +993,6 @@ function isAllowedReport(report, session, db){
   if(!session) return false;
   if(session.mode==="ADMIN" || session.mode==="SUPER") return true;
 
-  // firm gate
   if(report.firm && !firmAccessAllowed(session, report.firm, db)) return false;
 
   const acl=report.acl || {};
@@ -950,7 +1006,7 @@ function isAllowedReport(report, session, db){
    UI STATE
    ============================================================ */
 let portalSelectedCat = "ALL";
-let adminActiveTab = "FIRMS"; // FIRMS, ROLES, USERS, USER_FIRMS, USER_ROLES, FIRM_ACCESS, REPORTS, REPORT_ACL, SYSTEM
+let adminActiveTab = "FIRMS";
 
 function showLogin(show){
   const ov=document.getElementById("loginOverlay");
@@ -1043,6 +1099,7 @@ function doLogin(){
 
   // admin
   if(norm(u)===norm(ADMIN_LOGIN.username) && p===ADMIN_LOGIN.password){
+    pushLoginLog({ username:u, firmInput: firm, firmKey:"", mode:"ADMIN", success:true, reason:"" });
     setSession({ username:ADMIN_LOGIN.username, display:"Poseidon", mode:"ADMIN" });
     applyThemeVars(getUserTheme(ADMIN_LOGIN.username)||DEFAULT_THEME);
     showLogin(false);
@@ -1060,7 +1117,11 @@ function doLogin(){
   // super user
   const su=(db.superUsers||[]).find(x=>norm(x.username)===norm(u) && x.password===p);
   if(su){
-    if(su.active===false){ setMsg("loginMsg","Bu Super User pasif.","err"); return; }
+    if(su.active===false){
+      pushLoginLog({ username:u, firmInput: firm, firmKey:"", mode:"SUPER", success:false, reason:"SUPER_USER_PASSIVE" });
+      setMsg("loginMsg","Bu Super User pasif.","err"); return;
+    }
+    pushLoginLog({ username:u, firmInput: firm, firmKey:"", mode:"SUPER", success:true, reason:"" });
     setSession({ username:su.username, display:su.display||su.username, mode:"SUPER", roles:["SUPER"] });
     applyThemeVars(getUserTheme(su.username)||DEFAULT_THEME);
     showLogin(false);
@@ -1075,17 +1136,29 @@ function doLogin(){
 
   // normal user
   const user=(db.users||[]).find(x=>norm(x.username)===norm(u) && x.password===p);
-  if(!user){ setMsg("loginMsg","Hatalı kullanıcı adı veya şifre.","err"); return; }
-  if(user.active===false){ setMsg("loginMsg","Bu kullanıcı pasif.","err"); return; }
+  if(!user){
+    pushLoginLog({ username:u, firmInput: firm, firmKey:"", mode:"", success:false, reason:"BAD_CREDENTIALS" });
+    setMsg("loginMsg","Hatalı kullanıcı adı veya şifre.","err"); return;
+  }
+  if(user.active===false){
+    pushLoginLog({ username:u, firmInput: firm, firmKey:"", mode:"PORTAL", success:false, reason:"USER_PASSIVE" });
+    setMsg("loginMsg","Bu kullanıcı pasif.","err"); return;
+  }
 
-  if(!firm){ setMsg("loginMsg","Normal kullanıcı için firma zorunlu.","err"); return; }
+  if(!firm){
+    pushLoginLog({ username:u, firmInput: firm, firmKey:"", mode:"PORTAL", success:false, reason:"FIRM_REQUIRED" });
+    setMsg("loginMsg","Normal kullanıcı için firma zorunlu.","err"); return;
+  }
 
   const firmKey=firmKeyFromInput(firm, db);
   const firmObj=(db.firms||[]).find(f=>f.key===firmKey);
-  if(!firmObj || firmObj.active===false){ setMsg("loginMsg","Firma tanımsız veya pasif.","err"); return; }
+  if(!firmObj || firmObj.active===false){
+    pushLoginLog({ username:u, firmInput: firm, firmKey, mode:"PORTAL", success:false, reason:"FIRM_UNKNOWN_OR_PASSIVE" });
+    setMsg("loginMsg","Firma tanımsız veya pasif.","err"); return;
+  }
 
-  // user firm membership check
   if(!Array.isArray(user.firms) || !user.firms.includes(firmKey)){
+    pushLoginLog({ username:u, firmInput: firm, firmKey, mode:"PORTAL", success:false, reason:"USER_NOT_ASSIGNED_TO_FIRM" });
     setMsg("loginMsg","Bu kullanıcı bu firmaya atanmadı.","err");
     return;
   }
@@ -1100,9 +1173,12 @@ function doLogin(){
   };
 
   if(!firmAccessAllowed(session, firmKey, db)){
+    pushLoginLog({ username:u, firmInput: firm, firmKey, mode:"PORTAL", success:false, reason:"MISSING_FIRM_ACCESS_ROLE" });
     setMsg("loginMsg","Bu firmaya giriş için gerekli rol kullanıcıda yok.","err");
     return;
   }
+
+  pushLoginLog({ username:u, firmInput: firm, firmKey, mode:"PORTAL", success:true, reason:"" });
 
   setSession(session);
   applyThemeVars(getUserTheme(session.username)||DEFAULT_THEME);
@@ -1179,14 +1255,12 @@ function renderPortal(){
   }else if(session.mode==="SUPER"){
     // all reports
   }else{
-    // admin shouldn't be here
+    return;
   }
 
-  // active firm filter (for super too)
   const activeFirmSet=new Set((db.firms||[]).filter(f=>f.active!==false).map(f=>f.key));
   list=list.filter(r=>activeFirmSet.has(r.firm));
 
-  // search
   const q=norm(document.getElementById("searchPortal").value);
   if(q){
     list=list.filter(r=>{
@@ -1195,13 +1269,10 @@ function renderPortal(){
     });
   }
 
-  // cat filter
   if(portalSelectedCat!=="ALL"){
     list=list.filter(r=>r.cat===portalSelectedCat);
   }
 
-  // build chips on full allowed list (before cat filter) for better UX
-  // (recompute baseline for chips)
   let chipBase=(db.reports||[]).slice();
   if(session.mode==="PORTAL"){
     chipBase=chipBase.filter(r=>r.firm===session.firmKey).filter(r=>isAllowedReport(r, session, db));
@@ -1276,6 +1347,8 @@ function firmDisplayByKey(db, key){
   return f ? f.display : key;
 }
 
+let portalSelectedCatLocal = "ALL";
+
 function renderAdminTabs(){
   const tabs=[
     ["FIRMS","Firmalar"],
@@ -1286,6 +1359,7 @@ function renderAdminTabs(){
     ["FIRM_ACCESS","Firma Giriş Roller"],
     ["REPORTS","Raporlar"],
     ["REPORT_ACL","Rapor Yetkileri"],
+    ["LOGIN_LOGS","Giriş Kayıtları"],  // NEW
     ["SYSTEM","Sistem"]
   ];
   const box=document.getElementById("adminTabs");
@@ -1303,7 +1377,6 @@ function renderAdminTabs(){
   });
 }
 
-/* ----- Admin: helpers ----- */
 function buildRoleCheckboxes(containerId, roles, prechecked){
   const box=document.getElementById(containerId);
   box.innerHTML="";
@@ -1342,12 +1415,10 @@ function selOptions(el, items, mapValue, mapLabel, placeholder){
   });
 }
 
-/* ----- Admin: tab renderers ----- */
 function renderAdmin(){
   const session=getSession();
   if(!session || session.mode!=="ADMIN") return;
 
-  // always keep a working db for admin
   const wdb=loadWorkingDB();
   setWorkingDB(wdb);
 
@@ -1366,6 +1437,7 @@ function renderAdmin(){
   if(adminActiveTab==="FIRM_ACCESS") host.appendChild(tabFirmAccess(wdb));
   if(adminActiveTab==="REPORTS") host.appendChild(tabReports(wdb));
   if(adminActiveTab==="REPORT_ACL") host.appendChild(tabReportACL(wdb));
+  if(adminActiveTab==="LOGIN_LOGS") host.appendChild(tabLoginLogs()); // NEW reads committed DB
   if(adminActiveTab==="SYSTEM") host.appendChild(tabSystem(wdb));
 }
 
@@ -1409,7 +1481,6 @@ function tabFirms(db){
   root.appendChild(left);
   root.appendChild(right);
 
-  // live key
   const disp=left.querySelector("#firm_display");
   const keyOut=left.querySelector("#firm_key");
   disp.addEventListener("input", ()=>{
@@ -1515,18 +1586,14 @@ function tabFirms(db){
     if(!f) return;
     if(!confirm(`Firmayı silmek istiyor musun?\n\n${f.display} (${f.key})`)) return;
 
-    // remove firm
     db.firms = (db.firms||[]).filter(x=>x.key!==key);
 
-    // remove firm access roles mapping
     if(db.firmAccessRoles && db.firmAccessRoles[key]) delete db.firmAccessRoles[key];
 
-    // remove from users.firms
     (db.users||[]).forEach(u=>{
       u.firms = (u.firms||[]).filter(fk=>fk!==key);
     });
 
-    // remove reports of that firm
     db.reports = (db.reports||[]).filter(r=>r.firm!==key);
 
     setWorkingDB(db);
@@ -1540,8 +1607,7 @@ function tabFirms(db){
   function addAlias(){
     const d=trim(disp.value);
     if(!d){ setMsg("firm_msg","Alias eklemek için firma adı gir.","err"); return; }
-    const key=firmKeyFromInput(d, db); // alias yoksa auto üretir
-    // alias as written -> should map to an existing firm ideally
+    const key=firmKeyFromInput(d, db);
     const aliasKey=normalizeFirmNameForAlias(d);
     const exists=(db.firms||[]).some(x=>x.key===key);
     if(!exists){
@@ -1708,20 +1774,16 @@ function tabRoles(db){
     if(!r) return;
     if(!confirm(`Rol silinsin mi?\n\n${r.key}`)) return;
 
-    // remove role
     db.roles=(db.roles||[]).filter(x=>x.key!==k);
 
-    // remove from users roles
     (db.users||[]).forEach(u=>{
       u.roles=(u.roles||[]).filter(rr=>rr!==k);
     });
 
-    // remove from firmAccessRoles
     Object.keys(db.firmAccessRoles||{}).forEach(fk=>{
       db.firmAccessRoles[fk]=(db.firmAccessRoles[fk]||[]).filter(rr=>rr!==k);
     });
 
-    // remove from report ACL
     (db.reports||[]).forEach(rep=>{
       rep.acl=rep.acl||{};
       rep.acl.allowRoles=(rep.acl.allowRoles||[]).filter(rr=>rr!==k);
@@ -1743,7 +1805,7 @@ function tabRoles(db){
   return root;
 }
 
-/* =================== TAB: USERS =================== */
+/* =================== TAB: USERS (+ CSV Export) =================== */
 function tabUsers(db){
   const root=document.createElement("div");
   root.className="adminGrid";
@@ -1776,6 +1838,7 @@ function tabUsers(db){
       <button class="btn2 info" id="u_update" style="display:none;">Güncelle</button>
       <button class="btn2 warn" id="u_resetpwd" style="display:none;">Şifreyi Sıfırla</button>
       <button class="btn2" id="u_cancel" style="display:none;">İptal</button>
+      <button class="btn2 info" id="u_export">Excel Export (CSV)</button>
     </div>
     <div class="msg" id="u_msg"></div>
     <div class="muted">Not: Kullanıcı rol/firma ataması diğer tablardan yapılır.</div>
@@ -1923,7 +1986,6 @@ function tabUsers(db){
     if(!confirm(`Kullanıcı silinsin mi?\n\n${u.username} • ${u.display||""}`)) return;
     db.users=(db.users||[]).filter(x=>norm(x.username)!==norm(username));
 
-    // remove username from report allowUsers
     (db.reports||[]).forEach(r=>{
       r.acl=r.acl||{};
       r.acl.allowUsers=(r.acl.allowUsers||[]).filter(x=>norm(x)!==norm(username));
@@ -1936,10 +1998,25 @@ function tabUsers(db){
     updatePendingInfo(); refreshTopbar();
   }
 
+  function exportUsersCSV(){
+    const rows = (db.users||[]).slice().sort((a,b)=>a.username.localeCompare(b.username)).map(u=>({
+      username: u.username,
+      display: u.display || "",
+      email: u.email || "",
+      status: (u.active===false) ? "PASIF" : "AKTIF",
+      firms: (u.firms||[]).join(";"),
+      roles: (u.roles||[]).join(";")
+    }));
+    const date = new Date().toISOString().slice(0,10);
+    downloadCSV(`users_${date}.csv`, rows);
+    setMsg("u_msg","Kullanıcı listesi CSV indirildi.","ok");
+  }
+
   left.querySelector("#u_add").onclick=addUser;
   left.querySelector("#u_update").onclick=updateUser;
   left.querySelector("#u_resetpwd").onclick=resetPwd;
   left.querySelector("#u_cancel").onclick=()=>{ clearForm(); setMsg("u_msg","", ""); };
+  left.querySelector("#u_export").onclick=exportUsersCSV;
 
   renderList();
   return root;
@@ -2230,7 +2307,6 @@ function tabFirmAccess(db){
   root.appendChild(right);
 
   const firmSel=left.querySelector("#fa_firm");
-  const box=left.querySelector("#fa_roles");
 
   function renderFirmSelect(){
     selOptions(
@@ -2550,7 +2626,6 @@ function tabReportACL(db){
     const roles=activeRoles(db);
     buildRoleCheckboxes("acl_roles", roles, (r.acl && r.acl.allowRoles) ? r.acl.allowRoles : []);
 
-    // users list
     const box=document.getElementById("acl_users");
     box.innerHTML="";
     const set=new Set((r.acl && r.acl.allowUsers) ? r.acl.allowUsers : []);
@@ -2621,6 +2696,142 @@ function tabReportACL(db){
   return root;
 }
 
+/* =================== TAB: LOGIN_LOGS (NEW) =================== */
+function tabLoginLogs(){
+  const db = loadCommittedDB(); // logs are committed directly
+  const root=document.createElement("div");
+  root.className="adminGrid";
+
+  const left=document.createElement("div");
+  left.className="panel";
+  left.innerHTML=`
+    <h3>Giriş Kayıtları</h3>
+    <div class="muted">Başarılı/başarısız tüm login denemeleri tutulur. En son 2000 kayıt saklanır.</div>
+    <div class="hr"></div>
+
+    <div class="field">
+      <div class="label">Kullanıcı Filtre</div>
+      <input class="input" id="log_user" placeholder="örn: zeynep" />
+    </div>
+
+    <div class="field">
+      <div class="label">Başarı Durumu</div>
+      <select class="select" id="log_success">
+        <option value="">Tümü</option>
+        <option value="true">Başarılı</option>
+        <option value="false">Başarısız</option>
+      </select>
+    </div>
+
+    <div class="btnRow">
+      <button class="btn2 info" id="log_refresh">Yenile</button>
+      <button class="btn2 ok" id="log_export">Excel Export (CSV)</button>
+      <button class="btn2 danger" id="log_clear">Logları Temizle</button>
+    </div>
+
+    <div class="msg" id="log_msg"></div>
+  `;
+
+  const right=document.createElement("div");
+  right.className="panel";
+  right.innerHTML=`
+    <h3>Liste</h3>
+    <div class="list" id="log_list"></div>
+  `;
+
+  root.appendChild(left);
+  root.appendChild(right);
+
+  function getFiltered(){
+    const u = norm(document.getElementById("log_user").value);
+    const s = document.getElementById("log_success").value; // "", "true", "false"
+    let logs = (db.loginLogs||[]).slice();
+
+    // newest first
+    logs.reverse();
+
+    if(u){
+      logs = logs.filter(x=>norm(x.username).includes(u));
+    }
+    if(s==="true"){
+      logs = logs.filter(x=>x.success===true);
+    }else if(s==="false"){
+      logs = logs.filter(x=>x.success===false);
+    }
+    return logs;
+  }
+
+  function renderList(){
+    const list=document.getElementById("log_list");
+    list.innerHTML="";
+    const logs=getFiltered();
+
+    if(!logs.length){
+      list.innerHTML = `<div class="muted">Kayıt bulunamadı.</div>`;
+      return;
+    }
+
+    logs.slice(0, 400).forEach(l=>{
+      const row=document.createElement("div");
+      row.className="item";
+      const ok = l.success===true;
+      row.innerHTML=`
+        <div class="meta">
+          <b>${escapeHtml(l.ts)} • ${escapeHtml(l.username || "(blank)")} • ${escapeHtml(l.mode||"")}</b>
+          <span>${ok ? "BAŞARILI" : "BAŞARISIZ"} • FirmInput: ${escapeHtml(l.firmInput||"")} • FirmKey: ${escapeHtml(l.firmKey||"")} • ${escapeHtml(l.reason||"")}</span>
+        </div>
+        <div class="pills">
+          <span class="pill2 ${ok?"":"off"}">${ok?"OK":"FAIL"}</span>
+        </div>
+      `;
+      list.appendChild(row);
+    });
+
+    if(logs.length > 400){
+      const note=document.createElement("div");
+      note.className="muted";
+      note.textContent=`Not: Performans için ilk 400 kayıt gösterildi. Export ile tamamını alabilirsiniz. (Toplam: ${logs.length})`;
+      list.appendChild(note);
+    }
+  }
+
+  function exportCSV(){
+    const logs=getFiltered().slice().reverse(); // chronological
+    const rows = logs.map(l=>({
+      ts: l.ts,
+      username: l.username,
+      mode: l.mode,
+      firmInput: l.firmInput,
+      firmKey: l.firmKey,
+      success: l.success ? "TRUE" : "FALSE",
+      reason: l.reason
+    }));
+    const date = new Date().toISOString().slice(0,10);
+    downloadCSV(`login_logs_${date}.csv`, rows);
+    setMsg("log_msg","Login log CSV indirildi.","ok");
+  }
+
+  function clearLogs(){
+    if(!confirm("Tüm login log kayıtları temizlensin mi?")) return;
+    const committed = loadCommittedDB();
+    committed.loginLogs = [];
+    setLocalJSON(DB_KEY, committed);
+    setMsg("log_msg","Login logları temizlendi.","info");
+    // re-render with new db
+    renderAdmin();
+  }
+
+  document.getElementById("log_refresh").onclick=()=>{ setMsg("log_msg","", ""); renderList(); };
+  document.getElementById("log_export").onclick=exportCSV;
+  document.getElementById("log_clear").onclick=clearLogs;
+
+  document.getElementById("log_user").addEventListener("input", ()=>renderList());
+  document.getElementById("log_success").addEventListener("change", ()=>renderList());
+
+  renderList();
+  return root;
+}
+
 /* =================== TAB: SYSTEM =================== */
 function tabSystem(db){
   const root=document.createElement("div");
@@ -2680,15 +2891,6 @@ function tabSystem(db){
 }
 
 /* ============================================================
-   ADMIN - missing tabs note
-   ============================================================ */
-/* 
-  Senin 4/5. maddeler için zaten USER_FIRMS ve USER_ROLES tabları var.
-  Super user yönetimi istersen ayrıca eklerim; şimdilik superUsers listesi seed'de var
-  ve DB JSON'den yönetilebilir (istersen ayrı tab eklerim).
-*/
-
-/* ============================================================
    BOOT
    ============================================================ */
 function boot(){
@@ -2714,14 +2916,12 @@ function boot(){
     refreshTopbar();
     if(ok){
       // admin ekranda kal
-      setMsg("sys_msg","", "");
     }
     renderAdmin();
   };
 
   document.getElementById("searchPortal").addEventListener("input", ()=>renderPortal());
 
-  // restore session
   const s=getSession();
   if(s){
     applyThemeVars(getUserTheme(s.username)||DEFAULT_THEME);

@@ -1,2951 +1,340 @@
-<!doctype html>
-<html lang="tr">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PSD-Portal</title>
-
-  <style>
-    :root{
-      --bg:#0b1220;
-      --card:#111a2e;
-      --muted:#9aa7bd;
-      --text:#eaf0ff;
-      --border:rgba(255,255,255,.10);
-
-      --accent:#60a5fa;
-      --accent2:#22c55e;
-
-      --danger:#ef4444;
-      --ok:#22c55e;
-      --warn:#f59e0b;
-      --info:#60a5fa;
-
-      --shadow: 0 18px 55px rgba(0,0,0,.45);
-    }
-    *{box-sizing:border-box}
-    html, body{ height:100%; }
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      background:
-        radial-gradient(1000px 600px at 20% 0%, rgba(255,255,255,.25), transparent 60%),
-        radial-gradient(1000px 600px at 80% 0%, rgba(255,255,255,.25), transparent 60%),
-        var(--bg);
-      color:var(--text);
-      min-height:100vh;
-    }
-
-    .shell{ min-height:100vh; display:flex; flex-direction:column; }
-    header{
-      padding:16px 18px 10px;
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-    }
-    h1{ margin:0 0 6px; font-size:20px; letter-spacing:.2px; }
-    .sub{ margin:0; color:var(--muted); font-size:13px; line-height:1.4; }
-    .topbar-right{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      text-align:right;
-    }
-    .chip{
-      font-size:12px;
-      color:rgba(255,255,255,.85);
-      padding:8px 10px;
-      border:1px solid var(--border);
-      border-radius:12px;
-      background:rgba(255,255,255,.04);
-      white-space:nowrap;
-    }
-    .btnTop{
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      padding:9px 12px;
-      border-radius:12px;
-      cursor:pointer;
-      font-size:12px;
-      transition: transform .06s ease, border-color .06s ease, background .06s ease;
-      white-space:nowrap;
-    }
-    .btnTop:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.18); }
-    .btnTop:active{ transform: translateY(0px); }
-    .btnTop.primary{
-      border-color: color-mix(in srgb, var(--accent) 35%, rgba(255,255,255,.10));
-      background: color-mix(in srgb, var(--accent) 18%, rgba(255,255,255,.06));
-    }
-    .btnTop.warn{
-      border-color: rgba(245,158,11,.25);
-      background: rgba(245,158,11,.12);
-    }
-    .btnTop.danger{
-      border-color: rgba(239,68,68,.25);
-      background: rgba(239,68,68,.12);
-    }
-
-    .wrap{
-      width:100%;
-      padding:0 18px 28px;
-      flex:1;
-    }
-
-    .section{
-      margin:12px 0 16px;
-      padding:14px;
-      background: rgba(255,255,255,.03);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-    }
-    .section-title{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      margin:0 0 12px;
-      font-size:13px;
-      letter-spacing:.2px;
-      color:#dbe6ff;
-    }
-    .muted{ color:var(--muted); font-size:12.5px; line-height:1.5; }
-
-    .toolbar{
-      margin:0 0 10px;
-      padding:12px 14px;
-      background: rgba(255,255,255,.03);
-      border: 1px solid var(--border);
-      border-radius:16px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-    .input, .select{
-      background: rgba(255,255,255,.06);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 10px 10px;
-      border-radius: 12px;
-      outline: none;
-      font-size: 13px;
-      min-width: 240px;
-      max-width: 100%;
-    }
-    .chips{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
-    .chipBtn{
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.04);
-      color:rgba(255,255,255,.85);
-      padding:8px 10px;
-      border-radius:999px;
-      cursor:pointer;
-      font-size:12px;
-      transition: transform .06s ease, border-color .06s ease, background .06s ease;
-      user-select:none;
-      white-space:nowrap;
-    }
-    .chipBtn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.18); }
-    .chipBtn.active{
-      background: rgba(255,255,255,.08);
-      border-color: rgba(255,255,255,.22);
-      color: rgba(255,255,255,.95);
-      box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 20%, transparent) inset;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap:12px;
-    }
-    @media (max-width: 980px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 620px){
-      header{ flex-direction:column; align-items:flex-start; }
-      .topbar-right{ justify-content:flex-start; text-align:left; }
-      .grid{ grid-template-columns: 1fr; }
-      .input, .select{ width:100%; min-width:unset; }
-    }
-
-    .cardBtn{
-      text-align:left;
-      width:100%;
-      border: 1px solid var(--border);
-      background: var(--card);
-      color: var(--text);
-      padding: 12px;
-      border-radius: 14px;
-      cursor:pointer;
-      transition: transform .06s ease, border-color .06s ease, opacity .06s ease;
-      position:relative;
-      overflow:hidden;
-      min-height:70px;
-    }
-    .cardBtn:hover{
-      transform: translateY(-1px);
-      border-color: color-mix(in srgb, var(--accent) 30%, rgba(255,255,255,.18));
-    }
-    .cardBtn:active{ transform: translateY(0px); }
-    .cardBtn.disabled{
-      background: rgba(255,255,255,.04);
-      color: rgba(255,255,255,.55);
-      cursor:not-allowed;
-      opacity:.85;
-    }
-    .cardBtn.disabled:hover{ transform:none; border-color: var(--border); }
-
-    .pill{
-      position:absolute;
-      top:10px; right:10px;
-      font-size:10px;
-      padding:3px 7px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      color: rgba(255,255,255,.92);
-      background: rgba(255,255,255,.06);
-      white-space:nowrap;
-    }
-    .name{ font-weight:800; font-size:12.8px; margin:0 0 6px; padding-right:86px; line-height:1.2; }
-    .desc{ margin:0; font-size:11.8px; color:var(--muted); line-height:1.35; }
-
-    .adminTabs{
-      display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;
-    }
-    .tabBtn{
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.04);
-      color:rgba(255,255,255,.85);
-      padding:9px 12px;
-      border-radius:12px;
-      cursor:pointer;
-      font-size:12px;
-      transition: transform .06s ease, border-color .06s ease, background .06s ease;
-      user-select:none;
-      white-space:nowrap;
-    }
-    .tabBtn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.18); }
-    .tabBtn.active{
-      background: rgba(255,255,255,.08);
-      border-color: rgba(255,255,255,.22);
-      color: rgba(255,255,255,.95);
-      box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 20%, transparent) inset;
-    }
-
-    .adminGrid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-    }
-    @media (max-width: 980px){ .adminGrid{ grid-template-columns:1fr; } }
-
-    .panel{
-      background: rgba(255,255,255,.03);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding:14px;
-    }
-    .panel h3{ margin:0 0 10px; font-size:13px; color:#dbe6ff; letter-spacing:.2px; }
-    .formGrid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-    }
-    @media (max-width: 620px){ .formGrid{ grid-template-columns:1fr; } }
-    .field{ display:flex; flex-direction:column; gap:6px; }
-    .label{ font-size:12px; color:rgba(255,255,255,.78); display:flex; justify-content:space-between; gap:8px; align-items:center; }
-    .hint{ font-size:11px; color:rgba(255,255,255,.45); }
-
-    .btnRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
-    .btn2{
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
-      padding: 10px 12px;
-      border-radius: 12px;
-      cursor:pointer;
-      font-size: 12px;
-      font-weight: 650;
-      transition: transform .06s ease, border-color .06s ease;
-    }
-    .btn2:hover{ border-color: rgba(255,255,255,.18); transform: translateY(-1px); }
-    .btn2:active{ transform: translateY(0px); }
-    .btn2.ok{ border-color: rgba(34,197,94,.25); background: rgba(34,197,94,.10); }
-    .btn2.danger{ border-color: rgba(239,68,68,.25); background: rgba(239,68,68,.10); }
-    .btn2.warn{ border-color: rgba(245,158,11,.25); background: rgba(245,158,11,.10); }
-    .btn2.info{ border-color: rgba(96,165,250,.25); background: rgba(96,165,250,.10); }
-
-    .list{
-      margin-top:10px;
-      border-top:1px solid var(--border);
-      padding-top:10px;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      max-height: 320px;
-      overflow:auto;
-    }
-    .item{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:10px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.03);
-    }
-    .item .meta{ display:flex; flex-direction:column; gap:2px; min-width:0; }
-    .item .meta b{ font-size:12.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .item .meta span{ font-size:11px; color: rgba(255,255,255,.55); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-
-    .pills{ display:flex; gap:6px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
-    .pill2{
-      font-size:10px;
-      padding:3px 7px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.9);
-      white-space:nowrap;
-    }
-    .pill2.off{ opacity:.55; text-decoration: line-through; }
-
-    .rolesBox{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      padding:10px;
-      border:1px solid var(--border);
-      border-radius:12px;
-      background: rgba(255,255,255,.03);
-    }
-    .chk{
-      display:flex;
-      gap:8px;
-      align-items:center;
-      font-size:12px;
-      color: rgba(255,255,255,.85);
-      user-select:none;
-    }
-    .chk input{ transform: translateY(1px); }
-
-    .msg{
-      margin-top:8px;
-      font-size:12px;
-      min-height:18px;
-      color:rgba(255,255,255,.78);
-    }
-    .msg.err{ color: rgba(239,68,68,.95); }
-    .msg.ok{ color: rgba(34,197,94,.95); }
-    .msg.warn{ color: rgba(245,158,11,.95); }
-    .msg.info{ color: rgba(96,165,250,.95); }
-
-    .hr{ height:1px; background: var(--border); margin:12px 0; }
-
-    footer{
-      padding: 0 18px 22px;
-      color: rgba(255,255,255,.45);
-      font-size:12px;
-    }
-
-    .overlay{
-      position:fixed;
-      inset:0;
-      background: radial-gradient(1000px 700px at 20% 0%, rgba(59,130,246,.25), transparent 55%),
-                  radial-gradient(900px 650px at 80% 0%, rgba(34,197,94,.20), transparent 55%),
-                  rgba(7,10,18,.78);
-      backdrop-filter: blur(6px);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:16px;
-      z-index:9999;
-    }
-    .overlay.show{ display:flex; }
-    .loginCard{
-      width:min(920px, 100%);
-      border:1px solid var(--border);
-      border-radius:18px;
-      background: rgba(17,26,46,.92);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      display:grid;
-      grid-template-columns: 1.05fr .95fr;
-    }
-    @media (max-width: 860px){
-      .loginCard{ grid-template-columns:1fr; }
-      .loginLeft{ display:none; }
-    }
-    .loginLeft{
-      padding:26px;
-      border-right:1px solid var(--border);
-      background:
-        linear-gradient(120deg, color-mix(in srgb, var(--accent) 28%, transparent), transparent 55%),
-        linear-gradient(210deg, color-mix(in srgb, var(--accent2) 22%, transparent), transparent 55%),
-        rgba(255,255,255,.03);
-      min-height:360px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      gap:12px;
-    }
-    .loginRight{
-      padding:26px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      justify-content:center;
-      min-height:360px;
-    }
-    .loginTitle{ margin:0; font-size:18px; letter-spacing:.2px; }
-    .loginSub{ margin:0 0 6px; color: var(--muted); font-size:13px; line-height:1.4; }
-    .primary{
-      width:100%;
-      margin-top:8px;
-      padding:12px 12px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.14);
-      background: linear-gradient(120deg, color-mix(in srgb, var(--accent) 38%, transparent), color-mix(in srgb, var(--accent2) 24%, transparent));
-      color:var(--text);
-      cursor:pointer;
-      font-weight:700;
-      letter-spacing:.2px;
-    }
-    .tiny{ color: rgba(255,255,255,.45); font-size:11px; margin-top:8px; line-height:1.4; }
-
-    .themePanel{
-      position:fixed;
-      top:72px;
-      right:16px;
-      width: 280px;
-      max-width: calc(100vw - 32px);
-      border:1px solid var(--border);
-      border-radius:16px;
-      background: rgba(17,26,46,.92);
-      box-shadow: var(--shadow);
-      padding:12px;
-      z-index:9000;
-      display:none;
-      backdrop-filter: blur(8px);
-    }
-    .themePanel.show{ display:block; }
-    .themeTitle{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      margin-bottom:8px;
-    }
-    .themeTitle b{ font-size:12.5px; letter-spacing:.2px; }
-    .themeClose{
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
-      border-radius:10px;
-      padding:6px 8px;
-      cursor:pointer;
-      font-size:12px;
-    }
-    .themeRow{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:space-between;
-      padding:8px 0;
-      border-top:1px solid rgba(255,255,255,.08);
-    }
-    .themeRow:first-of-type{ border-top:none; }
-    .themeRow span{ font-size:12px; color:rgba(255,255,255,.78); }
-    .colorBox{ display:flex; gap:8px; align-items:center; }
-    .colorBox input[type="color"]{
-      width:40px; height:30px; border:none; background:transparent; padding:0; cursor:pointer;
-    }
-    .colorBox input[type="text"]{
-      width:110px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 8px 10px;
-      border-radius: 12px;
-      outline: none;
-      font-size: 12px;
-    }
-    .themeActions{ display:flex; gap:10px; margin-top:10px; }
-  </style>
-</head>
-
-<body>
-  <div class="shell">
-    <header>
-      <div>
-        <h1 id="title">PSD-Portal</h1>
-        <p class="sub" id="subtitle">Giriş yapın. Firma ve rol bazında raporlar listelenir.</p>
-      </div>
-
-      <div class="topbar-right">
-        <div class="chip" id="who" style="display:none;"></div>
-        <button class="btnTop" id="themeBtn" style="display:none;" type="button">Tema</button>
-        <button class="btnTop warn" id="adminBtn" style="display:none;" type="button">Admin</button>
-        <button class="btnTop primary" id="saveBtn" style="display:none;" type="button">Kaydet</button>
-        <button class="btnTop danger" id="logoutBtn" style="display:none;" type="button">Çıkış</button>
-      </div>
-    </header>
-
-    <div class="wrap">
-      <!-- PORTAL -->
-      <div id="portalView" style="display:none;">
-        <div class="toolbar">
-          <div class="row">
-            <input class="input" id="searchPortal" placeholder="Ara (kategori / rapor adı / açıklama)..." />
-          </div>
-          <div class="row">
-            <div class="chips" id="catChips"></div>
-          </div>
-        </div>
-
-        <div id="portalContent"></div>
-      </div>
-
-      <!-- ADMIN -->
-      <div id="adminView" style="display:none;">
-        <div class="section">
-          <div class="section-title">
-            <span>Admin Paneli</span>
-            <span class="muted" id="pendingInfo"></span>
-          </div>
-          <div class="muted">
-            Admin tarafındaki tüm işlemler <b>taslak</b>tır. Sağ üstteki <b>Kaydet</b> butonu ile kalıcı olur ve portal ekranına direkt yansır.
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="adminTabs" id="adminTabs"></div>
-        </div>
-
-        <div id="adminTabContent"></div>
-      </div>
-    </div>
-
-    <footer id="footer" style="display:none;">
-      İpucu: Gerçek erişim güvenliği için Google paylaşım izinleri / Apps Script backend gerekir.
-    </footer>
-  </div>
-
-  <!-- THEME PANEL -->
-  <aside class="themePanel" id="themePanel">
-    <div class="themeTitle">
-      <b>Tema Ayarları</b>
-      <button class="themeClose" id="themeClose" type="button">Kapat</button>
-    </div>
-
-    <div class="themeRow">
-      <span>Accent 1</span>
-      <div class="colorBox">
-        <input type="color" id="accentC" />
-        <input type="text" id="accentT" placeholder="#60a5fa" />
-      </div>
-    </div>
-
-    <div class="themeRow">
-      <span>Accent 2</span>
-      <div class="colorBox">
-        <input type="color" id="accent2C" />
-        <input type="text" id="accent2T" placeholder="#22c55e" />
-      </div>
-    </div>
-
-    <div class="themeRow">
-      <span>Arkaplan</span>
-      <div class="colorBox">
-        <input type="color" id="bgC" />
-        <input type="text" id="bgT" placeholder="#0b1220" />
-      </div>
-    </div>
-
-    <div class="themeRow">
-      <span>Kart</span>
-      <div class="colorBox">
-        <input type="color" id="cardC" />
-        <input type="text" id="cardT" placeholder="#111a2e" />
-      </div>
-    </div>
-
-    <div class="themeActions">
-      <button class="btn2 ok" id="themeSave" type="button">Kaydet</button>
-      <button class="btn2" id="themeReset" type="button">Sıfırla</button>
-    </div>
-
-    <div class="msg" id="themeMsg"></div>
-    <div class="tiny">Bu ayarlar kullanıcı bazlı (localStorage).</div>
-  </aside>
-
-  <!-- LOGIN OVERLAY -->
-  <div class="overlay" id="loginOverlay">
-    <div class="loginCard">
-      <div class="loginLeft">
-        <h2 style="margin:0;font-size:18px;">PSD-Portal</h2>
-        <p class="muted" style="margin:0;">
-          Normal kullanıcı: firma + rol bazlı raporlar<br/>
-          Super user: tüm firmalara erişir<br/>
-          Admin: yönetim ekranı
-        </p>
-        <div class="section" style="margin:10px 0 0;padding:12px;">
-          <div class="section-title" style="margin:0 0 8px;">Demo Kullanıcılar</div>
-          <div class="muted">
-            Admin: <b>Poseidon</b> / <b>psd123</b><br/>
-            Super: <b>key_alper</b> / <b>1234</b><br/>
-            Normal: <b>zeynep</b> / <b>1234</b> (Firma: Sudesan)
-          </div>
-        </div>
-      </div>
-
-      <div class="loginRight">
-        <h3 class="loginTitle">Giriş</h3>
-        <p class="loginSub">Kullanıcı adı, şifre ve (normal kullanıcı için) firma ile giriş yapın.</p>
-
-        <div class="field">
-          <div class="label">Kullanıcı Adı</div>
-          <input id="loginU" class="input" autocomplete="username" />
-        </div>
-
-        <div class="field">
-          <div class="label">Şifre</div>
-          <input id="loginP" class="input" type="password" autocomplete="current-password" />
-        </div>
-
-        <div class="field">
-          <div class="label">Firma <span class="hint">(Normal kullanıcı için zorunlu)</span></div>
-          <input id="loginFirm" class="input" placeholder="örn: Sudesan" />
-        </div>
-
-        <button class="primary" id="loginBtn" type="button">Giriş Yap</button>
-        <div class="msg" id="loginMsg"></div>
-
-        <div class="tiny">
-          * Not: Bu frontend gating’dir. Linklerin gerçek güvenliği için Apps Script/Google izinleri gerekir.
-        </div>
-      </div>
-    </div>
-  </div>
-
-<script>
-/* ============================================================
-   PSD-Portal (single-file)
-   - Normal / Super / Admin
-   - Draft -> Save workflow
-   - User theme prefs
-   - Login logs + CSV exports
-   ============================================================ */
-
-const DB_KEY       = "PSD_PORTAL_DB_V4";
-const WORKING_KEY  = "PSD_PORTAL_WORKING_V4";
-const SESSION_KEY  = "PSD_PORTAL_SESSION_V4";
-const PREFS_KEY    = "PSD_PORTAL_PREFS_V2";
-
-const ADMIN_LOGIN = { username:"Poseidon", password:"psd123" };
-
-/* ---------- Utilities ---------- */
-const deepClone = (x)=>JSON.parse(JSON.stringify(x));
-const norm = (s="")=>String(s).toLowerCase().trim();
-const trim = (s="")=>String(s).trim();
-
-function getLocalJSON(key){
-  try{ const s=localStorage.getItem(key); return s?JSON.parse(s):null; }catch(e){ return null; }
-}
-function setLocalJSON(key,obj){ localStorage.setItem(key, JSON.stringify(obj)); }
-function delLocal(key){ localStorage.removeItem(key); }
-
-function escapeHtml(s){
-  return String(s||"").replace(/[&<>"']/g,(c)=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[c]));
-}
-function setMsg(id, text, type){
-  const el=document.getElementById(id);
-  if(!el) return;
-  el.className="msg"+(type?(" "+type):"");
-  el.textContent=text||"";
-}
-function isHexColor(s){ return /^#([0-9a-fA-F]{6})$/.test(String(s||"").trim()); }
-function genId(){ return "r"+Math.random().toString(16).slice(2,10)+Date.now().toString(16).slice(-4); }
-
-function nowISO(){
-  return new Date().toISOString();
-}
-
-/* ---------- CSV download helpers (Excel friendly) ---------- */
-function downloadCSV(filename, rows){
-  // rows: array of arrays or array of objects
-  // If objects: use keys of first row
-  let csv = "";
-  if(!rows || !rows.length){
-    csv = "No data\n";
-  }else if(!Array.isArray(rows[0])){
-    const headers = Object.keys(rows[0]);
-    csv += headers.map(csvCell).join(",") + "\n";
-    for(const r of rows){
-      csv += headers.map(h=>csvCell(r[h])).join(",") + "\n";
-    }
-  }else{
-    for(const row of rows){
-      csv += row.map(csvCell).join(",") + "\n";
-    }
-  }
-
-  // Add UTF-8 BOM so Excel opens Turkish chars correctly
-  const blob = new Blob(["\uFEFF"+csv], {type:"text/csv;charset=utf-8;"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url), 2500);
-}
-function csvCell(v){
-  const s = (v===null || typeof v==="undefined") ? "" : String(v);
-  const escaped = s.replace(/"/g,'""');
-  return `"${escaped}"`;
-}
-
-/* ---------- Theme ---------- */
-const DEFAULT_THEME = { bg:"#0b1220", card:"#111a2e", accent:"#60a5fa", accent2:"#22c55e" };
-
-function applyThemeVars(t){
-  const theme = Object.assign({}, DEFAULT_THEME, t||{});
-  const root = document.documentElement;
-  root.style.setProperty("--bg", theme.bg);
-  root.style.setProperty("--card", theme.card);
-  root.style.setProperty("--accent", theme.accent);
-  root.style.setProperty("--accent2", theme.accent2);
-}
-function getAllPrefs(){ return getLocalJSON(PREFS_KEY) || {}; }
-function getUserTheme(username){
-  const all=getAllPrefs();
-  return all && all[username] ? all[username] : null;
-}
-function setUserTheme(username, theme){
-  const all=getAllPrefs();
-  all[username]=theme;
-  setLocalJSON(PREFS_KEY, all);
-}
-function clearUserTheme(username){
-  const all=getAllPrefs();
-  if(all && all[username]) delete all[username];
-  setLocalJSON(PREFS_KEY, all);
-}
-function syncThemePanelFromCSS(){
-  const cs=getComputedStyle(document.documentElement);
-  const bg=cs.getPropertyValue("--bg").trim()||DEFAULT_THEME.bg;
-  const card=cs.getPropertyValue("--card").trim()||DEFAULT_THEME.card;
-  const a1=cs.getPropertyValue("--accent").trim()||DEFAULT_THEME.accent;
-  const a2=cs.getPropertyValue("--accent2").trim()||DEFAULT_THEME.accent2;
-
-  const setBoth=(cId,tId,v)=>{
-    const c=document.getElementById(cId), t=document.getElementById(tId);
-    if(c) c.value=v;
-    if(t) t.value=v;
-  };
-  setBoth("bgC","bgT",bg);
-  setBoth("cardC","cardT",card);
-  setBoth("accentC","accentT",a1);
-  setBoth("accent2C","accent2T",a2);
-}
-function showThemePanel(show){
-  const p=document.getElementById("themePanel");
-  p.classList.toggle("show", !!show);
-  if(show) syncThemePanelFromCSS();
-}
-function wireThemePanel(){
-  const bindPair=(cId,tId,onVal)=>{
-    const c=document.getElementById(cId);
-    const t=document.getElementById(tId);
-    if(c){
-      c.addEventListener("input", ()=>{
-        if(t) t.value=c.value;
-        onVal(c.value);
-      });
-    }
-    if(t){
-      t.addEventListener("input", ()=>{
-        const v=t.value.trim();
-        if(isHexColor(v)){
-          if(c) c.value=v;
-          onVal(v);
-        }
-      });
-    }
-  };
-  bindPair("accentC","accentT",(v)=>document.documentElement.style.setProperty("--accent", v));
-  bindPair("accent2C","accent2T",(v)=>document.documentElement.style.setProperty("--accent2", v));
-  bindPair("bgC","bgT",(v)=>document.documentElement.style.setProperty("--bg", v));
-  bindPair("cardC","cardT",(v)=>document.documentElement.style.setProperty("--card", v));
-
-  document.getElementById("themeClose").onclick=()=>showThemePanel(false);
-  document.getElementById("themeBtn").onclick=()=>showThemePanel(true);
-
-  document.getElementById("themeSave").onclick=()=>{
-    const s=getSession();
-    if(!s){ setMsg("themeMsg","Önce giriş yapılmalı.","err"); return; }
-    const theme={
-      bg:   trim(document.getElementById("bgT").value),
-      card: trim(document.getElementById("cardT").value),
-      accent: trim(document.getElementById("accentT").value),
-      accent2: trim(document.getElementById("accent2T").value),
-    };
-    for(const k of ["bg","card","accent","accent2"]){
-      if(!isHexColor(theme[k])){ setMsg("themeMsg","Renk formatı hatalı. Örn: #60a5fa","err"); return; }
-    }
-    setUserTheme(s.username, theme);
-    setMsg("themeMsg","Tema kaydedildi.","ok");
-  };
-
-  document.getElementById("themeReset").onclick=()=>{
-    const s=getSession();
-    if(s) clearUserTheme(s.username);
-    applyThemeVars(DEFAULT_THEME);
-    syncThemePanelFromCSS();
-    setMsg("themeMsg","Tema sıfırlandı.","info");
-  };
-}
-
-/* ---------- Firm normalize / key ---------- */
-function normalizeFirmNameForAlias(s){
-  const t = norm(s)
-    .replace(/[.,]/g," ")
-    .replace(/\s+/g," ")
-    .replace(/\b(as|aş|a\.ş|a\.s|ltd|limited|inc|corp|co|san|tic|sti|şti|ve|veya)\b/g,"")
-    .replace(/\s+/g," ")
-    .trim();
-  return t;
-}
-function firmKeyAuto(display){
-  const raw=trim(display);
-  if(!raw) return "";
-  return raw.toUpperCase().replace(/\s+/g,"_").replace(/[^\wĞÜŞİÖÇ_]/g,"");
-}
-function firmKeyFromInput(display, db){
-  const raw=trim(display);
-  if(!raw) return "";
-  const aliasKey=normalizeFirmNameForAlias(raw);
-  const aliases=db.aliases||{};
-  if(aliases[aliasKey]) return aliases[aliasKey];
-  return firmKeyAuto(raw);
-}
-
-/* ---------- Role normalize ---------- */
-function normalizeRoleKey(k){
-  return trim(k).toUpperCase().replace(/\s+/g,"_").replace(/[^\wĞÜŞİÖÇ_]/g,"");
-}
-
-/* ============================================================
-   DATABASE
-   ============================================================ */
-const SEED_DB = {
-  version: 4,
-  firms: [
-    { key:"SUDESAN", display:"Sudesan", active:true },
-    { key:"DUPACK",  display:"Dupack",  active:true }
-  ],
-  aliases: {
-    "sudesan":"SUDESAN",
-    "dupack":"DUPACK"
+/***********************
+ *  PORTAL: Kullanıcı / Rol / Yetki / Log / Export
+ *  - Tabları otomatik oluşturur & başlıkları düzeltir
+ *  - onOpen ile menü ekler
+ *  - onOpen ile giriş kaydı (OPEN) loglar
+ *  - Kullanıcı listesini Excel (xlsx) export eder
+ ************************/
+
+/** ---- AYARLAR ---- **/
+const CFG = {
+  SHEETS: {
+    USERS: "Kullanıcılar",
+    COMPANY_ROLES: "Firma Giriş Roller",
+    REPORT_PERMS: "Rapor Yetkileri",
+    LOGIN_LOGS: "Giriş Kayıtları",
   },
-  roles: [
-    { key:"SUDESAN_VIEW", desc:"Sudesan erişimi", active:true },
-    { key:"DUPACK_VIEW",  desc:"Dupack erişimi", active:true },
-    { key:"DASHBOARD_VIEW", desc:"Dashboard raporları", active:true },
-    { key:"FINANCE_VIEW", desc:"Finans raporları", active:true },
-    { key:"OPS_VIEW", desc:"Operasyon raporları", active:true },
-  ],
-  firmAccessRoles: {
-    "SUDESAN": ["SUDESAN_VIEW"],
-    "DUPACK":  ["DUPACK_VIEW"]
-  },
-  users: [
-    { username:"zeynep", password:"1234", display:"Zeynep", email:"", active:true, firms:["SUDESAN"], roles:["SUDESAN_VIEW","DASHBOARD_VIEW"] },
-    { username:"dupack", password:"1234", display:"Dupack User", email:"", active:true, firms:["DUPACK"], roles:["DUPACK_VIEW","DASHBOARD_VIEW"] }
-  ],
-  superUsers: [
-    { username:"key_alper", password:"1234", display:"Alper (Super)", email:"", active:true }
-  ],
-  reports: [
-    { id:"r1", firm:"SUDESAN", cat:"DASHBOARD", name:"Sudesan | Looker Dashboard", desc:"Looker Studio", url:"", acl:{ allowRoles:["SUDESAN_VIEW","DASHBOARD_VIEW"], allowUsers:[] } },
-    { id:"r2", firm:"SUDESAN", cat:"FINANCE", name:"Sudesan | Finans Sheet", desc:"Google Sheet", url:"", acl:{ allowRoles:["SUDESAN_VIEW","FINANCE_VIEW"], allowUsers:[] } },
-    { id:"r3", firm:"DUPACK",  cat:"DASHBOARD", name:"Dupack | Üretim Dashboard", desc:"Looker Studio", url:"", acl:{ allowRoles:["DUPACK_VIEW","DASHBOARD_VIEW"], allowUsers:[] } },
-  ],
-  loginLogs: [] // NEW
+  HEADER_ROW: 1,
+  TZ: Session.getScriptTimeZone() || "Europe/Istanbul",
 };
 
-function migrateDB(db){
-  db.version = db.version || 4;
-  db.firms = db.firms || [];
-  db.aliases = db.aliases || {};
-  db.roles = db.roles || [];
-  db.firmAccessRoles = db.firmAccessRoles || {};
-  db.users = db.users || [];
-  db.superUsers = db.superUsers || [];
-  db.reports = db.reports || [];
-  db.loginLogs = db.loginLogs || [];
+/** ---- MENÜ ---- **/
+function onOpen() {
+  const ui = SpreadsheetApp.getUi();
+  ui.createMenu("Portal Yönetim")
+    .addItem("✅ Tabları Kur / Düzelt", "setupPortal")
+    .addSeparator()
+    .addItem("📄 Kullanıcıları Excel'e Aktar (xlsx)", "exportUsersToExcel")
+    .addSeparator()
+    .addItem("🧾 Giriş Kaydı (Manuel) - LOGIN", "logManualLogin")
+    .addToUi();
 
-  db.firms.forEach(f=>{ if(typeof f.active==="undefined") f.active=true; });
-  db.roles.forEach(r=>{ if(typeof r.active==="undefined") r.active=true; });
-  db.users.forEach(u=>{
-    if(typeof u.active==="undefined") u.active=true;
-    if(!Array.isArray(u.firms)) u.firms=[];
-    if(!Array.isArray(u.roles)) u.roles=[];
-  });
-  db.superUsers.forEach(u=>{ if(typeof u.active==="undefined") u.active=true; });
-  db.reports.forEach(r=>{
-    if(!r.acl) r.acl={};
-    if(!Array.isArray(r.acl.allowRoles)) r.acl.allowRoles=[];
-    if(!Array.isArray(r.acl.allowUsers)) r.acl.allowUsers=[];
-  });
-  db.loginLogs.forEach(l=>{
-    if(!l.ts) l.ts = nowISO();
-  });
-
-  return db;
-}
-
-function ensureDB(){
-  const existing=getLocalJSON(DB_KEY);
-  if(existing) return;
-  setLocalJSON(DB_KEY, SEED_DB);
-}
-function loadCommittedDB(){
-  ensureDB();
-  return migrateDB(getLocalJSON(DB_KEY));
-}
-function loadWorkingDB(){
-  const w=getLocalJSON(WORKING_KEY);
-  if(w) return migrateDB(w);
-  return deepClone(loadCommittedDB());
-}
-function setWorkingDB(db){ setLocalJSON(WORKING_KEY, db); }
-function discardWorking(){ delLocal(WORKING_KEY); }
-
-function hasPendingChanges(){
-  const w=getLocalJSON(WORKING_KEY);
-  if(!w) return false;
-  const c=loadCommittedDB();
-  return JSON.stringify(migrateDB(w)) !== JSON.stringify(c);
-}
-function commitWorkingToDB(){
-  const w=getLocalJSON(WORKING_KEY);
-  if(!w) return false;
-  setLocalJSON(DB_KEY, migrateDB(w));
-  discardWorking();
-  return true;
-}
-
-/* ---------- Login Logs (commit directly to DB) ---------- */
-function pushLoginLog(entry){
-  const db = loadCommittedDB();
-  db.loginLogs = db.loginLogs || [];
-  db.loginLogs.push({
-    ts: nowISO(),
-    username: entry.username || "",
-    firmInput: entry.firmInput || "",
-    firmKey: entry.firmKey || "",
-    mode: entry.mode || "",
-    success: !!entry.success,
-    reason: entry.reason || ""
-  });
-
-  // keep last 2000 logs (prevent bloating)
-  if(db.loginLogs.length > 2000){
-    db.loginLogs = db.loginLogs.slice(-2000);
-  }
-
-  setLocalJSON(DB_KEY, db);
-}
-
-/* ============================================================
-   SESSION + PERMISSIONS
-   ============================================================ */
-function setSession(s){ setLocalJSON(SESSION_KEY, s); }
-function getSession(){ return getLocalJSON(SESSION_KEY); }
-function clearSession(){ delLocal(SESSION_KEY); }
-
-function roleMetaMap(db){
-  const m={}; (db.roles||[]).forEach(r=>{ if(r && r.key) m[r.key]=r; });
-  return m;
-}
-function hasRole(session, role, db){
-  if(!session) return false;
-  if(session.mode==="ADMIN") return true;
-  if(session.mode==="SUPER") return true;
-  const meta=roleMetaMap(db);
-  if(role && meta[role] && meta[role].active===false) return false;
-  return Array.isArray(session.roles) && session.roles.includes(role);
-}
-function firmAccessAllowed(session, firmKey, db){
-  if(!session) return false;
-  if(session.mode==="ADMIN" || session.mode==="SUPER") return true;
-  const req = (db.firmAccessRoles && db.firmAccessRoles[firmKey] && db.firmAccessRoles[firmKey].length)
-    ? db.firmAccessRoles[firmKey]
-    : [`${firmKey}_VIEW`];
-  return req.some(r=>hasRole(session,r,db));
-}
-function isAllowedReport(report, session, db){
-  if(!session) return false;
-  if(session.mode==="ADMIN" || session.mode==="SUPER") return true;
-
-  if(report.firm && !firmAccessAllowed(session, report.firm, db)) return false;
-
-  const acl=report.acl || {};
-  const allowUsers=Array.isArray(acl.allowUsers)?acl.allowUsers:[];
-  const allowRoles=Array.isArray(acl.allowRoles)?acl.allowRoles:[];
-  if(allowUsers.includes(session.username)) return true;
-  return allowRoles.some(r=>hasRole(session,r,db));
-}
-
-/* ============================================================
-   UI STATE
-   ============================================================ */
-let portalSelectedCat = "ALL";
-let adminActiveTab = "FIRMS";
-
-function showLogin(show){
-  const ov=document.getElementById("loginOverlay");
-  ov.classList.toggle("show", !!show);
-}
-function showPortal(show){
-  document.getElementById("portalView").style.display = show ? "block" : "none";
-}
-function showAdmin(show){
-  document.getElementById("adminView").style.display = show ? "block" : "none";
-}
-function setTitle(session){
-  const t=document.getElementById("title");
-  const s=document.getElementById("subtitle");
-  if(!session){
-    t.textContent="PSD-Portal";
-    s.textContent="Giriş yapın. Firma ve rol bazında raporlar listelenir.";
-    document.title="PSD-Portal";
-    return;
-  }
-  if(session.mode==="ADMIN"){
-    t.textContent="PSD-Portal (Admin)";
-    s.textContent="Firma / Rol / Kullanıcı / Rapor yönetimi. Taslak değişiklikleri Kaydet ile kalıcı yap.";
-    document.title="PSD-Portal (Admin)";
-    return;
-  }
-  if(session.mode==="SUPER"){
-    t.textContent="PSD-Portal (Super User)";
-    s.textContent="Tüm firmaların raporlarına erişim. Filtre ve arama ile gezinin.";
-    document.title="PSD-Portal (Super User)";
-    return;
-  }
-  t.textContent=`${session.firmDisplay}-Portal`;
-  s.textContent="Kategorilere göre raporları açın. Yetkiniz olmayanlar görünmez.";
-  document.title=`${session.firmDisplay}-Portal`;
-}
-function refreshTopbar(){
-  const session=getSession();
-  const who=document.getElementById("who");
-  const themeBtn=document.getElementById("themeBtn");
-  const adminBtn=document.getElementById("adminBtn");
-  const saveBtn=document.getElementById("saveBtn");
-  const logoutBtn=document.getElementById("logoutBtn");
-  const footer=document.getElementById("footer");
-
-  if(!session){
-    who.style.display="none";
-    themeBtn.style.display="none";
-    adminBtn.style.display="none";
-    saveBtn.style.display="none";
-    logoutBtn.style.display="none";
-    footer.style.display="none";
-    showThemePanel(false);
-    return;
-  }
-
-  who.style.display="inline-flex";
-  themeBtn.style.display="inline-flex";
-  logoutBtn.style.display="inline-flex";
-  footer.style.display="block";
-
-  if(session.mode==="ADMIN"){
-    who.textContent=`${session.display} • Admin`;
-    adminBtn.style.display="inline-flex";
-    saveBtn.style.display=hasPendingChanges() ? "inline-flex" : "none";
-  }else if(session.mode==="SUPER"){
-    who.textContent=`${session.display} • Super`;
-    adminBtn.style.display="none";
-    saveBtn.style.display="none";
-  }else{
-    who.textContent=`${session.display} • ${session.firmDisplay}`;
-    adminBtn.style.display="none";
-    saveBtn.style.display="none";
+  // Sayfa açılışını logla (kullanıcı e-posta izin veriyorsa)
+  try {
+    logLoginEvent_("OPEN");
+  } catch (e) {
+    // sessiz geç
   }
 }
-function updatePendingInfo(){
-  const el=document.getElementById("pendingInfo");
-  el.textContent = hasPendingChanges() ? "Taslak değişiklik var (Kaydet bekliyor)" : "Taslak değişiklik yok";
+
+/** ---- KURULUM / DÜZELTME ---- **/
+function setupPortal() {
+  const ss = SpreadsheetApp.getActive();
+
+  const shUsers = getOrCreateSheet_(ss, CFG.SHEETS.USERS);
+  const shCompanyRoles = getOrCreateSheet_(ss, CFG.SHEETS.COMPANY_ROLES);
+  const shReportPerms = getOrCreateSheet_(ss, CFG.SHEETS.REPORT_PERMS);
+  const shLogs = getOrCreateSheet_(ss, CFG.SHEETS.LOGIN_LOGS);
+
+  buildUsersSheet_(shUsers);
+  buildCompanyRolesSheet_(shCompanyRoles, shUsers);
+  buildReportPermsSheet_(shReportPerms);
+  buildLoginLogsSheet_(shLogs);
+
+  SpreadsheetApp.getUi().alert("Tablar kuruldu/düzeltildi ✅\n\n- Kullanıcılar\n- Firma Giriş Roller\n- Rapor Yetkileri\n- Giriş Kayıtları\n\nMenüden Excel export'u kullanabilirsin.");
 }
 
-/* ============================================================
-   LOGIN
-   ============================================================ */
-function doLogin(){
-  const u=trim(document.getElementById("loginU").value);
-  const p=document.getElementById("loginP").value || "";
-  const firm=trim(document.getElementById("loginFirm").value);
-
-  setMsg("loginMsg","", "");
-
-  // admin
-  if(norm(u)===norm(ADMIN_LOGIN.username) && p===ADMIN_LOGIN.password){
-    pushLoginLog({ username:u, firmInput: firm, firmKey:"", mode:"ADMIN", success:true, reason:"" });
-    setSession({ username:ADMIN_LOGIN.username, display:"Poseidon", mode:"ADMIN" });
-    applyThemeVars(getUserTheme(ADMIN_LOGIN.username)||DEFAULT_THEME);
-    showLogin(false);
-    showAdmin(true);
-    showPortal(false);
-    adminActiveTab="FIRMS";
-    renderAdmin();
-    refreshTopbar();
-    setTitle(getSession());
-    return;
-  }
-
-  const db=loadCommittedDB();
-
-  // super user
-  const su=(db.superUsers||[]).find(x=>norm(x.username)===norm(u) && x.password===p);
-  if(su){
-    if(su.active===false){
-      pushLoginLog({ username:u, firmInput: firm, firmKey:"", mode:"SUPER", success:false, reason:"SUPER_USER_PASSIVE" });
-      setMsg("loginMsg","Bu Super User pasif.","err"); return;
-    }
-    pushLoginLog({ username:u, firmInput: firm, firmKey:"", mode:"SUPER", success:true, reason:"" });
-    setSession({ username:su.username, display:su.display||su.username, mode:"SUPER", roles:["SUPER"] });
-    applyThemeVars(getUserTheme(su.username)||DEFAULT_THEME);
-    showLogin(false);
-    showAdmin(false);
-    showPortal(true);
-    portalSelectedCat="ALL";
-    renderPortal();
-    refreshTopbar();
-    setTitle(getSession());
-    return;
-  }
-
-  // normal user
-  const user=(db.users||[]).find(x=>norm(x.username)===norm(u) && x.password===p);
-  if(!user){
-    pushLoginLog({ username:u, firmInput: firm, firmKey:"", mode:"", success:false, reason:"BAD_CREDENTIALS" });
-    setMsg("loginMsg","Hatalı kullanıcı adı veya şifre.","err"); return;
-  }
-  if(user.active===false){
-    pushLoginLog({ username:u, firmInput: firm, firmKey:"", mode:"PORTAL", success:false, reason:"USER_PASSIVE" });
-    setMsg("loginMsg","Bu kullanıcı pasif.","err"); return;
-  }
-
-  if(!firm){
-    pushLoginLog({ username:u, firmInput: firm, firmKey:"", mode:"PORTAL", success:false, reason:"FIRM_REQUIRED" });
-    setMsg("loginMsg","Normal kullanıcı için firma zorunlu.","err"); return;
-  }
-
-  const firmKey=firmKeyFromInput(firm, db);
-  const firmObj=(db.firms||[]).find(f=>f.key===firmKey);
-  if(!firmObj || firmObj.active===false){
-    pushLoginLog({ username:u, firmInput: firm, firmKey, mode:"PORTAL", success:false, reason:"FIRM_UNKNOWN_OR_PASSIVE" });
-    setMsg("loginMsg","Firma tanımsız veya pasif.","err"); return;
-  }
-
-  if(!Array.isArray(user.firms) || !user.firms.includes(firmKey)){
-    pushLoginLog({ username:u, firmInput: firm, firmKey, mode:"PORTAL", success:false, reason:"USER_NOT_ASSIGNED_TO_FIRM" });
-    setMsg("loginMsg","Bu kullanıcı bu firmaya atanmadı.","err");
-    return;
-  }
-
-  const session={
-    username:user.username,
-    display:user.display||user.username,
-    mode:"PORTAL",
-    firmKey,
-    firmDisplay: firmObj.display,
-    roles: user.roles||[]
-  };
-
-  if(!firmAccessAllowed(session, firmKey, db)){
-    pushLoginLog({ username:u, firmInput: firm, firmKey, mode:"PORTAL", success:false, reason:"MISSING_FIRM_ACCESS_ROLE" });
-    setMsg("loginMsg","Bu firmaya giriş için gerekli rol kullanıcıda yok.","err");
-    return;
-  }
-
-  pushLoginLog({ username:u, firmInput: firm, firmKey, mode:"PORTAL", success:true, reason:"" });
-
-  setSession(session);
-  applyThemeVars(getUserTheme(session.username)||DEFAULT_THEME);
-
-  showLogin(false);
-  showAdmin(false);
-  showPortal(true);
-  portalSelectedCat="ALL";
-  renderPortal();
-  refreshTopbar();
-  setTitle(getSession());
-}
-function doLogout(){
-  showThemePanel(false);
-  clearSession();
-  portalSelectedCat="ALL";
-  document.getElementById("portalContent").innerHTML="";
-  document.getElementById("catChips").innerHTML="";
-  document.getElementById("searchPortal").value="";
-  applyThemeVars(DEFAULT_THEME);
-
-  showPortal(false);
-  showAdmin(false);
-  showLogin(true);
-  refreshTopbar();
-  setTitle(null);
-}
-
-/* ============================================================
-   PORTAL RENDER
-   ============================================================ */
-function groupByCat(list){
-  const m={};
-  list.forEach(r=>{
-    const c=r.cat || "GENEL";
-    (m[c]=m[c]||[]).push(r);
-  });
-  return Object.keys(m).sort().map(cat=>({ cat, items:m[cat] }));
-}
-function uniqueCats(list){
-  const set=new Set(list.map(x=>x.cat).filter(Boolean));
-  return Array.from(set).sort();
-}
-function buildCatChips(list){
-  const cats=uniqueCats(list);
-  const chips=document.getElementById("catChips");
-  chips.innerHTML="";
-
-  const all=["ALL", ...cats];
-  all.forEach(c=>{
-    const b=document.createElement("button");
-    b.type="button";
-    b.className="chipBtn"+(portalSelectedCat===c?" active":"");
-    b.textContent = (c==="ALL") ? "Tümü" : c;
-    b.onclick=()=>{
-      portalSelectedCat=c;
-      buildCatChips(list);
-      renderPortal();
-    };
-    chips.appendChild(b);
-  });
-}
-function renderPortal(){
-  const session=getSession();
-  if(!session){ showLogin(true); return; }
-
-  const db=loadCommittedDB();
-
-  let list=(db.reports||[]).slice();
-
-  if(session.mode==="PORTAL"){
-    list=list.filter(r=>r.firm===session.firmKey);
-    list=list.filter(r=>isAllowedReport(r, session, db));
-  }else if(session.mode==="SUPER"){
-    // all reports
-  }else{
-    return;
-  }
-
-  const activeFirmSet=new Set((db.firms||[]).filter(f=>f.active!==false).map(f=>f.key));
-  list=list.filter(r=>activeFirmSet.has(r.firm));
-
-  const q=norm(document.getElementById("searchPortal").value);
-  if(q){
-    list=list.filter(r=>{
-      const hay=norm((r.firm||"")+" "+(r.cat||"")+" "+(r.name||"")+" "+(r.desc||""));
-      return hay.includes(q);
-    });
-  }
-
-  if(portalSelectedCat!=="ALL"){
-    list=list.filter(r=>r.cat===portalSelectedCat);
-  }
-
-  let chipBase=(db.reports||[]).slice();
-  if(session.mode==="PORTAL"){
-    chipBase=chipBase.filter(r=>r.firm===session.firmKey).filter(r=>isAllowedReport(r, session, db));
-  }
-  chipBase=chipBase.filter(r=>activeFirmSet.has(r.firm));
-  if(q){
-    chipBase=chipBase.filter(r=>{
-      const hay=norm((r.firm||"")+" "+(r.cat||"")+" "+(r.name||"")+" "+(r.desc||""));
-      return hay.includes(q);
-    });
-  }
-  buildCatChips(chipBase);
-
-  const content=document.getElementById("portalContent");
-  content.innerHTML="";
-
-  if(!list.length){
-    content.innerHTML = `
-      <div class="section">
-        <div class="section-title">Sonuç yok</div>
-        <div class="muted">Bu filtre için rapor bulunamadı.</div>
-      </div>`;
-    return;
-  }
-
-  const grouped=groupByCat(list);
-  grouped.forEach(sec=>{
-    const box=document.createElement("div");
-    box.className="section";
-
-    const title=document.createElement("div");
-    title.className="section-title";
-    title.innerHTML = `<span>${escapeHtml(sec.cat)}</span><span class="muted">${sec.items.length} rapor</span>`;
-
-    const grid=document.createElement("div");
-    grid.className="grid";
-
-    sec.items.forEach(r=>{
-      const btn=document.createElement("button");
-      btn.type="button";
-      btn.className="cardBtn"+(!r.url ? " disabled" : "");
-      btn.innerHTML = `
-        <div class="pill">${escapeHtml(r.firm)}</div>
-        <div class="name">${escapeHtml(r.name)}</div>
-        <div class="desc">${escapeHtml(r.desc||"")}</div>
-      `;
-      if(r.url){
-        btn.onclick=()=>window.open(r.url, "_blank", "noopener,noreferrer");
-      }else{
-        btn.onclick=()=>{};
-      }
-      grid.appendChild(btn);
-    });
-
-    box.appendChild(title);
-    box.appendChild(grid);
-    content.appendChild(box);
-  });
-}
-
-/* ============================================================
-   ADMIN UI
-   ============================================================ */
-function activeRoles(db){
-  return (db.roles||[]).filter(r=>r.active!==false).map(r=>r.key).sort();
-}
-function activeFirms(db){
-  return (db.firms||[]).filter(f=>f.active!==false).slice().sort((a,b)=>a.display.localeCompare(b.display));
-}
-function firmDisplayByKey(db, key){
-  const f=(db.firms||[]).find(x=>x.key===key);
-  return f ? f.display : key;
-}
-
-let portalSelectedCatLocal = "ALL";
-
-function renderAdminTabs(){
-  const tabs=[
-    ["FIRMS","Firmalar"],
-    ["ROLES","Roller"],
-    ["USERS","Kullanıcılar"],
-    ["USER_FIRMS","Kullanıcı → Firma"],
-    ["USER_ROLES","Kullanıcı → Rol"],
-    ["FIRM_ACCESS","Firma Giriş Roller"],
-    ["REPORTS","Raporlar"],
-    ["REPORT_ACL","Rapor Yetkileri"],
-    ["LOGIN_LOGS","Giriş Kayıtları"],  // NEW
-    ["SYSTEM","Sistem"]
+/** ---- TAB: Kullanıcılar ---- **/
+function buildUsersSheet_(sh) {
+  const headers = [
+    "Kullanıcı ID",
+    "Ad Soyad",
+    "E-posta",
+    "Firma",
+    "Rol",
+    "Durum (Aktif/Pasif)",
+    "Oluşturma Tarihi",
+    "Not",
   ];
-  const box=document.getElementById("adminTabs");
-  box.innerHTML="";
-  tabs.forEach(([k,label])=>{
-    const b=document.createElement("button");
-    b.type="button";
-    b.className="tabBtn"+(adminActiveTab===k?" active":"");
-    b.textContent=label;
-    b.onclick=()=>{
-      adminActiveTab=k;
-      renderAdmin();
-    };
-    box.appendChild(b);
-  });
+
+  resetSheet_(sh, headers);
+
+  // Kolon genişlikleri
+  sh.setColumnWidths(1, headers.length, 170);
+  sh.setFrozenRows(1);
+
+  // Durum dropdown
+  const lastRow = Math.max(sh.getMaxRows(), 200);
+  const statusRange = sh.getRange(2, 6, lastRow - 1, 1);
+  const rule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(["Aktif", "Pasif"], true)
+    .setAllowInvalid(false)
+    .build();
+  statusRange.setDataValidation(rule);
+
+  // Örnek satır (boşsa ekle)
+  if (sh.getLastRow() < 2) {
+    sh.getRange(2, 1, 1, headers.length).setValues([[
+      "U-0001",
+      "Örnek Kullanıcı",
+      Session.getActiveUser().getEmail() || "",
+      "Örnek Firma",
+      "Admin",
+      "Aktif",
+      new Date(),
+      "İstersen sil",
+    ]]);
+  }
 }
 
-function buildRoleCheckboxes(containerId, roles, prechecked){
-  const box=document.getElementById(containerId);
-  box.innerHTML="";
-  const set=new Set(prechecked||[]);
-  roles.forEach(r=>{
-    const lbl=document.createElement("label");
-    lbl.className="chk";
-    const inp=document.createElement("input");
-    inp.type="checkbox";
-    inp.value=r;
-    inp.checked=set.has(r);
-    const sp=document.createElement("span");
-    sp.textContent=r;
-    lbl.appendChild(inp);
-    lbl.appendChild(sp);
-    box.appendChild(lbl);
-  });
-}
-function getChecked(containerId){
-  return Array.from(document.querySelectorAll(`#${containerId} input[type="checkbox"]`))
-    .filter(x=>x.checked).map(x=>x.value);
-}
-function selOptions(el, items, mapValue, mapLabel, placeholder){
-  el.innerHTML="";
-  if(placeholder){
-    const o=document.createElement("option");
-    o.value="";
-    o.textContent=placeholder;
-    el.appendChild(o);
+/** ---- TAB: Firma Giriş Roller ---- **/
+function buildCompanyRolesSheet_(shCompanyRoles, shUsers) {
+  const headers = [
+    "Firma",
+    "Rol",
+    "Açıklama",
+    "Varsayılan mı?",
+    "Aktif mi?",
+    "Oluşturan",
+    "Oluşturma Tarihi",
+  ];
+
+  resetSheet_(shCompanyRoles, headers);
+  shCompanyRoles.setFrozenRows(1);
+  shCompanyRoles.setColumnWidths(1, headers.length, 180);
+
+  // Dropdown: Varsayılan mı? / Aktif mi?
+  const lastRow = Math.max(shCompanyRoles.getMaxRows(), 200);
+  const defaultRange = shCompanyRoles.getRange(2, 4, lastRow - 1, 1);
+  const activeRange = shCompanyRoles.getRange(2, 5, lastRow - 1, 1);
+
+  const yesNoRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(["Evet", "Hayır"], true)
+    .setAllowInvalid(false)
+    .build();
+  defaultRange.setDataValidation(yesNoRule);
+  activeRange.setDataValidation(yesNoRule);
+
+  // Örnek roller
+  if (shCompanyRoles.getLastRow() < 2) {
+    shCompanyRoles.getRange(2, 1, 3, headers.length).setValues([
+      ["Örnek Firma", "Admin", "Tüm yetkiler", "Evet", "Evet", Session.getActiveUser().getEmail() || "", new Date()],
+      ["Örnek Firma", "Rapor Görüntüleyici", "Sadece rapor görüntüler", "Hayır", "Evet", Session.getActiveUser().getEmail() || "", new Date()],
+      ["Örnek Firma", "Operasyon", "Operasyon ekranları", "Hayır", "Evet", Session.getActiveUser().getEmail() || "", new Date()],
+    ]);
   }
-  items.forEach(it=>{
-    const o=document.createElement("option");
-    o.value=mapValue(it);
-    o.textContent=mapLabel(it);
-    el.appendChild(o);
-  });
-}
 
-function renderAdmin(){
-  const session=getSession();
-  if(!session || session.mode!=="ADMIN") return;
-
-  const wdb=loadWorkingDB();
-  setWorkingDB(wdb);
-
-  renderAdminTabs();
-  updatePendingInfo();
-  refreshTopbar();
-
-  const host=document.getElementById("adminTabContent");
-  host.innerHTML="";
-
-  if(adminActiveTab==="FIRMS") host.appendChild(tabFirms(wdb));
-  if(adminActiveTab==="ROLES") host.appendChild(tabRoles(wdb));
-  if(adminActiveTab==="USERS") host.appendChild(tabUsers(wdb));
-  if(adminActiveTab==="USER_FIRMS") host.appendChild(tabUserFirms(wdb));
-  if(adminActiveTab==="USER_ROLES") host.appendChild(tabUserRoles(wdb));
-  if(adminActiveTab==="FIRM_ACCESS") host.appendChild(tabFirmAccess(wdb));
-  if(adminActiveTab==="REPORTS") host.appendChild(tabReports(wdb));
-  if(adminActiveTab==="REPORT_ACL") host.appendChild(tabReportACL(wdb));
-  if(adminActiveTab==="LOGIN_LOGS") host.appendChild(tabLoginLogs()); // NEW reads committed DB
-  if(adminActiveTab==="SYSTEM") host.appendChild(tabSystem(wdb));
+  // Kullanıcılar tabındaki Firma ve Rol kolonlarına dropdown kuralı istersen:
+  // - Firma: Kullanıcılar!D
+  // - Rol: Kullanıcılar!E
+  // Bu dropdown’ları otomatik bağlayalım (Firma listesi ve rol listesi dinamik)
+  try {
+    applyUserDropdowns_(shUsers, shCompanyRoles);
+  } catch (e) {
+    // sessiz geç
+  }
 }
 
-/* =================== TAB: FIRMS =================== */
-function tabFirms(db){
-  const root=document.createElement("div");
-  root.className="adminGrid";
+function applyUserDropdowns_(shUsers, shCompanyRoles) {
+  // Firma listesi: Firma Giriş Roller!A (benzersiz)
+  // Rol listesi: Firma Giriş Roller!B (benzersiz)
+  // Basit yaklaşım: tüm A ve B sütunlarını kaynak al
+  const maxRows = Math.max(shCompanyRoles.getLastRow(), 2);
+  const firmaSource = `'${CFG.SHEETS.COMPANY_ROLES}'!A2:A${maxRows}`;
+  const rolSource = `'${CFG.SHEETS.COMPANY_ROLES}'!B2:B${maxRows}`;
 
-  const left=document.createElement("div");
-  left.className="panel";
-  left.innerHTML=`
-    <h3>Firma Ekle / Düzenle</h3>
-    <div class="formGrid">
-      <div class="field">
-        <div class="label">Firma Adı <span class="hint">(örn: Sudesan)</span></div>
-        <input class="input" id="firm_display" placeholder="Firma adı" />
-      </div>
-      <div class="field">
-        <div class="label">Firma Key (otomatik)</div>
-        <input class="input" id="firm_key" disabled placeholder="SUDESAN" />
-      </div>
-    </div>
-    <input id="firm_edit_key" type="hidden"/>
-    <div class="btnRow">
-      <button class="btn2 ok" id="firm_add">Ekle</button>
-      <button class="btn2 info" id="firm_update" style="display:none;">Güncelle</button>
-      <button class="btn2" id="firm_cancel" style="display:none;">İptal</button>
-      <button class="btn2 warn" id="firm_alias">Bu yazımı alias olarak ekle</button>
-    </div>
-    <div class="msg" id="firm_msg"></div>
-    <div class="muted">Not: Firma pasif yapılırsa portalda görünmez.</div>
-  `;
+  const usersMax = Math.max(shUsers.getMaxRows(), 200);
 
-  const right=document.createElement("div");
-  right.className="panel";
-  right.innerHTML=`
-    <h3>Firma Listesi</h3>
-    <div class="list" id="firm_list"></div>
-  `;
+  const firmaRange = shUsers.getRange(2, 4, usersMax - 1, 1); // D
+  const rolRange = shUsers.getRange(2, 5, usersMax - 1, 1);   // E
 
-  root.appendChild(left);
-  root.appendChild(right);
+  const firmaRule = SpreadsheetApp.newDataValidation()
+    .requireFormulaSatisfied(`=COUNTIF(${firmaSource},D2)>0`)
+    .setAllowInvalid(true)
+    .build();
 
-  const disp=left.querySelector("#firm_display");
-  const keyOut=left.querySelector("#firm_key");
-  disp.addEventListener("input", ()=>{
-    if(left.querySelector("#firm_edit_key").value) return;
-    keyOut.value = firmKeyFromInput(disp.value, db) || "";
-  });
+  // NOT: requireFormulaSatisfied tek hücre referansı istediği için bu yaklaşım sınırlı.
+  // Bu yüzden en sağlam yöntem valueInRange:
+  const firmaRule2 = SpreadsheetApp.newDataValidation()
+    .requireValueInRange(shCompanyRoles.getRange(2, 1, Math.max(1, maxRows - 1), 1), true)
+    .setAllowInvalid(true)
+    .build();
+  const rolRule2 = SpreadsheetApp.newDataValidation()
+    .requireValueInRange(shCompanyRoles.getRange(2, 2, Math.max(1, maxRows - 1), 1), true)
+    .setAllowInvalid(true)
+    .build();
 
-  function renderList(){
-    const list=right.querySelector("#firm_list");
-    list.innerHTML="";
-    (db.firms||[]).slice().sort((a,b)=>a.display.localeCompare(b.display)).forEach(f=>{
-      const active=f.active!==false;
-      const row=document.createElement("div");
-      row.className="item";
-      row.innerHTML=`
-        <div class="meta">
-          <b>${escapeHtml(f.display)} (${escapeHtml(f.key)})</b>
-          <span>${active?"AKTİF":"PASİF"}</span>
-        </div>
-        <div class="pills">
-          <span class="pill2 ${active?"":"off"}">${active?"AKTİF":"PASİF"}</span>
-          <button class="btn2 info" data-edit="${escapeHtml(f.key)}">Düzenle</button>
-          <button class="btn2 ${active?"warn":"ok"}" data-toggle="${escapeHtml(f.key)}">${active?"Pasif Yap":"Aktif Yap"}</button>
-          <button class="btn2 danger" data-del="${escapeHtml(f.key)}">Sil</button>
-        </div>
-      `;
-      list.appendChild(row);
-    });
-
-    list.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>startEdit(b.getAttribute("data-edit")));
-    list.querySelectorAll("[data-toggle]").forEach(b=>b.onclick=()=>toggleActive(b.getAttribute("data-toggle")));
-    list.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>delFirm(b.getAttribute("data-del")));
-  }
-
-  function clearForm(){
-    left.querySelector("#firm_edit_key").value="";
-    disp.value="";
-    keyOut.value="";
-    left.querySelector("#firm_add").style.display="inline-block";
-    left.querySelector("#firm_update").style.display="none";
-    left.querySelector("#firm_cancel").style.display="none";
-  }
-
-  function startEdit(firmKey){
-    const f=(db.firms||[]).find(x=>x.key===firmKey);
-    if(!f) return;
-    left.querySelector("#firm_edit_key").value=f.key;
-    disp.value=f.display;
-    keyOut.value=f.key;
-    left.querySelector("#firm_add").style.display="none";
-    left.querySelector("#firm_update").style.display="inline-block";
-    left.querySelector("#firm_cancel").style.display="inline-block";
-    setMsg("firm_msg",`Düzenleme: ${f.key}`,"info");
-  }
-
-  function addFirm(){
-    const d=trim(disp.value);
-    if(!d){ setMsg("firm_msg","Firma adı zorunlu.","err"); return; }
-    const key=firmKeyFromInput(d, db);
-    if(!key){ setMsg("firm_msg","Firma key üretilemedi.","err"); return; }
-    if((db.firms||[]).some(x=>x.key===key)){
-      setMsg("firm_msg","Bu firma key zaten var (alias olabilir).","warn");
-      return;
-    }
-    db.firms.push({ key, display:d, active:true });
-    setWorkingDB(db);
-    setMsg("firm_msg",`Firma eklendi: ${key}`,"ok");
-    clearForm();
-    renderList();
-    updatePendingInfo();
-    refreshTopbar();
-  }
-
-  function updateFirm(){
-    const editKey=left.querySelector("#firm_edit_key").value;
-    if(!editKey){ setMsg("firm_msg","Güncellenecek firma seçilmedi.","err"); return; }
-    const f=(db.firms||[]).find(x=>x.key===editKey);
-    if(!f){ setMsg("firm_msg","Firma bulunamadı.","err"); return; }
-    const d=trim(disp.value);
-    if(!d){ setMsg("firm_msg","Firma adı zorunlu.","err"); return; }
-    f.display=d;
-    setWorkingDB(db);
-    setMsg("firm_msg","Firma güncellendi (taslak).","ok");
-    clearForm();
-    renderList();
-    updatePendingInfo();
-    refreshTopbar();
-  }
-
-  function toggleActive(key){
-    const f=(db.firms||[]).find(x=>x.key===key);
-    if(!f) return;
-    f.active = (f.active===false) ? true : false;
-    setWorkingDB(db);
-    setMsg("firm_msg",`${key} => ${f.active?"AKTİF":"PASİF"} (taslak)`,"info");
-    renderList();
-    updatePendingInfo();
-    refreshTopbar();
-  }
-
-  function delFirm(key){
-    const f=(db.firms||[]).find(x=>x.key===key);
-    if(!f) return;
-    if(!confirm(`Firmayı silmek istiyor musun?\n\n${f.display} (${f.key})`)) return;
-
-    db.firms = (db.firms||[]).filter(x=>x.key!==key);
-
-    if(db.firmAccessRoles && db.firmAccessRoles[key]) delete db.firmAccessRoles[key];
-
-    (db.users||[]).forEach(u=>{
-      u.firms = (u.firms||[]).filter(fk=>fk!==key);
-    });
-
-    db.reports = (db.reports||[]).filter(r=>r.firm!==key);
-
-    setWorkingDB(db);
-    setMsg("firm_msg","Firma silindi (taslak).","ok");
-    clearForm();
-    renderList();
-    updatePendingInfo();
-    refreshTopbar();
-  }
-
-  function addAlias(){
-    const d=trim(disp.value);
-    if(!d){ setMsg("firm_msg","Alias eklemek için firma adı gir.","err"); return; }
-    const key=firmKeyFromInput(d, db);
-    const aliasKey=normalizeFirmNameForAlias(d);
-    const exists=(db.firms||[]).some(x=>x.key===key);
-    if(!exists){
-      setMsg("firm_msg","Alias eklemek için önce firma kaydı olmalı (key mevcut değil).","warn");
-      return;
-    }
-    db.aliases = db.aliases || {};
-    db.aliases[aliasKey]=key;
-    setWorkingDB(db);
-    setMsg("firm_msg",`Alias eklendi: "${aliasKey}" -> ${key} (taslak)`,"ok");
-    updatePendingInfo();
-    refreshTopbar();
-  }
-
-  left.querySelector("#firm_add").onclick=addFirm;
-  left.querySelector("#firm_update").onclick=updateFirm;
-  left.querySelector("#firm_cancel").onclick=()=>{ clearForm(); setMsg("firm_msg","", ""); };
-  left.querySelector("#firm_alias").onclick=addAlias;
-
-  renderList();
-  return root;
+  firmaRange.setDataValidation(firmaRule2);
+  rolRange.setDataValidation(rolRule2);
 }
 
-/* =================== TAB: ROLES =================== */
-function tabRoles(db){
-  const root=document.createElement("div");
-  root.className="adminGrid";
+/** ---- TAB: Rapor Yetkileri ---- **/
+function buildReportPermsSheet_(sh) {
+  const headers = [
+    "Rol",
+    "Rapor Kodu",
+    "Rapor Adı",
+    "Görüntüleme",
+    "Export",
+    "Filtre Kullanımı",
+    "Açıklama",
+    "Güncelleyen",
+    "Güncelleme Tarihi",
+  ];
 
-  const left=document.createElement("div");
-  left.className="panel";
-  left.innerHTML=`
-    <h3>Rol Ekle / Düzenle</h3>
-    <div class="formGrid">
-      <div class="field">
-        <div class="label">Rol Kodu <span class="hint">(örn: FINANCE_VIEW)</span></div>
-        <input class="input" id="role_key" placeholder="ROL_KODU" />
-      </div>
-      <div class="field">
-        <div class="label">Açıklama</div>
-        <input class="input" id="role_desc" placeholder="opsiyonel" />
-      </div>
-    </div>
-    <input id="role_edit_key" type="hidden"/>
-    <div class="btnRow">
-      <button class="btn2 ok" id="role_add">Ekle</button>
-      <button class="btn2 info" id="role_update" style="display:none;">Güncelle</button>
-      <button class="btn2" id="role_cancel" style="display:none;">İptal</button>
-    </div>
-    <div class="msg" id="role_msg"></div>
-    <div class="muted">Not: Rol pasif olursa kullanıcıda dursa bile yetki vermez.</div>
-  `;
+  resetSheet_(sh, headers);
+  sh.setFrozenRows(1);
+  sh.setColumnWidths(1, headers.length, 170);
 
-  const right=document.createElement("div");
-  right.className="panel";
-  right.innerHTML=`
-    <h3>Rol Listesi</h3>
-    <div class="list" id="role_list"></div>
-  `;
+  // Evet/Hayır dropdown
+  const lastRow = Math.max(sh.getMaxRows(), 300);
+  const yesNoRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(["Evet", "Hayır"], true)
+    .setAllowInvalid(false)
+    .build();
 
-  root.appendChild(left);
-  root.appendChild(right);
+  sh.getRange(2, 4, lastRow - 1, 3).setDataValidation(yesNoRule); // Görüntüleme/Export/Filtre
 
-  const keyIn=left.querySelector("#role_key");
-  const descIn=left.querySelector("#role_desc");
+  // Örnek
+  if (sh.getLastRow() < 2) {
+    sh.getRange(2, 1, 3, headers.length).setValues([
+      ["Admin", "RPT-001", "Genel Dashboard", "Evet", "Evet", "Evet", "Tüm erişim", Session.getActiveUser().getEmail() || "", new Date()],
+      ["Rapor Görüntüleyici", "RPT-001", "Genel Dashboard", "Evet", "Hayır", "Evet", "Sadece görüntüleme", Session.getActiveUser().getEmail() || "", new Date()],
+      ["Operasyon", "RPT-010", "Operasyon KPI", "Evet", "Evet", "Evet", "Operasyon raporu", Session.getActiveUser().getEmail() || "", new Date()],
+    ]);
+  }
+}
 
-  keyIn.addEventListener("input", ()=>{
-    if(left.querySelector("#role_edit_key").value) return;
-    keyIn.value = normalizeRoleKey(keyIn.value);
+/** ---- TAB: Giriş Kayıtları ---- **/
+function buildLoginLogsSheet_(sh) {
+  const headers = [
+    "Tarih-Saat",
+    "Aksiyon",
+    "Kullanıcı E-posta",
+    "Spreadsheet",
+    "Sheet",
+    "Not",
+  ];
+
+  resetSheet_(sh, headers);
+  sh.setFrozenRows(1);
+  sh.setColumnWidths(1, headers.length, 200);
+}
+
+/** ---- LOG YAZMA ---- **/
+function logLoginEvent_(action, note) {
+  const ss = SpreadsheetApp.getActive();
+  const sh = getOrCreateSheet_(ss, CFG.SHEETS.LOGIN_LOGS);
+  if (sh.getLastRow() === 0) buildLoginLogsSheet_(sh);
+
+  const email = Session.getActiveUser().getEmail() || "UNKNOWN";
+  const activeSheet = ss.getActiveSheet();
+  const row = [
+    new Date(),
+    action || "",
+    email,
+    ss.getName(),
+    activeSheet ? activeSheet.getName() : "",
+    note || "",
+  ];
+
+  sh.appendRow(row);
+}
+
+/** Menüden manuel login log */
+function logManualLogin() {
+  logLoginEvent_("LOGIN", "Manuel tetikleme (menü)");
+  SpreadsheetApp.getUi().alert("Giriş kaydı eklendi ✅");
+}
+
+/** ---- EXCEL EXPORT: Kullanıcılar ---- **/
+function exportUsersToExcel() {
+  const ss = SpreadsheetApp.getActive();
+  const usersSheet = ss.getSheetByName(CFG.SHEETS.USERS);
+  if (!usersSheet) {
+    SpreadsheetApp.getUi().alert(`'${CFG.SHEETS.USERS}' tabı bulunamadı. Önce 'Tabları Kur / Düzelt' çalıştır.`);
+    return;
+  }
+
+  // Export edilecek aralık: Kullanıcılar tabındaki dolu alan
+  const lastRow = Math.max(usersSheet.getLastRow(), 1);
+  const lastCol = Math.max(usersSheet.getLastColumn(), 1);
+
+  // Geçici bir spreadsheet oluşturup kullanıcıları oraya kopyalayıp xlsx export almak en sağlam yöntem
+  const temp = SpreadsheetApp.create(`Kullanıcılar Export - ${formatNow_()}`);
+  const tempSs = SpreadsheetApp.openById(temp.getId());
+  const tempSh = tempSs.getSheets()[0];
+  tempSh.setName("Kullanıcılar");
+
+  const values = usersSheet.getRange(1, 1, lastRow, lastCol).getValues();
+  tempSh.getRange(1, 1, values.length, values[0].length).setValues(values);
+  tempSh.setFrozenRows(1);
+
+  // XLSX olarak Drive’a export et
+  const xlsxBlob = exportSpreadsheetAsXlsx_(tempSs.getId(), `Kullanıcılar_${formatNow_()}.xlsx`);
+  const file = DriveApp.createFile(xlsxBlob);
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+
+  // Geçici dosyayı sil (Drive’dan) — sadece spreadsheet’i çöpe at
+  DriveApp.getFileById(tempSs.getId()).setTrashed(true);
+
+  // Log
+  logLoginEvent_("EXPORT_USERS_XLSX", `Dosya: ${file.getName()}`);
+
+  SpreadsheetApp.getUi().alert(
+    "Excel export hazır ✅\n\nLink (Drive):\n" + file.getUrl() +
+    "\n\nNot: Linki açıp indir menüsünden .xlsx indirebilirsin."
+  );
+}
+
+function exportSpreadsheetAsXlsx_(spreadsheetId, filename) {
+  const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=xlsx`;
+  const token = ScriptApp.getOAuthToken();
+  const resp = UrlFetchApp.fetch(url, {
+    headers: { Authorization: "Bearer " + token },
+    muteHttpExceptions: true,
   });
 
-  function renderList(){
-    const list=right.querySelector("#role_list");
-    list.innerHTML="";
-    (db.roles||[]).slice().sort((a,b)=>a.key.localeCompare(b.key)).forEach(r=>{
-      const active=r.active!==false;
-      const row=document.createElement("div");
-      row.className="item";
-      row.innerHTML=`
-        <div class="meta">
-          <b>${escapeHtml(r.key)}</b>
-          <span>${escapeHtml(r.desc||"")}</span>
-        </div>
-        <div class="pills">
-          <span class="pill2 ${active?"":"off"}">${active?"AKTİF":"PASİF"}</span>
-          <button class="btn2 info" data-edit="${escapeHtml(r.key)}">Düzenle</button>
-          <button class="btn2 ${active?"warn":"ok"}" data-toggle="${escapeHtml(r.key)}">${active?"Pasif Yap":"Aktif Yap"}</button>
-          <button class="btn2 danger" data-del="${escapeHtml(r.key)}">Sil</button>
-        </div>
-      `;
-      list.appendChild(row);
-    });
-
-    list.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>startEdit(b.getAttribute("data-edit")));
-    list.querySelectorAll("[data-toggle]").forEach(b=>b.onclick=()=>toggleActive(b.getAttribute("data-toggle")));
-    list.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>delRole(b.getAttribute("data-del")));
+  const code = resp.getResponseCode();
+  if (code !== 200) {
+    throw new Error("XLSX export başarısız. HTTP " + code + " | " + resp.getContentText());
   }
 
-  function clearForm(){
-    left.querySelector("#role_edit_key").value="";
-    keyIn.value="";
-    descIn.value="";
-    keyIn.disabled=false;
-    left.querySelector("#role_add").style.display="inline-block";
-    left.querySelector("#role_update").style.display="none";
-    left.querySelector("#role_cancel").style.display="none";
-  }
-
-  function startEdit(k){
-    const r=(db.roles||[]).find(x=>x.key===k);
-    if(!r) return;
-    left.querySelector("#role_edit_key").value=r.key;
-    keyIn.value=r.key;
-    descIn.value=r.desc||"";
-    keyIn.disabled=true;
-    left.querySelector("#role_add").style.display="none";
-    left.querySelector("#role_update").style.display="inline-block";
-    left.querySelector("#role_cancel").style.display="inline-block";
-    setMsg("role_msg",`Düzenleme: ${r.key}`,"info");
-  }
-
-  function addRole(){
-    const k=normalizeRoleKey(keyIn.value);
-    const d=trim(descIn.value);
-    if(!k){ setMsg("role_msg","Rol kodu zorunlu.","err"); return; }
-    if((db.roles||[]).some(x=>x.key===k)){
-      setMsg("role_msg","Bu rol zaten var.","warn"); return;
-    }
-    db.roles.push({ key:k, desc:d, active:true });
-    setWorkingDB(db);
-    setMsg("role_msg",`Rol eklendi: ${k} (taslak)`,"ok");
-    clearForm();
-    renderList();
-    updatePendingInfo();
-    refreshTopbar();
-  }
-
-  function updateRole(){
-    const ek=left.querySelector("#role_edit_key").value;
-    if(!ek){ setMsg("role_msg","Güncellenecek rol seçilmedi.","err"); return; }
-    const r=(db.roles||[]).find(x=>x.key===ek);
-    if(!r){ setMsg("role_msg","Rol bulunamadı.","err"); return; }
-    r.desc=trim(descIn.value);
-    setWorkingDB(db);
-    setMsg("role_msg","Rol güncellendi (taslak).","ok");
-    clearForm();
-    renderList();
-    updatePendingInfo();
-    refreshTopbar();
-  }
-
-  function toggleActive(k){
-    const r=(db.roles||[]).find(x=>x.key===k);
-    if(!r) return;
-    r.active = (r.active===false)?true:false;
-    setWorkingDB(db);
-    setMsg("role_msg",`${k} => ${r.active?"AKTİF":"PASİF"} (taslak)`,"info");
-    renderList();
-    updatePendingInfo();
-    refreshTopbar();
-  }
-
-  function delRole(k){
-    const r=(db.roles||[]).find(x=>x.key===k);
-    if(!r) return;
-    if(!confirm(`Rol silinsin mi?\n\n${r.key}`)) return;
-
-    db.roles=(db.roles||[]).filter(x=>x.key!==k);
-
-    (db.users||[]).forEach(u=>{
-      u.roles=(u.roles||[]).filter(rr=>rr!==k);
-    });
-
-    Object.keys(db.firmAccessRoles||{}).forEach(fk=>{
-      db.firmAccessRoles[fk]=(db.firmAccessRoles[fk]||[]).filter(rr=>rr!==k);
-    });
-
-    (db.reports||[]).forEach(rep=>{
-      rep.acl=rep.acl||{};
-      rep.acl.allowRoles=(rep.acl.allowRoles||[]).filter(rr=>rr!==k);
-    });
-
-    setWorkingDB(db);
-    setMsg("role_msg","Rol silindi (taslak).","ok");
-    clearForm();
-    renderList();
-    updatePendingInfo();
-    refreshTopbar();
-  }
-
-  left.querySelector("#role_add").onclick=addRole;
-  left.querySelector("#role_update").onclick=updateRole;
-  left.querySelector("#role_cancel").onclick=()=>{ clearForm(); setMsg("role_msg","", ""); };
-
-  renderList();
-  return root;
+  const blob = resp.getBlob().setName(filename);
+  return blob;
 }
 
-/* =================== TAB: USERS (+ CSV Export) =================== */
-function tabUsers(db){
-  const root=document.createElement("div");
-  root.className="adminGrid";
-
-  const left=document.createElement("div");
-  left.className="panel";
-  left.innerHTML=`
-    <h3>Kullanıcı Ekle / Düzenle</h3>
-    <div class="formGrid">
-      <div class="field">
-        <div class="label">Kullanıcı Adı</div>
-        <input class="input" id="u_name" placeholder="örn: zeynep" />
-      </div>
-      <div class="field">
-        <div class="label">Şifre</div>
-        <input class="input" id="u_pass" placeholder="örn: 1234" />
-      </div>
-      <div class="field">
-        <div class="label">Görünen Ad</div>
-        <input class="input" id="u_disp" placeholder="örn: Zeynep" />
-      </div>
-      <div class="field">
-        <div class="label">E-posta</div>
-        <input class="input" id="u_mail" placeholder="opsiyonel" />
-      </div>
-    </div>
-    <input id="u_edit" type="hidden"/>
-    <div class="btnRow">
-      <button class="btn2 ok" id="u_add">Ekle</button>
-      <button class="btn2 info" id="u_update" style="display:none;">Güncelle</button>
-      <button class="btn2 warn" id="u_resetpwd" style="display:none;">Şifreyi Sıfırla</button>
-      <button class="btn2" id="u_cancel" style="display:none;">İptal</button>
-      <button class="btn2 info" id="u_export">Excel Export (CSV)</button>
-    </div>
-    <div class="msg" id="u_msg"></div>
-    <div class="muted">Not: Kullanıcı rol/firma ataması diğer tablardan yapılır.</div>
-  `;
-
-  const right=document.createElement("div");
-  right.className="panel";
-  right.innerHTML=`
-    <h3>Kullanıcı Listesi</h3>
-    <div class="list" id="u_list"></div>
-  `;
-
-  root.appendChild(left);
-  root.appendChild(right);
-
-  const inName=left.querySelector("#u_name");
-  const inPass=left.querySelector("#u_pass");
-  const inDisp=left.querySelector("#u_disp");
-  const inMail=left.querySelector("#u_mail");
-
-  function renderList(){
-    const list=right.querySelector("#u_list");
-    list.innerHTML="";
-    (db.users||[]).slice().sort((a,b)=>a.username.localeCompare(b.username)).forEach(u=>{
-      const active=u.active!==false;
-      const firms=(u.firms||[]).join(", ");
-      const roles=(u.roles||[]).join(", ");
-      const row=document.createElement("div");
-      row.className="item";
-      row.innerHTML=`
-        <div class="meta">
-          <b>${escapeHtml(u.username)} • ${escapeHtml(u.display||"")}</b>
-          <span>${active?"AKTİF":"PASİF"} • Firms: ${escapeHtml(firms)} • Roles: ${escapeHtml(roles)}</span>
-        </div>
-        <div class="pills">
-          <span class="pill2 ${active?"":"off"}">${active?"AKTİF":"PASİF"}</span>
-          <button class="btn2 info" data-edit="${escapeHtml(u.username)}">Düzenle</button>
-          <button class="btn2 ${active?"warn":"ok"}" data-toggle="${escapeHtml(u.username)}">${active?"Pasif Yap":"Aktif Yap"}</button>
-          <button class="btn2 danger" data-del="${escapeHtml(u.username)}">Sil</button>
-        </div>
-      `;
-      list.appendChild(row);
-    });
-
-    list.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>startEdit(b.getAttribute("data-edit")));
-    list.querySelectorAll("[data-toggle]").forEach(b=>b.onclick=()=>toggleActive(b.getAttribute("data-toggle")));
-    list.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>delUser(b.getAttribute("data-del")));
-  }
-
-  function clearForm(){
-    left.querySelector("#u_edit").value="";
-    inName.value=""; inPass.value=""; inDisp.value=""; inMail.value="";
-    inName.disabled=false;
-    left.querySelector("#u_add").style.display="inline-block";
-    left.querySelector("#u_update").style.display="none";
-    left.querySelector("#u_resetpwd").style.display="none";
-    left.querySelector("#u_cancel").style.display="none";
-  }
-
-  function startEdit(username){
-    const u=(db.users||[]).find(x=>norm(x.username)===norm(username));
-    if(!u) return;
-    left.querySelector("#u_edit").value=u.username;
-    inName.value=u.username;
-    inPass.value="";
-    inDisp.value=u.display||"";
-    inMail.value=u.email||"";
-    inName.disabled=true;
-    left.querySelector("#u_add").style.display="none";
-    left.querySelector("#u_update").style.display="inline-block";
-    left.querySelector("#u_resetpwd").style.display="inline-block";
-    left.querySelector("#u_cancel").style.display="inline-block";
-    setMsg("u_msg",`Düzenleme: ${u.username}`,"info");
-  }
-
-  function addUser(){
-    const username=trim(inName.value);
-    const pwd=inPass.value||"";
-    if(!username || !pwd){ setMsg("u_msg","Kullanıcı adı ve şifre zorunlu.","err"); return; }
-    if(norm(username)===norm(ADMIN_LOGIN.username)){ setMsg("u_msg","Bu kullanıcı adı admin için ayrılmış.","err"); return; }
-    if((db.superUsers||[]).some(x=>norm(x.username)===norm(username))){
-      setMsg("u_msg","Bu kullanıcı adı Super User olarak zaten var.","err"); return;
-    }
-    if((db.users||[]).some(x=>norm(x.username)===norm(username))){
-      setMsg("u_msg","Bu kullanıcı adı zaten var.","warn"); return;
-    }
-    db.users.push({
-      username,
-      password:pwd,
-      display:trim(inDisp.value),
-      email:trim(inMail.value),
-      active:true,
-      firms:[],
-      roles:[]
-    });
-    setWorkingDB(db);
-    setMsg("u_msg",`Kullanıcı eklendi: ${username} (taslak)`,"ok");
-    clearForm();
-    renderList();
-    updatePendingInfo(); refreshTopbar();
-  }
-
-  function updateUser(){
-    const editing=left.querySelector("#u_edit").value;
-    if(!editing){ setMsg("u_msg","Güncellenecek kullanıcı seçilmedi.","err"); return; }
-    const u=(db.users||[]).find(x=>norm(x.username)===norm(editing));
-    if(!u){ setMsg("u_msg","Kullanıcı bulunamadı.","err"); return; }
-    u.display=trim(inDisp.value);
-    u.email=trim(inMail.value);
-    setWorkingDB(db);
-    setMsg("u_msg","Kullanıcı güncellendi (taslak).","ok");
-    clearForm();
-    renderList();
-    updatePendingInfo(); refreshTopbar();
-  }
-
-  function resetPwd(){
-    const editing=left.querySelector("#u_edit").value;
-    if(!editing){ setMsg("u_msg","Şifre sıfırlamak için kullanıcı seç.","err"); return; }
-    const u=(db.users||[]).find(x=>norm(x.username)===norm(editing));
-    if(!u){ setMsg("u_msg","Kullanıcı bulunamadı.","err"); return; }
-    const newPwd=inPass.value||"";
-    if(!newPwd){ setMsg("u_msg","Yeni şifre alanını doldur.","err"); return; }
-    u.password=newPwd;
-    setWorkingDB(db);
-    setMsg("u_msg","Şifre güncellendi (taslak).","ok");
-    inPass.value="";
-    renderList();
-    updatePendingInfo(); refreshTopbar();
-  }
-
-  function toggleActive(username){
-    const u=(db.users||[]).find(x=>norm(x.username)===norm(username));
-    if(!u) return;
-    u.active=(u.active===false)?true:false;
-    setWorkingDB(db);
-    setMsg("u_msg",`${u.username} => ${u.active?"AKTİF":"PASİF"} (taslak)`,"info");
-    renderList();
-    updatePendingInfo(); refreshTopbar();
-  }
-
-  function delUser(username){
-    const u=(db.users||[]).find(x=>norm(x.username)===norm(username));
-    if(!u) return;
-    if(!confirm(`Kullanıcı silinsin mi?\n\n${u.username} • ${u.display||""}`)) return;
-    db.users=(db.users||[]).filter(x=>norm(x.username)!==norm(username));
-
-    (db.reports||[]).forEach(r=>{
-      r.acl=r.acl||{};
-      r.acl.allowUsers=(r.acl.allowUsers||[]).filter(x=>norm(x)!==norm(username));
-    });
-
-    setWorkingDB(db);
-    setMsg("u_msg","Kullanıcı silindi (taslak).","ok");
-    clearForm();
-    renderList();
-    updatePendingInfo(); refreshTopbar();
-  }
-
-  function exportUsersCSV(){
-    const rows = (db.users||[]).slice().sort((a,b)=>a.username.localeCompare(b.username)).map(u=>({
-      username: u.username,
-      display: u.display || "",
-      email: u.email || "",
-      status: (u.active===false) ? "PASIF" : "AKTIF",
-      firms: (u.firms||[]).join(";"),
-      roles: (u.roles||[]).join(";")
-    }));
-    const date = new Date().toISOString().slice(0,10);
-    downloadCSV(`users_${date}.csv`, rows);
-    setMsg("u_msg","Kullanıcı listesi CSV indirildi.","ok");
-  }
-
-  left.querySelector("#u_add").onclick=addUser;
-  left.querySelector("#u_update").onclick=updateUser;
-  left.querySelector("#u_resetpwd").onclick=resetPwd;
-  left.querySelector("#u_cancel").onclick=()=>{ clearForm(); setMsg("u_msg","", ""); };
-  left.querySelector("#u_export").onclick=exportUsersCSV;
-
-  renderList();
-  return root;
+/** ---- YARDIMCILAR ---- **/
+function getOrCreateSheet_(ss, name) {
+  let sh = ss.getSheetByName(name);
+  if (!sh) sh = ss.insertSheet(name);
+  return sh;
 }
 
-/* =================== TAB: USER_FIRMS =================== */
-function tabUserFirms(db){
-  const root=document.createElement("div");
-  root.className="adminGrid";
+function resetSheet_(sh, headers) {
+  // Sheet boş değilse sadece header yapısını garanti edelim (tamamen silmek yerine güvenli)
+  // İstersen burada sh.clear() yapabilirsin; ben "tablar çalışmıyor" dediğin için kesin düzeltmek adına clear yapıyorum.
+  sh.clear();
 
-  const left=document.createElement("div");
-  left.className="panel";
-  left.innerHTML=`
-    <h3>Kullanıcı → Firma Ataması</h3>
-    <div class="field">
-      <div class="label">Kullanıcı</div>
-      <select class="select" id="uf_user"></select>
-    </div>
-    <div class="field">
-      <div class="label">Firmalar</div>
-      <div class="rolesBox" id="uf_firms"></div>
-    </div>
-    <div class="btnRow">
-      <button class="btn2 info" id="uf_save">Kaydet (Taslak)</button>
-      <button class="btn2 warn" id="uf_clear">Temizle</button>
-    </div>
-    <div class="msg" id="uf_msg"></div>
-    <div class="muted">Not: Normal kullanıcı login sırasında firma girmek zorundadır ve kullanıcı o firmaya atanmış olmalıdır.</div>
-  `;
-
-  const right=document.createElement("div");
-  right.className="panel";
-  right.innerHTML=`
-    <h3>Özet</h3>
-    <div class="list" id="uf_list"></div>
-  `;
-
-  root.appendChild(left);
-  root.appendChild(right);
-
-  const sel=left.querySelector("#uf_user");
-  const firmsBox=left.querySelector("#uf_firms");
-
-  function renderUsers(){
-    selOptions(
-      sel,
-      (db.users||[]).slice().sort((a,b)=>a.username.localeCompare(b.username)),
-      u=>u.username,
-      u=>`${u.username} • ${u.display||""}`,
-      "Kullanıcı seç"
-    );
-  }
-
-  function renderFirmCheckboxes(){
-    const username=sel.value;
-    firmsBox.innerHTML="";
-    const u=(db.users||[]).find(x=>x.username===username);
-    const set=new Set((u && u.firms) ? u.firms : []);
-    activeFirms(db).forEach(f=>{
-      const lbl=document.createElement("label");
-      lbl.className="chk";
-      const inp=document.createElement("input");
-      inp.type="checkbox";
-      inp.value=f.key;
-      inp.checked=set.has(f.key);
-      const sp=document.createElement("span");
-      sp.textContent=`${f.display} (${f.key})`;
-      lbl.appendChild(inp); lbl.appendChild(sp);
-      firmsBox.appendChild(lbl);
-    });
-  }
-
-  function renderSummary(){
-    const list=right.querySelector("#uf_list");
-    list.innerHTML="";
-    (db.users||[]).slice().sort((a,b)=>a.username.localeCompare(b.username)).forEach(u=>{
-      const row=document.createElement("div");
-      row.className="item";
-      row.innerHTML=`
-        <div class="meta">
-          <b>${escapeHtml(u.username)} • ${escapeHtml(u.display||"")}</b>
-          <span>Firmalar: ${escapeHtml((u.firms||[]).join(", "))}</span>
-        </div>
-      `;
-      list.appendChild(row);
-    });
-  }
-
-  function save(){
-    const username=sel.value;
-    if(!username){ setMsg("uf_msg","Kullanıcı seç.","err"); return; }
-    const u=(db.users||[]).find(x=>x.username===username);
-    if(!u){ setMsg("uf_msg","Kullanıcı bulunamadı.","err"); return; }
-    const checked = Array.from(firmsBox.querySelectorAll("input[type=checkbox]")).filter(x=>x.checked).map(x=>x.value);
-    u.firms=checked;
-
-    setWorkingDB(db);
-    setMsg("uf_msg","Firma ataması güncellendi (taslak).","ok");
-    renderSummary();
-    updatePendingInfo(); refreshTopbar();
-  }
-
-  function clear(){
-    const username=sel.value;
-    if(!username){ setMsg("uf_msg","Kullanıcı seç.","err"); return; }
-    const u=(db.users||[]).find(x=>x.username===username);
-    if(!u) return;
-    u.firms=[];
-    setWorkingDB(db);
-    setMsg("uf_msg","Firma ataması temizlendi (taslak).","info");
-    renderFirmCheckboxes();
-    renderSummary();
-    updatePendingInfo(); refreshTopbar();
-  }
-
-  sel.onchange=()=>{
-    renderFirmCheckboxes();
-    setMsg("uf_msg","", "");
-  };
-
-  left.querySelector("#uf_save").onclick=save;
-  left.querySelector("#uf_clear").onclick=clear;
-
-  renderUsers();
-  renderFirmCheckboxes();
-  renderSummary();
-  return root;
+  sh.getRange(CFG.HEADER_ROW, 1, 1, headers.length).setValues([headers]);
+  const headerRange = sh.getRange(1, 1, 1, headers.length);
+  headerRange.setFontWeight("bold");
+  headerRange.setWrap(true);
+  sh.setFrozenRows(1);
 }
 
-/* =================== TAB: USER_ROLES =================== */
-function tabUserRoles(db){
-  const root=document.createElement("div");
-  root.className="adminGrid";
-
-  const left=document.createElement("div");
-  left.className="panel";
-  left.innerHTML=`
-    <h3>Kullanıcı → Rol Ataması</h3>
-    <div class="field">
-      <div class="label">Kullanıcı</div>
-      <select class="select" id="ur_user"></select>
-    </div>
-    <div class="field">
-      <div class="label">Roller</div>
-      <div class="rolesBox" id="ur_roles"></div>
-    </div>
-    <div class="btnRow">
-      <button class="btn2 info" id="ur_save">Kaydet (Taslak)</button>
-      <button class="btn2 warn" id="ur_clear">Temizle</button>
-    </div>
-    <div class="msg" id="ur_msg"></div>
-  `;
-
-  const right=document.createElement("div");
-  right.className="panel";
-  right.innerHTML=`
-    <h3>Özet</h3>
-    <div class="list" id="ur_list"></div>
-  `;
-
-  root.appendChild(left);
-  root.appendChild(right);
-
-  const sel=left.querySelector("#ur_user");
-  const rolesBox=left.querySelector("#ur_roles");
-
-  function renderUsers(){
-    selOptions(
-      sel,
-      (db.users||[]).slice().sort((a,b)=>a.username.localeCompare(b.username)),
-      u=>u.username,
-      u=>`${u.username} • ${u.display||""}`,
-      "Kullanıcı seç"
-    );
-  }
-
-  function renderRoleCheckboxes(){
-    const username=sel.value;
-    rolesBox.innerHTML="";
-    const u=(db.users||[]).find(x=>x.username===username);
-    const set=new Set((u && u.roles) ? u.roles : []);
-    activeRoles(db).forEach(r=>{
-      const lbl=document.createElement("label");
-      lbl.className="chk";
-      const inp=document.createElement("input");
-      inp.type="checkbox";
-      inp.value=r;
-      inp.checked=set.has(r);
-      const sp=document.createElement("span");
-      sp.textContent=r;
-      lbl.appendChild(inp); lbl.appendChild(sp);
-      rolesBox.appendChild(lbl);
-    });
-  }
-
-  function renderSummary(){
-    const list=right.querySelector("#ur_list");
-    list.innerHTML="";
-    (db.users||[]).slice().sort((a,b)=>a.username.localeCompare(b.username)).forEach(u=>{
-      const row=document.createElement("div");
-      row.className="item";
-      row.innerHTML=`
-        <div class="meta">
-          <b>${escapeHtml(u.username)} • ${escapeHtml(u.display||"")}</b>
-          <span>Roller: ${escapeHtml((u.roles||[]).join(", "))}</span>
-        </div>
-      `;
-      list.appendChild(row);
-    });
-  }
-
-  function save(){
-    const username=sel.value;
-    if(!username){ setMsg("ur_msg","Kullanıcı seç.","err"); return; }
-    const u=(db.users||[]).find(x=>x.username===username);
-    if(!u){ setMsg("ur_msg","Kullanıcı bulunamadı.","err"); return; }
-    const checked = Array.from(rolesBox.querySelectorAll("input[type=checkbox]")).filter(x=>x.checked).map(x=>x.value);
-    u.roles=checked;
-
-    setWorkingDB(db);
-    setMsg("ur_msg","Rol ataması güncellendi (taslak).","ok");
-    renderSummary();
-    updatePendingInfo(); refreshTopbar();
-  }
-
-  function clear(){
-    const username=sel.value;
-    if(!username){ setMsg("ur_msg","Kullanıcı seç.","err"); return; }
-    const u=(db.users||[]).find(x=>x.username===username);
-    if(!u) return;
-    u.roles=[];
-    setWorkingDB(db);
-    setMsg("ur_msg","Rol ataması temizlendi (taslak).","info");
-    renderRoleCheckboxes();
-    renderSummary();
-    updatePendingInfo(); refreshTopbar();
-  }
-
-  sel.onchange=()=>{
-    renderRoleCheckboxes();
-    setMsg("ur_msg","", "");
-  };
-
-  left.querySelector("#ur_save").onclick=save;
-  left.querySelector("#ur_clear").onclick=clear;
-
-  renderUsers();
-  renderRoleCheckboxes();
-  renderSummary();
-  return root;
+function formatNow_() {
+  const d = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
 }
-
-/* =================== TAB: FIRM_ACCESS =================== */
-function tabFirmAccess(db){
-  const root=document.createElement("div");
-  root.className="adminGrid";
-
-  const left=document.createElement("div");
-  left.className="panel";
-  left.innerHTML=`
-    <h3>Firma Girişi için Gerekli Roller</h3>
-    <div class="field">
-      <div class="label">Firma</div>
-      <select class="select" id="fa_firm"></select>
-    </div>
-    <div class="field">
-      <div class="label">Gerekli Roller</div>
-      <div class="rolesBox" id="fa_roles"></div>
-    </div>
-    <div class="btnRow">
-      <button class="btn2 info" id="fa_save">Kaydet (Taslak)</button>
-      <button class="btn2 warn" id="fa_clear">Temizle (Fallback)</button>
-    </div>
-    <div class="msg" id="fa_msg"></div>
-    <div class="muted">
-      Temizlersen fallback olarak <code>FIRMKEY_VIEW</code> aranır. (örn: SUDESAN_VIEW)
-    </div>
-  `;
-
-  const right=document.createElement("div");
-  right.className="panel";
-  right.innerHTML=`
-    <h3>Özet</h3>
-    <div class="list" id="fa_list"></div>
-  `;
-
-  root.appendChild(left);
-  root.appendChild(right);
-
-  const firmSel=left.querySelector("#fa_firm");
-
-  function renderFirmSelect(){
-    selOptions(
-      firmSel,
-      activeFirms(db),
-      f=>f.key,
-      f=>`${f.display} (${f.key})`,
-      null
-    );
-  }
-
-  function renderRoleBox(){
-    const fk=firmSel.value;
-    const current=(db.firmAccessRoles && db.firmAccessRoles[fk]) ? db.firmAccessRoles[fk] : [];
-    buildRoleCheckboxes("fa_roles", activeRoles(db), current);
-  }
-
-  function renderSummary(){
-    const list=right.querySelector("#fa_list");
-    list.innerHTML="";
-    activeFirms(db).forEach(f=>{
-      const req = (db.firmAccessRoles && db.firmAccessRoles[f.key] && db.firmAccessRoles[f.key].length)
-        ? db.firmAccessRoles[f.key]
-        : [`${f.key}_VIEW (fallback)`];
-      const row=document.createElement("div");
-      row.className="item";
-      row.innerHTML=`
-        <div class="meta">
-          <b>${escapeHtml(f.display)} (${escapeHtml(f.key)})</b>
-          <span>Giriş Rolleri: ${escapeHtml(req.join(", "))}</span>
-        </div>
-      `;
-      list.appendChild(row);
-    });
-  }
-
-  function save(){
-    const fk=firmSel.value;
-    if(!fk){ setMsg("fa_msg","Firma seç.","err"); return; }
-    const roles=getChecked("fa_roles");
-    db.firmAccessRoles=db.firmAccessRoles||{};
-    db.firmAccessRoles[fk]=roles;
-    setWorkingDB(db);
-    setMsg("fa_msg","Firma giriş rolleri güncellendi (taslak).","ok");
-    renderSummary();
-    updatePendingInfo(); refreshTopbar();
-  }
-
-  function clear(){
-    const fk=firmSel.value;
-    if(!fk){ setMsg("fa_msg","Firma seç.","err"); return; }
-    db.firmAccessRoles=db.firmAccessRoles||{};
-    delete db.firmAccessRoles[fk];
-    setWorkingDB(db);
-    setMsg("fa_msg","Firma giriş rolleri temizlendi (fallback aktif) (taslak).","info");
-    renderRoleBox();
-    renderSummary();
-    updatePendingInfo(); refreshTopbar();
-  }
-
-  firmSel.onchange=()=>{ renderRoleBox(); setMsg("fa_msg","", ""); };
-
-  left.querySelector("#fa_save").onclick=save;
-  left.querySelector("#fa_clear").onclick=clear;
-
-  renderFirmSelect();
-  renderRoleBox();
-  renderSummary();
-  return root;
-}
-
-/* =================== TAB: REPORTS =================== */
-function tabReports(db){
-  const root=document.createElement("div");
-  root.className="adminGrid";
-
-  const left=document.createElement("div");
-  left.className="panel";
-  left.innerHTML=`
-    <h3>Rapor Ekle / Düzenle</h3>
-
-    <div class="field">
-      <div class="label">Mevcut Raporlar <span class="hint">(düzenlemek için seç)</span></div>
-      <select class="select" id="rep_pick"></select>
-    </div>
-
-    <div class="btnRow">
-      <button class="btn2 info" id="rep_load">Yükle (Düzenle)</button>
-      <button class="btn2 danger" id="rep_delete">Sil</button>
-      <button class="btn2" id="rep_new">Yeni</button>
-    </div>
-
-    <div class="hr"></div>
-
-    <div class="formGrid">
-      <div class="field">
-        <div class="label">Firma</div>
-        <select class="select" id="rep_firm"></select>
-      </div>
-      <div class="field">
-        <div class="label">Kategori <span class="hint">(örn: DASHBOARD / FINANCE)</span></div>
-        <input class="input" id="rep_cat" placeholder="Kategori" />
-      </div>
-      <div class="field" style="grid-column:1/-1;">
-        <div class="label">Rapor Adı</div>
-        <input class="input" id="rep_name" placeholder="Rapor adı" />
-      </div>
-      <div class="field" style="grid-column:1/-1;">
-        <div class="label">Açıklama</div>
-        <input class="input" id="rep_desc" placeholder="opsiyonel" />
-      </div>
-      <div class="field" style="grid-column:1/-1;">
-        <div class="label">URL</div>
-        <input class="input" id="rep_url" placeholder="https://..." />
-      </div>
-    </div>
-
-    <input id="rep_edit_id" type="hidden"/>
-
-    <div class="btnRow">
-      <button class="btn2 ok" id="rep_save">Kaydet (Taslak)</button>
-    </div>
-
-    <div class="msg" id="rep_msg"></div>
-    <div class="muted">Not: Yetkiler (role/user) ayrı tabdan yönetilir.</div>
-  `;
-
-  const right=document.createElement("div");
-  right.className="panel";
-  right.innerHTML=`
-    <h3>Rapor Listesi</h3>
-    <div class="list" id="rep_list"></div>
-  `;
-
-  root.appendChild(left);
-  root.appendChild(right);
-
-  const pick=left.querySelector("#rep_pick");
-  const firmSel=left.querySelector("#rep_firm");
-  const catIn=left.querySelector("#rep_cat");
-  const nameIn=left.querySelector("#rep_name");
-  const descIn=left.querySelector("#rep_desc");
-  const urlIn=left.querySelector("#rep_url");
-  const editId=left.querySelector("#rep_edit_id");
-
-  function renderPick(){
-    const reps=(db.reports||[]).slice().sort((a,b)=>(a.name||"").localeCompare(b.name||""));
-    pick.innerHTML="";
-    reps.forEach(r=>{
-      const o=document.createElement("option");
-      o.value=r.id;
-      o.textContent=`${r.name} (${r.firm}/${r.cat})`;
-      pick.appendChild(o);
-    });
-  }
-  function renderFirmSel(){
-    selOptions(firmSel, activeFirms(db), f=>f.key, f=>`${f.display} (${f.key})`, null);
-  }
-  function clearForm(){
-    editId.value="";
-    firmSel.value=activeFirms(db)[0]?.key || "";
-    catIn.value="";
-    nameIn.value="";
-    descIn.value="";
-    urlIn.value="";
-  }
-  function loadSelected(){
-    const id=pick.value;
-    const r=(db.reports||[]).find(x=>x.id===id);
-    if(!r){ setMsg("rep_msg","Rapor bulunamadı.","err"); return; }
-    editId.value=r.id;
-    firmSel.value=r.firm;
-    catIn.value=r.cat||"";
-    nameIn.value=r.name||"";
-    descIn.value=r.desc||"";
-    urlIn.value=r.url||"";
-    setMsg("rep_msg",`Düzenleme: ${r.name}`,"info");
-  }
-
-  function upsert(){
-    const firm=firmSel.value;
-    const cat=trim(catIn.value);
-    const name=trim(nameIn.value);
-    const desc=trim(descIn.value);
-    const url=trim(urlIn.value);
-
-    if(!firm){ setMsg("rep_msg","Firma seç.","err"); return; }
-    if(!cat){ setMsg("rep_msg","Kategori zorunlu.","err"); return; }
-    if(!name){ setMsg("rep_msg","Rapor adı zorunlu.","err"); return; }
-
-    const id=editId.value || genId();
-    let r=(db.reports||[]).find(x=>x.id===id);
-
-    if(!r){
-      r={ id, firm, cat, name, desc, url, acl:{ allowRoles:[], allowUsers:[] } };
-      db.reports.push(r);
-    }else{
-      r.firm=firm; r.cat=cat; r.name=name; r.desc=desc; r.url=url;
-      r.acl=r.acl||{allowRoles:[], allowUsers:[]};
-      if(!Array.isArray(r.acl.allowRoles)) r.acl.allowRoles=[];
-      if(!Array.isArray(r.acl.allowUsers)) r.acl.allowUsers=[];
-    }
-
-    setWorkingDB(db);
-    setMsg("rep_msg","Rapor kaydedildi (taslak).","ok");
-    renderPick();
-    renderList();
-    updatePendingInfo(); refreshTopbar();
-  }
-
-  function delReport(){
-    const id=pick.value;
-    const r=(db.reports||[]).find(x=>x.id===id);
-    if(!r){ setMsg("rep_msg","Rapor bulunamadı.","err"); return; }
-    if(!confirm(`Rapor silinsin mi?\n\n${r.name}`)) return;
-    db.reports=(db.reports||[]).filter(x=>x.id!==id);
-    setWorkingDB(db);
-    setMsg("rep_msg","Rapor silindi (taslak).","ok");
-    clearForm();
-    renderPick();
-    renderList();
-    updatePendingInfo(); refreshTopbar();
-  }
-
-  function renderList(){
-    const list=right.querySelector("#rep_list");
-    list.innerHTML="";
-    (db.reports||[]).slice().sort((a,b)=>(a.firm+a.cat+a.name).localeCompare(b.firm+b.cat+b.name)).forEach(r=>{
-      const row=document.createElement("div");
-      row.className="item";
-      row.innerHTML=`
-        <div class="meta">
-          <b>${escapeHtml(r.name)}</b>
-          <span>${escapeHtml(r.firm)} • ${escapeHtml(r.cat)} • ${escapeHtml(r.url||"(URL yok)")}</span>
-        </div>
-      `;
-      list.appendChild(row);
-    });
-  }
-
-  left.querySelector("#rep_load").onclick=loadSelected;
-  left.querySelector("#rep_delete").onclick=delReport;
-  left.querySelector("#rep_new").onclick=()=>{ clearForm(); setMsg("rep_msg","Yeni rapor.","info"); };
-  left.querySelector("#rep_save").onclick=upsert;
-
-  renderFirmSel();
-  renderPick();
-  clearForm();
-  renderList();
-  return root;
-}
-
-/* =================== TAB: REPORT_ACL =================== */
-function tabReportACL(db){
-  const root=document.createElement("div");
-  root.className="adminGrid";
-
-  const left=document.createElement("div");
-  left.className="panel";
-  left.innerHTML=`
-    <h3>Rapor Yetkilendirme (Role / User)</h3>
-    <div class="field">
-      <div class="label">Rapor</div>
-      <select class="select" id="acl_rep"></select>
-    </div>
-
-    <div class="field">
-      <div class="label">AllowRoles</div>
-      <div class="rolesBox" id="acl_roles"></div>
-    </div>
-
-    <div class="field">
-      <div class="label">AllowUsers <span class="hint">(opsiyonel)</span></div>
-      <div class="rolesBox" id="acl_users"></div>
-    </div>
-
-    <div class="btnRow">
-      <button class="btn2 info" id="acl_save">Kaydet (Taslak)</button>
-      <button class="btn2 warn" id="acl_clear">Temizle</button>
-    </div>
-
-    <div class="msg" id="acl_msg"></div>
-    <div class="muted">
-      Normal kullanıcı: rapor hem firmaya ait olmalı hem de allowRoles/allowUsers eşleşmeli.<br/>
-      Super user: tüm raporlar.
-    </div>
-  `;
-
-  const right=document.createElement("div");
-  right.className="panel";
-  right.innerHTML=`
-    <h3>Özet</h3>
-    <div class="list" id="acl_list"></div>
-  `;
-
-  root.appendChild(left);
-  root.appendChild(right);
-
-  const repSel=left.querySelector("#acl_rep");
-
-  function renderRepSelect(){
-    const reps=(db.reports||[]).slice().sort((a,b)=>(a.name||"").localeCompare(b.name||""));
-    repSel.innerHTML="";
-    reps.forEach(r=>{
-      const o=document.createElement("option");
-      o.value=r.id;
-      o.textContent=`${r.name} (${r.firm}/${r.cat})`;
-      repSel.appendChild(o);
-    });
-  }
-
-  function renderBoxes(){
-    const id=repSel.value;
-    const r=(db.reports||[]).find(x=>x.id===id);
-    if(!r) return;
-
-    const roles=activeRoles(db);
-    buildRoleCheckboxes("acl_roles", roles, (r.acl && r.acl.allowRoles) ? r.acl.allowRoles : []);
-
-    const box=document.getElementById("acl_users");
-    box.innerHTML="";
-    const set=new Set((r.acl && r.acl.allowUsers) ? r.acl.allowUsers : []);
-    (db.users||[]).slice().sort((a,b)=>a.username.localeCompare(b.username)).forEach(u=>{
-      const lbl=document.createElement("label");
-      lbl.className="chk";
-      const inp=document.createElement("input");
-      inp.type="checkbox";
-      inp.value=u.username;
-      inp.checked=set.has(u.username);
-      const sp=document.createElement("span");
-      sp.textContent=`${u.username}`;
-      lbl.appendChild(inp); lbl.appendChild(sp);
-      box.appendChild(lbl);
-    });
-  }
-
-  function renderSummary(){
-    const list=right.querySelector("#acl_list");
-    list.innerHTML="";
-    (db.reports||[]).slice().sort((a,b)=>(a.firm+a.cat+a.name).localeCompare(b.firm+b.cat+b.name)).forEach(r=>{
-      const row=document.createElement("div");
-      row.className="item";
-      row.innerHTML=`
-        <div class="meta">
-          <b>${escapeHtml(r.name)}</b>
-          <span>${escapeHtml(r.firm)} • ${escapeHtml(r.cat)} • Roles: ${escapeHtml((r.acl?.allowRoles||[]).join(", "))} • Users: ${escapeHtml((r.acl?.allowUsers||[]).join(", "))}</span>
-        </div>
-      `;
-      list.appendChild(row);
-    });
-  }
-
-  function save(){
-    const id=repSel.value;
-    const r=(db.reports||[]).find(x=>x.id===id);
-    if(!r){ setMsg("acl_msg","Rapor bulunamadı.","err"); return; }
-    r.acl=r.acl||{ allowRoles:[], allowUsers:[] };
-    r.acl.allowRoles=getChecked("acl_roles");
-    r.acl.allowUsers=getChecked("acl_users");
-
-    setWorkingDB(db);
-    setMsg("acl_msg","Yetkiler güncellendi (taslak).","ok");
-    renderSummary();
-    updatePendingInfo(); refreshTopbar();
-  }
-
-  function clear(){
-    const id=repSel.value;
-    const r=(db.reports||[]).find(x=>x.id===id);
-    if(!r) return;
-    r.acl={ allowRoles:[], allowUsers:[] };
-    setWorkingDB(db);
-    setMsg("acl_msg","Yetkiler temizlendi (taslak).","info");
-    renderBoxes();
-    renderSummary();
-    updatePendingInfo(); refreshTopbar();
-  }
-
-  repSel.onchange=()=>{ renderBoxes(); setMsg("acl_msg","", ""); };
-
-  left.querySelector("#acl_save").onclick=save;
-  left.querySelector("#acl_clear").onclick=clear;
-
-  renderRepSelect();
-  renderBoxes();
-  renderSummary();
-  return root;
-}
-
-/* =================== TAB: LOGIN_LOGS (NEW) =================== */
-function tabLoginLogs(){
-  const db = loadCommittedDB(); // logs are committed directly
-  const root=document.createElement("div");
-  root.className="adminGrid";
-
-  const left=document.createElement("div");
-  left.className="panel";
-  left.innerHTML=`
-    <h3>Giriş Kayıtları</h3>
-    <div class="muted">Başarılı/başarısız tüm login denemeleri tutulur. En son 2000 kayıt saklanır.</div>
-    <div class="hr"></div>
-
-    <div class="field">
-      <div class="label">Kullanıcı Filtre</div>
-      <input class="input" id="log_user" placeholder="örn: zeynep" />
-    </div>
-
-    <div class="field">
-      <div class="label">Başarı Durumu</div>
-      <select class="select" id="log_success">
-        <option value="">Tümü</option>
-        <option value="true">Başarılı</option>
-        <option value="false">Başarısız</option>
-      </select>
-    </div>
-
-    <div class="btnRow">
-      <button class="btn2 info" id="log_refresh">Yenile</button>
-      <button class="btn2 ok" id="log_export">Excel Export (CSV)</button>
-      <button class="btn2 danger" id="log_clear">Logları Temizle</button>
-    </div>
-
-    <div class="msg" id="log_msg"></div>
-  `;
-
-  const right=document.createElement("div");
-  right.className="panel";
-  right.innerHTML=`
-    <h3>Liste</h3>
-    <div class="list" id="log_list"></div>
-  `;
-
-  root.appendChild(left);
-  root.appendChild(right);
-
-  function getFiltered(){
-    const u = norm(document.getElementById("log_user").value);
-    const s = document.getElementById("log_success").value; // "", "true", "false"
-    let logs = (db.loginLogs||[]).slice();
-
-    // newest first
-    logs.reverse();
-
-    if(u){
-      logs = logs.filter(x=>norm(x.username).includes(u));
-    }
-    if(s==="true"){
-      logs = logs.filter(x=>x.success===true);
-    }else if(s==="false"){
-      logs = logs.filter(x=>x.success===false);
-    }
-    return logs;
-  }
-
-  function renderList(){
-    const list=document.getElementById("log_list");
-    list.innerHTML="";
-    const logs=getFiltered();
-
-    if(!logs.length){
-      list.innerHTML = `<div class="muted">Kayıt bulunamadı.</div>`;
-      return;
-    }
-
-    logs.slice(0, 400).forEach(l=>{
-      const row=document.createElement("div");
-      row.className="item";
-      const ok = l.success===true;
-      row.innerHTML=`
-        <div class="meta">
-          <b>${escapeHtml(l.ts)} • ${escapeHtml(l.username || "(blank)")} • ${escapeHtml(l.mode||"")}</b>
-          <span>${ok ? "BAŞARILI" : "BAŞARISIZ"} • FirmInput: ${escapeHtml(l.firmInput||"")} • FirmKey: ${escapeHtml(l.firmKey||"")} • ${escapeHtml(l.reason||"")}</span>
-        </div>
-        <div class="pills">
-          <span class="pill2 ${ok?"":"off"}">${ok?"OK":"FAIL"}</span>
-        </div>
-      `;
-      list.appendChild(row);
-    });
-
-    if(logs.length > 400){
-      const note=document.createElement("div");
-      note.className="muted";
-      note.textContent=`Not: Performans için ilk 400 kayıt gösterildi. Export ile tamamını alabilirsiniz. (Toplam: ${logs.length})`;
-      list.appendChild(note);
-    }
-  }
-
-  function exportCSV(){
-    const logs=getFiltered().slice().reverse(); // chronological
-    const rows = logs.map(l=>({
-      ts: l.ts,
-      username: l.username,
-      mode: l.mode,
-      firmInput: l.firmInput,
-      firmKey: l.firmKey,
-      success: l.success ? "TRUE" : "FALSE",
-      reason: l.reason
-    }));
-    const date = new Date().toISOString().slice(0,10);
-    downloadCSV(`login_logs_${date}.csv`, rows);
-    setMsg("log_msg","Login log CSV indirildi.","ok");
-  }
-
-  function clearLogs(){
-    if(!confirm("Tüm login log kayıtları temizlensin mi?")) return;
-    const committed = loadCommittedDB();
-    committed.loginLogs = [];
-    setLocalJSON(DB_KEY, committed);
-    setMsg("log_msg","Login logları temizlendi.","info");
-    // re-render with new db
-    renderAdmin();
-  }
-
-  document.getElementById("log_refresh").onclick=()=>{ setMsg("log_msg","", ""); renderList(); };
-  document.getElementById("log_export").onclick=exportCSV;
-  document.getElementById("log_clear").onclick=clearLogs;
-
-  document.getElementById("log_user").addEventListener("input", ()=>renderList());
-  document.getElementById("log_success").addEventListener("change", ()=>renderList());
-
-  renderList();
-  return root;
-}
-
-/* =================== TAB: SYSTEM =================== */
-function tabSystem(db){
-  const root=document.createElement("div");
-  root.className="adminGrid";
-
-  const left=document.createElement("div");
-  left.className="panel";
-  left.innerHTML=`
-    <h3>Sistem Araçları</h3>
-    <div class="muted">
-      Aşağıdakiler sadece bu tarayıcıdaki localStorage içindir.
-      GitHub Pages ortamında sunucu yok; tüm veriler kullanıcı cihazında tutulur.
-    </div>
-
-    <div class="hr"></div>
-
-    <div class="btnRow">
-      <button class="btn2 warn" id="sys_resetdb">DB'yi Seed'e Sıfırla</button>
-      <button class="btn2 danger" id="sys_clearall">Tüm LocalStorage'ı Temizle</button>
-    </div>
-
-    <div class="msg" id="sys_msg"></div>
-  `;
-
-  const right=document.createElement("div");
-  right.className="panel";
-  right.innerHTML=`
-    <h3>DB JSON (Okunabilir)</h3>
-    <pre id="sys_dump" style="white-space:pre-wrap; word-break:break-word; font-size:11px; color:rgba(255,255,255,.78); margin:0;"></pre>
-  `;
-
-  root.appendChild(left);
-  root.appendChild(right);
-
-  function dump(){
-    right.querySelector("#sys_dump").textContent = JSON.stringify(loadWorkingDB(), null, 2);
-  }
-
-  left.querySelector("#sys_resetdb").onclick=()=>{
-    if(!confirm("DB seed'e sıfırlansın mı? (taslak değil, direkt kalıcı)")) return;
-    setLocalJSON(DB_KEY, SEED_DB);
-    discardWorking();
-    setMsg("sys_msg","DB seed'e sıfırlandı.","ok");
-    dump();
-    updatePendingInfo(); refreshTopbar();
-  };
-
-  left.querySelector("#sys_clearall").onclick=()=>{
-    if(!confirm("Tüm localStorage temizlensin mi?")) return;
-    localStorage.clear();
-    setMsg("sys_msg","localStorage temizlendi. Sayfayı yenileyin.","info");
-    dump();
-  };
-
-  dump();
-  return root;
-}
-
-/* ============================================================
-   BOOT
-   ============================================================ */
-function boot(){
-  ensureDB();
-  wireThemePanel();
-
-  document.getElementById("loginBtn").onclick=doLogin;
-  document.getElementById("logoutBtn").onclick=doLogout;
-
-  document.getElementById("adminBtn").onclick=()=>{
-    const s=getSession();
-    if(!s || s.mode!=="ADMIN") return;
-    showAdmin(true);
-    showPortal(false);
-    renderAdmin();
-    refreshTopbar();
-    setTitle(getSession());
-  };
-
-  document.getElementById("saveBtn").onclick=()=>{
-    const ok=commitWorkingToDB();
-    updatePendingInfo();
-    refreshTopbar();
-    if(ok){
-      // admin ekranda kal
-    }
-    renderAdmin();
-  };
-
-  document.getElementById("searchPortal").addEventListener("input", ()=>renderPortal());
-
-  const s=getSession();
-  if(s){
-    applyThemeVars(getUserTheme(s.username)||DEFAULT_THEME);
-    showLogin(false);
-    if(s.mode==="ADMIN"){
-      showAdmin(true); showPortal(false);
-      renderAdmin();
-    }else{
-      showAdmin(false); showPortal(true);
-      renderPortal();
-    }
-    refreshTopbar();
-    setTitle(s);
-  }else{
-    applyThemeVars(DEFAULT_THEME);
-    showLogin(true);
-    showAdmin(false);
-    showPortal(false);
-    refreshTopbar();
-    setTitle(null);
-  }
-}
-
-window.addEventListener("DOMContentLoaded", boot);
-</script>
-</body>
-</html>
